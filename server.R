@@ -1,14 +1,32 @@
+library(shiny)
+library(shinyWidgets)
+library(shinydashboard)
+library(shinydashboardPlus)
+library(dplyr)
+library(readxl)
+library(stringr)
+library(flexdashboard)
+library(ggplot2)
+library(plotly)
+library(rmarkdown)
+library(pagedown)
+library(stringr)
+library(RODBC)
+library(RMySQL)
+library(RMariaDB)
+library(ggtext)
+library(fresh)
+library(shinyWidgets)
+library(shinycssloaders)
+library(DT)
+library(reshape2)
+
 if( stringr::str_detect(string = getwd(),pattern = "marco")){
-  
-  source(file = "https://raw.githubusercontent.com/MarcoAVLeal/dash_mis/main/librarys.R")
-  # path_pg1 <- "pagina1.R"
-  # path_pg2 <- "pagina2.R"
   path_pg1 <-  source(file = "https://raw.githubusercontent.com/MarcoAVLeal/dash_mis/main/pagina1.R",encoding = "UTF-8",local = F)
   path_pg2 <-  source(file = "https://raw.githubusercontent.com/MarcoAVLeal/dash_mis/main/pagina2.R",encoding = "UTF-8",local = F)
   
   
 }else{
-  source(file = "https://raw.githubusercontent.com/MarcoAVLeal/dash_mis/main/librarys.R")
   path_pg1 <-  source(file = "https://raw.githubusercontent.com/MarcoAVLeal/dash_mis/main/pagina1.R",encoding = "UTF-8",local = F)
   path_pg2 <-  source(file = "https://raw.githubusercontent.com/MarcoAVLeal/dash_mis/main/pagina2.R",encoding = "UTF-8",local = F)
   }
