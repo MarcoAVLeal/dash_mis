@@ -23,7 +23,7 @@ info_box_bg = "#D8DEE9"
 )
 ),
 #tags$a(href='https://site.crefaz.com.br/',tags$img(src='logo2.png',width = 80 ),"MIS")
-options = list(sidebarExpandOnHover = TRUE),
+#options = list(sidebarExpandOnHover = TRUE),
 header = dashboardHeader(title = strong("MIS"),userOutput("user"),leftUi = tagList(logo= tags$a(href='https://site.crefaz.com.br/',tags$img(src='logo2.png',width = 80 )))),
 sidebar = dashboardSidebar(sidebarMenu(
     id = "tabs",
@@ -45,4 +45,3 @@ title = "MIS"
 
 
 
-shinyUI(ui = ui)
