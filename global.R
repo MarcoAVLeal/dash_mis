@@ -22,10 +22,10 @@ library(shinycssloaders)
 library(DT)
 library(reshape2)
 #source(file = "funcoes.R",encoding = "UTF-8")
-read_url_csv <- function(url, sep = ","){
+read_url_csv <- function(url, sep = ",",enc = "utf-8"){
   tmpFile <- tempfile()
   download.file(url, destfile = tmpFile)
-  url_csv <- read.csv(tmpFile, sep = sep)
+  url_csv <- read.csv(tmpFile, sep = sep,encoding = enc)
   return(url_csv)
 }
 
