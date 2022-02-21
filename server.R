@@ -198,12 +198,11 @@ server <- function(input, output, session) {
     onedrive_url <- "https://crefaz-my.sharepoint.com/:x:/g/personal/gestaodedados4_crefaz_onmicrosoft_com/Ea1IGOUCSa1Mjlev_QvrNLAB4I_qcKHjWy908-RxDbWPcQ?download=1"
     x <- read_url_csv(onedrive_url)
     
-    #x <- read.csv(file = 'dados\\2022_02.csv') 
-    # output$msgbox_bitrix1 <- renderValueBox({
-    #   shinydashboard::valueBox(subtitle = tags$p("TOTAL", style = "font-size:100%;color:#E4781C;font-weight:bold;"),
-    #                            value =tags$p(x[1,"total"], style = "font-size:50%;color:#E4781C;font-weight:bold") , 
-    #                            width = 4, color = "navy")
-    # })
+    output$msgbox_bitrix1 <- renderValueBox({
+      shinydashboard::valueBox(subtitle = tags$p("TOTAL", style = "font-size:100%;color:#E4781C;font-weight:bold;"),
+                               value =tags$p(x[1,"total"], style = "font-size:50%;color:#E4781C;font-weight:bold") , 
+                               width = 4, color = "navy")
+    })
     
     output$msgbox_bitrix2 <- renderValueBox({
       shinydashboard::valueBox(subtitle = tags$p("PENDENTE", style = "font-size:100%;color:#E4781C;font-weight:bold;"),
