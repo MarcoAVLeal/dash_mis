@@ -1,5 +1,5 @@
-if( stringr::str_detect(string = getwd(),pattern = "marco")){source(file = "librarys.R")
-}else{source(file = "librarys.R")}
+if( stringr::str_detect(string = getwd(),pattern = "marco")){source(file = "https://raw.githubusercontent.com/MarcoAVLeal/dash_mis/main/librarys.R")
+}else{source(file = "https://raw.githubusercontent.com/MarcoAVLeal/dash_mis/main/librarys.R")}
 
 
 

@@ -1,11 +1,16 @@
 if( stringr::str_detect(string = getwd(),pattern = "marco")){
   
-  source(file = "librarys.R")
-  path_pg1 <- "pagina1.R"
-  path_pg2 <- "pagina2.R"
+  source(file = "https://raw.githubusercontent.com/MarcoAVLeal/dash_mis/main/librarys.R")
+  # path_pg1 <- "pagina1.R"
+  # path_pg2 <- "pagina2.R"
+  path_pg1 <-  source(file = "https://raw.githubusercontent.com/MarcoAVLeal/dash_mis/main/pagina1.R",encoding = "UTF-8",local = F)
+  path_pg2 <-  source(file = "https://raw.githubusercontent.com/MarcoAVLeal/dash_mis/main/pagina2.R",encoding = "UTF-8",local = F)
+  
   
 }else{
-    source(file = "librarys.R")
+  source(file = "https://raw.githubusercontent.com/MarcoAVLeal/dash_mis/main/librarys.R")
+  path_pg1 <-  source(file = "https://raw.githubusercontent.com/MarcoAVLeal/dash_mis/main/pagina1.R",encoding = "UTF-8",local = F)
+  path_pg2 <-  source(file = "https://raw.githubusercontent.com/MarcoAVLeal/dash_mis/main/pagina2.R",encoding = "UTF-8",local = F)
   }
 
 
@@ -170,7 +175,7 @@ shinyServer(function(input, output, session) {
        }else{
             output$page1 <- renderUI({
                 
-                source(file = path_pg1,encoding = "utf-8")
+                path_pg1
                 #source(file = "source_server_pagina1.R",encoding = "utf-8")
                 
             })
@@ -178,7 +183,7 @@ shinyServer(function(input, output, session) {
             
             output$page2 <- renderUI({
                 
-                source(file = path_pg2,encoding = "utf-8")
+              path_pg2
                 
             })
             

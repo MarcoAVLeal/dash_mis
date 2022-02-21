@@ -78,7 +78,7 @@ df                <- df %>% filter(str_detect(string = Lojas,pattern = "Loja CFZ
 
 
 df                <- df %>% mutate("Fase do negocio" = ifelse(`Fase do negocio` == "PAGO AO CLIENTE","PAGO",`Fase do negocio`))
-df                <- df %>% mutate("Fase do negocio" = ifelse(`Fase do negocio` == "EM ANÃ\u0081LISE","EM ANÁLISE",`Fase do negocio`))
+df                <- df %>% mutate("Fase do negocio" = ifelse(`Fase do negocio` == "EM ANÁLISE","EM ANÁLISE",`Fase do negocio`))
 # df                <- df %>% mutate("Origem do Cliente"  = ifelse(`Origem do Cliente` == "","Não identificada",`Origem do Cliente`),
 #                                    "Fonte"              = ifelse(`Contato Fonte` =="",`Lead Fonte`,`Contato Fonte`),
 #                                    "Origem do Cliente1" = ifelse(`Origem do Cliente` == "Fonte" & `Contato Fonte` == "" & `Lead Fonte` == "","Fonte (erro de tabulação)",ifelse(Fonte != "","Fonte",`Origem do Cliente`)),
