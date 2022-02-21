@@ -63,11 +63,11 @@ onedrive_url <- "https://crefaz-my.sharepoint.com/:x:/g/personal/gestaodedados4_
 users             <- read_url_csv(onedrive_url,sep = ";")
 users$ID          <- as.character(users$ID)
 
-library(readxl)
-url <- "https://crefaz-my.sharepoint.com/:x:/g/personal/gestaodedados4_crefaz_onmicrosoft_com/EaODUUKwdOFJtbyx6MQHshsBjMAYRqYYyXr-el08rDnpxQ?download=1"
-destfile <- "regionais.xlsx"
-curl::curl_download(url, destfile)
-regionais <- read_excel(destfile,sheet = "Planilha1")
+# library(readxl)
+# url <- "https://crefaz-my.sharepoint.com/:x:/g/personal/gestaodedados4_crefaz_onmicrosoft_com/EaODUUKwdOFJtbyx6MQHshsBjMAYRqYYyXr-el08rDnpxQ?download=1"
+# destfile <- "regionais.xlsx"
+# curl::curl_download(url, destfile)
+# regionais <- read_excel(destfile,sheet = "Planilha1")
 
 
 df                <- left_join(x = df,y = users,by=c("Pessoa reponsavel ID"="ID"),keep=TRUE,suffix = c("_LEADS","_users"))
