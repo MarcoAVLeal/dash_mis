@@ -21,6 +21,7 @@ library(shinyWidgets)
 library(shinycssloaders)
 library(DT)
 library(reshape2)
+Sys.setlocale("LC_TIME", "pt_BR.UTF-8")
 #source(file = "funcoes.R",encoding = "UTF-8")
 read_url_csv <- function(url, sep = ","){
   tmpFile <- tempfile()
@@ -94,6 +95,8 @@ colnames(df)[colnames(df) == "Departamento"] <- "Lojas"
 
 df                <- df %>% filter(str_detect(string = Lojas,pattern = "Loja CFZ"))
 
+
+df$`Fase do negocio` %>% unique
 
 
 df                <- df %>% mutate("Fase do negocio" = ifelse(`Fase do negocio` == "PAGO AO CLIENTE","PAGO",`Fase do negocio`))
