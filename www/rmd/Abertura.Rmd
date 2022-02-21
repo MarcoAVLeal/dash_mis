@@ -1,0 +1,108 @@
+---
+output:
+  pdf_document:
+    latex_engine: xelatex
+    keep_tex: false
+    number_section: false
+    template: template.tex
+indent: false
+params:
+  id_projeto_abertura: NA
+  contratante_nome_abertura: NA
+  gerente_nome_abertura: NA
+  nome_projeto_abertura: NA
+  autor_projeto_abertura: NA
+  revisor_projeto_abertura: NA
+  resumo_projeto_abertura: NA
+  gerente_projeto_abertura: NA
+  preco_projeto_abertura: NA
+  numero_parcelas_abertura: NA
+  prazo_projeto_abertura: NA
+---
+
+```{r setup, include = FALSE}
+library(knitr)
+path_source <- "../input/main.R"
+source(path_source, encoding = "UTF-8")
+Sys.setlocale("LC_TIME", "pt_BR.UTF-8")
+```
+
+\begin{Large}
+\begin{center}
+TERMO DE ABERTURA DE PROJETO\\
+Nº `r params$id_projeto_abertura`
+\end{center}
+\end{Large}
+
+\noindent
+\textbf{\large Nome do Projeto:} `r params$nome_projeto_abertura`\newline
+\textbf{\large Elaborado por:} `r params$autor_projeto_abertura`\newline
+\textbf{\large Revisado por:} `r params$revisor_projeto_abertura`
+
+\section{Resumo do Projeto}
+
+`r params$resumo_projeto_abertura`
+
+\section{Gerente do Projeto}
+
+`r params$gerente_nome_abertura`
+
+\section{Atribuições e Responsabilidades do Gerente}
+
+\begin{itemize}
+  \item Atuar como o ponto central de contato para toda comunicação formal relacionada ao projeto entre a empresa e o cliente.
+  \item Assegurar que os membros da equipe do projeto estejam cientes de suas responsabilidades e também, que todos os compromissos assumidos pelos indivíduos sejam realizados.
+  \item Gerenciar os compromissos contratuais para realizá-los em tempo, dentro do orçamento e com satisfação do cliente.
+  \item Elaborar o relatório final e qualquer outro relatório previamente solicitado pelo cliente.
+  \item Controlar os custos, cronograma, orçamento e variações técnicas dentro das margens estabelecidas do projeto.
+  \item Manter toda documentação atualizada.
+  \item Seguir todos os processos e padrões metodológicos.
+  \item Reportar formalmente o status do projeto à diretoria de projetos, evitando surpresas.
+\end{itemize}
+
+\newpage
+
+\section{Premissas}
+
+Os dados estarão disponíveis para a Estats Consultoria até `r format(params$prazo_projeto_abertura, format = "%d/%m/%Y")`, não havendo alteração nos mesmos após essa data.
+
+\section{Restrições e Riscos}
+A qualidade e a veracidade dos resultados estão limitadas às características refletidas pelos dados amostrais, uma vez que cabe à Estats Consultoria apenas a análise dos dados coletados, não tendo a mesma participado do planejamento amostral e da elaboração do instrumento de coleta de dados.
+
+\section{Cronograma e planejamento do projeto}
+
+
+\section{Investimento e Prazo}
+
+Investimento: `r paste("R$", format(params$preco_projeto_abertura, nsmall = 2))`\newline
+Prazo: `r format(params$prazo_projeto_abertura, format = "%d/%m/%Y")`\newline
+
+\newpage
+
+\noindent\textbf{As Partes concordam que o projeto seja iniciado e assinam o presente termo dando por iniciadas todas as responsabilidades e atividades da Estats Consultoria, referentes a este projeto.}\newline
+
+\vspace{2cm}
+
+\rule{8cm}{0.4pt}
+\indent `r params$contratante_nome_abertura`\newline
+\indent Contratante
+
+\vspace{2cm}
+
+\rule{8cm}{0.4pt}
+`r params$gerente_nome_abertura`\newline
+\indent Gerente de Projetos\newline
+\indent Estats Consultoria\newline
+
+\vspace{2cm}
+
+\rule{8cm}{0.4pt}
+\indent `r diretor_projetos$nome`\newline
+\indent Diretor de Projetos\newline
+\indent Estats Consultoria\newline
+
+\vfill
+
+\begin{center}
+Maringá, `r format(Sys.Date(), format = "%d de %B de %Y")`
+\end{center}

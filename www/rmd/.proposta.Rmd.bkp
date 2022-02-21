@@ -1,0 +1,178 @@
+---
+header-includes:
+- \usepackage[T1]{fontenc}
+- \usepackage{lmodern}
+- \usepackage{scrextend}
+- \changefontsizes[18pt]{12pt}
+- \usepackage[utf8]{inputenc}
+- \usepackage[brazil]{babel}
+- \usepackage{multicol}
+- \usepackage{setspace}
+- \usepackage{hyperref}
+- \usepackage{fancyref}
+- \usepackage{fontspec}
+- \setmainfont{[font.ttf]}
+- \usepackage{enumerate}
+- \usepackage{background}
+- \usepackage{nopageno}
+- \backgroundsetup{scale=1,angle = 0, opacity = 1, contents = {\includegraphics[width = \paperwidth,  height = \paperheight] {../input/fundo.pdf}}}
+- \usepackage{indentfirst}
+- \linespread{0.8}
+documentclass: article
+fontsize: 12pt
+classoption: a4paper
+geometry: left=3cm,right=2cm,top=5.5cm,bottom=4.5cm
+output:
+  pdf_document:
+    latex_engine: xelatex
+    keep_tex: false
+    number_section: false
+indent: true
+params:
+  gerente_nome_proposta: NA
+  gerente_cargo_proposta: NA
+  objetivo_projeto_proposta: NA
+  metodologia_projeto_proposta: NA
+  numero_parcelas_proposta: NA
+  preco_projeto_proposta: NA
+  prazo_projeto_proposta: NA
+  correcao_banco_proposta: NA
+  horas_correcao_banco_proposta: NA
+  elaboracao_relatorio_proposta: NA
+  horas_elaboracao_relatorio_proposta: NA
+  pesquisa_mercado_proposta: NA
+  horas_pesquisa_mercado_proposta: NA
+  pesquisa_satisfacao_proposta: NA
+  horas_pesquisa_satisfacao_proposta: NA
+  analise_descritiva_proposta: NA
+  horas_analise_descritiva_proposta: NA
+  teste_correlacao_proposta: NA
+  horas_teste_correlacao_proposta: NA
+  teste_geral_proposta: NA
+  horas_teste_geral_proposta: NA
+  plano_amostral_proposta: NA
+  horas_plano_amostral_proposta: NA
+  validacao_metodo_proposta: NA
+  horas_validacao_metodo_proposta: NA
+  analise_experimento_proposta: NA
+  horas_analise_experimento_proposta: NA
+  tipo_cliente_proposta: NA
+---
+
+```{r setup, echo  = FALSE, include = FALSE}
+library(knitr)
+path_source <- "../input/main.R"
+source(path_source)
+
+# Vetor lógico dos serviços selecionados
+bool <- c(params$correcao_banco_proposta,
+          params$elaboracao_relatorio_proposta,
+          params$pesquisa_mercado_proposta,
+          params$pesquisa_satisfacao_proposta,
+          params$analise_descritiva_proposta,
+          params$teste_correlacao_proposta,
+          params$teste_geral_proposta,
+          params$plano_amostral_proposta,
+          params$validacao_metodo_proposta,
+          params$analise_experimento_proposta)
+
+# Seleção dos serviços selecionados no banco de preços
+este_banco <- servicos[bool,]
+
+# Vetor com as horas dos serviços
+horas <- c(params$horas_correcao_banco_proposta,
+           params$horas_elaboracao_relatorio_proposta,
+           params$horas_pesquisa_mercado_proposta,
+           params$horas_pesquisa_satisfacao_proposta,
+           params$horas_analise_descritiva_proposta,
+           params$horas_teste_correlacao_proposta,
+           params$horas_teste_geral_proposta,
+           params$horas_plano_amostral_proposta,
+           params$horas_validacao_metodo_proposta,
+           params$horas_analise_experimento_proposta)
+
+# Seleção das horas dos serviços selecionados
+horas <- horas[bool]
+
+# Vetor de preço do tipo de cliente selecionado
+preco_cliente <- switch(params$tipo_cliente_proposta,
+                        "Geral" = este_banco$Geral,
+                        "Ejs e parceiros" = este_banco$Ej_parceiro,
+                        "Empresa" = este_banco$Empresas)
+
+# Preço total do projeto
+preco_projeto_proposta <- sum(preco_cliente*horas)+10
+
+# Primeira coluna da tabela final
+servico <- c(este_banco$Serviço, "Materiais", "Total")
+
+# Segunda coluna da tabela final
+hora <- c(horas, "-", as.character(sum(horas)))
+
+# Terceira coluna da tabela final
+valorhora <- c(paste("R$", format(preco_cliente, nsmall = 2)), "-", "")
+
+# Quarta coluna da tabela final
+total <- c(paste("R$", format(preco_cliente*as.numeric(horas),
+                              nsmall = 2)), "R$ 10.00",
+           paste("R$", format(preco_projeto_proposta,
+                 nsmall = 2)))
+
+# Tabela final
+novo_banco <- data.frame(Serviços = servico,
+                         Horas = hora,
+                         ValorHora = valorhora,
+                         Total = total)
+
+Sys.setlocale("LC_TIME", "pt_BR.UTF-8")
+```
+
+\noindent
+Caro cliente,
+
+A partir de estudos realizados apresentamos a proposta de prestação de serviço, afim de formalizar o trabalho a ser desenvolvido pela Estats Consultoria. Ao ser aceita, será elaborado o contrato de prestação de serviços.
+
+\begin{center}
+A Estats Consultoria agradece desde já o interesse e a escolha pela nossa empresa. 
+\end{center}
+\flushleft{Atenciosamente,}
+
+\begin{center}
+`r params$gerente_nome_proposta`\\
+`r params$gerente_cargo_proposta`
+\end{center}
+
+`r params$contratante_nome_proposta`
+
+\newpage
+
+\section{Objetivo do Projeto}
+
+`r params$objetivo_projeto_proposta`
+
+\section{Metodologia}
+
+`r params$metodologia_projeto_proposta`
+
+\section{Duração do Projeto}
+
+\begin{center}
+\begin{large}
+```{r, echo = FALSE}
+kable(novo_banco, "latex",
+      col.names = c("Atividades", "Horas", "Valor/Hora", "Total"))
+```
+\end{large}
+\end{center}
+
+\section{Investimento e Prazo}
+
+Investimento: `r paste("R$", format(preco_projeto_proposta, digits = 2))`
+
+Prazo: `r format(params$prazo_projeto_proposta, format = "%d/%m/%Y")`
+
+\vfill
+
+\begin{center}
+Maringá, `r format(Sys.Date(), format = "%d de %B de %Y")`
+\end{center}

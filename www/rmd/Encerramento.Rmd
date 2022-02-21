@@ -1,0 +1,97 @@
+---
+output:
+  pdf_document:
+    latex_engine: xelatex
+    keep_tex: false
+    number_section: false
+    template: template.tex
+indent: false
+params:
+  contratante_nome_encerramento: NA
+  id_projeto_encerramento: NA
+  nome_projeto_encerramento: NA
+  gerente_projeto_encerramento: NA
+  entrega_projeto_encerramento: NA
+  tipo_encerramento: NA
+---
+
+```{r setup, echo  = FALSE, include = FALSE}
+library(knitr)
+path_source <- "../input/main.R"
+source(path_source, encoding = "UTF-8")
+Sys.setlocale("LC_TIME", "pt_BR.UTF-8")
+
+texto_concluido <- "concluído, com a execução de todas as fases e tarefas definidas no início do projeto, e assinam o presente termo dando por encerradas todas as responsabilidades e atividades da Estats Consultoria, referentes a este projeto."
+
+texto_adiado <- "adiado."
+
+texto_cancelado <- "cancelado, e assinam o presente termo dando por encerradas todas as responsabilidades e atividades da Estats Consultoria, referentes a este projeto."
+
+if(params$tipo_encerramento == "Concluído")
+{
+  texto_final <- texto_concluido
+} else if(params$tipo_encerramento == "Adiado")
+{
+  texto_final <- texto_adiado
+} else if(params$tipo_encerramento == "Cancelado")
+{
+  texto_final <- texto_cancelado
+}
+```
+
+\begin{Large}
+\begin{center}
+TERMO DE ENCERRAMENTO DE PROJETO\\
+Nº `r params$id_projeto_encerramento`
+\end{center}
+\end{Large}
+
+\noindent
+\textbf{\large Nome do Projeto:} `r params$nome_projeto_encerramento`\newline
+\textbf{\large Gerente do Projeto:} `r params$gerente_projeto_encerramento`\newline
+
+\section{Tipo do encerramento}
+
+\noindent
+(`r ifelse(params$tipo_encerramento == "Concluído", "X", "  ")`) Concluído
+
+\noindent
+(`r ifelse(params$tipo_encerramento == "Adiado", "X", "  ")`) Adiado
+
+\noindent
+(`r ifelse(params$tipo_encerramento == "Cancelado", "X", "  ")`) Cancelado
+
+\section{Relação das entregas}
+
+```{r, echo = FALSE}
+kable(data.frame(desc = c("Relatório final", "Apresentação dos resultados"),
+                 data = rep(format(params$entrega_projeto_encerramento, format = "%d/%m/%Y"), 2)),
+    col.names = c("Descrição das entregas", "Data da entrega"))
+```
+
+\newpage
+
+\noindent\textbf{As Partes concordam que o projeto foi `r texto_final`}\newline
+
+\vspace{2cm}
+
+\rule{8cm}{0.4pt}
+\indent `r params$contratante_nome_encerramento`\newline
+
+\vspace{2cm}
+
+\rule{8cm}{0.4pt}
+\indent `r params$gerente_projeto_encerramento`\newline
+\indent Gerente de Projetos\newline
+\indent Estats Consultoria\newline
+
+\vspace{2cm}
+
+\rule{8cm}{0.4pt}
+\indent `r diretor_projetos$nome`\newline
+\indent Diretor de Projetos\newline
+\indent Estats Consultoria\newline
+
+\begin{center}
+Maringá, `r format(Sys.Date(), format = "%d de %B de %Y")`
+\end{center}

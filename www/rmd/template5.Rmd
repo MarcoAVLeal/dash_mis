@@ -1,0 +1,377 @@
+---
+output:
+  html_document:
+    css: extra.css
+    self_contained: yes
+    mode: selfcontained
+indent: true
+params:
+  filter: NA
+  visao: NA
+---
+
+
+<style type="text/css">
+.main-container {
+  max-width: 1920px;
+  margin-left: auto;
+  margin-right: auto;
+}
+</style>
+
+
+```{r setup, echo  = FALSE, include = FALSE}
+params$visao
+params$filter
+#rm(list=ls())
+library(knitr)
+library(glue)
+#path_source <- "../input/main.R"
+#source(path_source, encoding = "UTF-8")
+Sys.setlocale("LC_TIME", "pt_BR.UTF-8")
+
+library(dplyr)
+library(readxl)
+library(stringr)
+library(ggplot2)
+library(plotly)
+library(ggtext)
+library(flexdashboard)
+source(file = "D:\\OneDrive - Crefaz Financiamentos e Investimentos\\Projeto_Leads_Bitrix\\Dash_Leads_Britrix_V2\\funcoes.R",encoding = "UTF-8")
+
+df                <- read.csv(file = "Z:\\Usuários\\Nathalia\\IndicadoresVendasBitrix\\report-bitrix.csv",sep = ";")
+names_df          <- c("ID","Nome", "Fase do negocio","Fechado","Data de inicio","Pessoa reponsavel ID","Pessoa responsável","Criado em","Modificado em",
+                       "Modificado por ID","Modificado por","CPF","Produto Crefaz","Valor do emprestimo","Desafio","Fase automacao","Lead Fonte",
+                       "Origem do Cliente","Contato Primeiro nome","Contato sobrenome","Contato Fonte","Data prevista de fechamento","Data negociar","Data analisar",
+                       "Data prospectar","Comentario")
+
+
+colnames(df)      <- names_df
+users             <- read.csv(file = "Z:\\Usuários\\Nathalia\\IndicadoresVendasBitrix\\users.xls.csv",sep = ";")   
+regionais         <- read_xlsx(path = "Z:\\Usuários\\Nathalia\\IndicadoresVendasBitrix\\regionais.xlsx",sheet = "Planilha1")
+
+
+df                <- left_join(x = df,y = users,by=c("Pessoa reponsavel ID"="ID"),keep=TRUE,suffix = c("_LEADS","_users"))
+df                <- left_join(x = df,y = regionais,by=c("Departamento"="Departamento"),keep=TRUE,suffix = c("_LEADS","_reg"))
+colnames(df)[colnames(df) == "Departamento_reg"] <- "Lojas"
+
+df                <- df %>% filter(str_detect(REGIONAL,pattern = "GILBERTO FELICIO") | str_detect(REGIONAL,pattern = "MAYSA CARVALHO") | str_detect(REGIONAL,pattern = "SC"))
+df                <- df %>% mutate("Fase do negocio" = ifelse( (Comentario == "") & (`Fase do negocio` == "PROSPECTAR"),"NOVO", `Fase do negocio`))
+
+df                <- df %>% mutate("Origem do Cliente"  = ifelse(`Origem do Cliente` == "","Não identificada",`Origem do Cliente`),
+                                   "Fonte"              = ifelse(`Contato Fonte` =="",`Lead Fonte`,`Contato Fonte`),
+                                   "Origem do Cliente1" = ifelse(`Origem do Cliente` == "Fonte" & `Contato Fonte` == "" & `Lead Fonte` == "","Fonte (erro de tabulação)",ifelse(Fonte != "","Fonte",`Origem do Cliente`)),
+                                   "Data fechado"       = ifelse(Fechado == "Sim",`Data prevista de fechamento`, NA),
+                                   "Data criado"        = ifelse(`Origem do Cliente1` == "Fonte"| `Origem do Cliente1` =="Não identificada",NA,`Criado em`))
+
+
+
+df$`Criado em`         <- as.Date(df$`Criado em`,format = "%d/%m/%Y")
+df$`Data fechado`      <- as.Date(df$`Data fechado`  ,format = "%d/%m/%Y")
+df$`Data analisar`     <- as.Date(df$`Data analisar`,format = "%d/%m/%Y")
+df$`Data criado`       <- as.Date(df$`Data criado`,format = "%d/%m/%Y")
+df$`Data negociar`     <- as.Date(df$`Data negociar`,format = "%d/%m/%Y")
+df$`Data prospectar`   <- as.Date(df$`Data prospectar`,format = "%d/%m/%Y")
+ 
+
+
+
+#df1 <- df
+
+
+
+
+
+ if(params$filter == "NA" || params$filter == "Sem Filtro"|| params$filter =="RESUMO GERAL"){
+      
+      header_name <- "RESUMO GERAL"
+      df1         <- df
+      total_prospec          <- nrow(df1)
+    
+      
+ }else{
+    
+     if(str_detect(string = params$filter,pattern = "Loja CFZ")){
+       df1                    <- df %>% filter(Lojas == as.character(params$filter))
+        header_name <- params$filter
+        print(header_name)
+     }else{
+           header_name <- paste0("REGIONAL ",params$filter)
+           df1                    <- df %>% filter(REGIONAL == as.character(params$filter))
+     }
+    
+    total_prospec          <- nrow(df1)
+   
+   
+    }
+
+data <- lubridate::today() %>% format("%d/%m/%Y")
+font_size32  <- 32
+font_size20 <- 20
+font_size24 <- 24
+font_size30 <- 30
+```
+
+
+
+<div class='parent', style="width: 1920px;"> 
+
+
+<div class="left"><img src='logo.png' alt='logo'/></div>
+<h1  style="color:#273658;font-weight:bold;text-align:center;padding-top:-20px;font-size:36px"> INDICADORES DO FLUXO DE VENDAS DO BITRIX  </h1>
+<div class="right" style="color:#273658;font-size:18px;font-weight:bold;text-align:center;">`r data` <br> DATA DE REFERÊNCIA</div>
+<hr style="width:100%;text-align:center;margin-left:0;height:2px;color:#652B91;border-width: 1px;">
+<h2 style="color:#E4781C;text-align:center;font-weight:bold;font-size:34px"> `r header_name` </h2>
+<hr style="width:100%;text-align:center;margin-left:0;height:4px;color:#652B91;border-width: 1px;">
+
+
+
+
+<h1 style="color:#273658;text-align:center;font-weight:bold;font-size:32px">  `r total_prospec`  </h1> 
+<h3 style="color:#273658;text-align:center;font-weight:bold;font-size:32px">  Total  </h3>  
+<hr style="width:100%;text-align:center;margin-left:0;height:4px;color:#652B91;border-width: 2px;">
+
+
+
+<table>
+  <tr>
+    <td valign="top" style="width: 960px;font-size:`r font_size30`px;">
+    
+<h3 style='color:#273658;text-align:center;font-weight:bold;'>PROPORÇÃO DE LEADS POR FASE</h3>
+    ```{r,echo=FALSE}
+ resumo_fases           <- data.frame(Fase = c("NOVO","PROSPECTAR","NEGOCIAR","ANALISAR","PAGO","DESAFIO"), Qntd. = 0, "QntdP" = 0)
+  
+  aux1                   <- table(df1$`Fase do negocio`) %>% as.data.frame %>%
+    mutate(Var1 = as.character(Var1)) %>%
+    mutate(Var1 = if_else(Var1 == "PAGO AO CLIENTE", "PAGO",Var1))
+  
+  aux2                   <- prop.table(table(df1$`Fase do negocio`)) %>%
+    as.data.frame %>%
+    mutate(Var1 = as.character(Var1)) %>%
+    mutate(Var1 = if_else(Var1 == "PAGO AO CLIENTE", "PAGO",Var1)) %>%
+    mutate(Freq = paste0(round(Freq * 100,2),"%"))
+  
+  
+  for(fase in aux1$Var1){
+    #print(fase)
+    resumo_fases[resumo_fases$Fase == fase,"Qntd."] <- aux1[aux1$Var1 == fase,"Freq"]
+    resumo_fases[resumo_fases$Fase == fase,"QntdP"] <- aux2[aux2$Var1 == fase,"Freq"]
+    
+  }
+  
+  colnames(resumo_fases) <- c("Fase","Qntd.","%")
+  resumo_fases <- resumo_fases  %>%
+    mutate(prop = Qntd. / sum(resumo_fases$Qntd.) *100) %>%
+    mutate(ypos = cumsum(prop)- 0.5*prop ) %>%
+    dplyr::select("Fase","Qntd.","%")
+   
+
+    resumo_fases %>% kable_data(cap = "",foot = NULL)
+
+```
+<hr style="width:100%;text-align:center;margin-left:0;height:2px;color:#652B91;border-width: 1px;">
+<h3 style='color:#273658;text-align:center;font-weight:bold;'>CADASTRO DE LEADS NA DATA DE REFERÊNCIA</h3>
+```{r,echo=FALSE,fig.align='center',warning=FALSE,error=FALSE,message=FALSE}
+
+  if(params$visao == "Lojas"){
+      dados <- df1 %>% 
+          filter(`Origem do Cliente` == "Não identificada") %>%
+          filter(`Lead Fonte` != "Não identificada" | `Contato Fonte` != "Não identificada") %>%
+          filter(`Criado em` == max(`Criado em`))
+        
+       Total <- sum
+        table_cadastro <- addmargins( table(dados$Nomes.e.sobrenomes),quiet = TRUE,FUN = Total) %>% as.data.frame
+        colnames(table_cadastro) <- c("Usuário","Qtnd.")
+        table_cadastro %>% kable_data(cap = "",foot = NULL)
+        
+    
+  }else{
+    df1$Lojas <- df1$Lojas %>% str_remove(pattern = "Loja CFZ ")
+      dados <- df1 %>% 
+          filter(`Origem do Cliente` == "Não identificada") %>%
+          filter(`Lead Fonte` != "Não identificada" | `Contato Fonte` != "Não identificada") %>%
+          filter(`Criado em` == max(`Criado em`))
+        
+        Total <- sum
+        table_cadastro <- addmargins( table(dados$Lojas),quiet = TRUE,FUN = Total) %>% as.data.frame
+        colnames(table_cadastro) <- c("Usuário","Qtnd.")
+        table_cadastro  %>% kable_data(cap = "",foot = NULL)
+    
+    
+  }
+  
+
+```
+
+    </td>
+
+<td valign="top" style="width: 960px;font-size:`r font_size30`px;">
+
+<h3 style='color:#273658;text-align:center;font-weight:bold;'>PROPORÇÃO E QUANTIDADE DE LEADS PAGOS</h3> 
+```{r,echo=FALSE,warning=FALSE,error=FALSE,message=FALSE}
+
+
+if(params$visao == "Lojas"){
+    
+     dados <- df1 %>% 
+      dplyr::group_by(`Nomes.e.sobrenomes`,`Fase do negocio`) %>% 
+      filter(`Fase do negocio` != "NOVO")  %>% 
+      summarise("Qntd" = n()) %>%
+      dplyr::group_by(`Nomes.e.sobrenomes`) %>% 
+      mutate(total = sum(Qntd)) %>%
+      filter(`Fase do negocio` == "PAGO AO CLIENTE")  %>% 
+      mutate(prop = (Qntd/total)*100)
+    colnames(dados) <- c("Usuário","Fase","Qntd.","Total","Conversão")
+    dados  <- dados %>% dplyr::select(`Usuário`,Qntd.,Total,`Conversão`) %>% dplyr::arrange(desc(`Conversão`))
+   
+    dados  %>% kable_data(cap = "",foot = NULL)
+  
+}else{
+  df1$Lojas <- df1$Lojas %>% str_remove(pattern = "Loja CFZ ")
+     dados <- df1 %>% 
+      dplyr::group_by(Lojas,`Fase do negocio`) %>% 
+      filter(`Fase do negocio` != "NOVO")  %>% 
+      summarise("Qntd" = n()) %>%
+      dplyr::group_by(Lojas) %>% 
+      mutate(total = sum(Qntd)) %>%
+      filter(`Fase do negocio` == "PAGO AO CLIENTE")  %>% 
+      mutate(prop = (Qntd/total)*100)
+    colnames(dados) <- c("Lojas","Fase","Qntd.","Total","Conversão")
+    dados  <- dados %>% dplyr::select(Lojas,Qntd.,Total,`Conversão`) %>% dplyr::arrange(desc(`Conversão`))
+   
+    dados  %>% kable_data(cap = "",foot = NULL)
+  
+}
+ 
+```
+</td>
+</tr>
+  <tr>
+     
+<td valign="top"  colspan="3" style="width: 1920;font-size:`r font_size30`px;">
+<h3 style='color:#273658;text-align:center;font-weight:bold;'>CONTATO EM CADA FASE</h3>    
+```{r,echo=FALSE,message=FALSE,warning=FALSE}
+
+  if(params$visao == "Lojas"){
+    Total <- sum  
+   table_fases_group <- addmargins( table(df1$Nomes.e.sobrenomes,df1$`Fase do negocio`),quiet = TRUE,FUN = Total) %>% as.data.frame
+    
+   table_fases_group <- reshape2::dcast(table_fases_group, Var1 ~ Var2, value.var="Freq") 
+   colnames(table_fases_group)[1] <- c("Usuário")
+   table_fases_group %>% kable_data(cap = "",foot = NULL)
+        
+    
+  }else{
+    df1$Lojas <- df1$Lojas %>% str_remove(pattern = "Loja CFZ ")
+     Total <- sum  
+   table_fases_group <- addmargins( table(df1$Lojas,df1$`Fase do negocio`),quiet = TRUE,FUN = Total) %>% as.data.frame
+    
+   table_fases_group <- reshape2::dcast(table_fases_group, Var1 ~ Var2, value.var="Freq") 
+   colnames(table_fases_group)[1] <- c("Lojas")
+   table_fases_group %>% kable_data(cap = "",foot = NULL)
+    
+    
+  }
+  
+
+```
+
+
+```{r,echo=FALSE,fig.align='center', fig.height=5,fig.width=12,warning=FALSE,error=FALSE,message=FALSE}
+# if(params$visao == "Lojas"){
+#      level_order           <- c("NOVO","PROSPECTAR","NEGOCIAR","ANALISAR","PAGO AO CLIENTE","DESAFIO")
+#     df1$`Fase do negocio` <- factor(df1$`Fase do negocio` ,levels = level_order)
+#     
+#     dados <- df1 %>% 
+#       dplyr::group_by(`Nomes.e.sobrenomes`,`Fase do negocio`) %>% 
+#       filter(`Fase do negocio` != "NOVO")  %>% 
+#       summarise("Qntd" = n()) %>%
+#       dplyr::group_by(`Nomes.e.sobrenomes`) %>% 
+#       mutate(total = sum(Qntd)) %>%
+#       filter(`Fase do negocio` == "PAGO AO CLIENTE")  %>% 
+#       mutate(prop = Qntd/total)
+#       
+#      totals <- dados %>%
+#       group_by(`Nomes.e.sobrenomes`) %>%
+#       summarize(total = sum(Qntd))
+#     
+#     pallete_col <- c("#E41A1C","#33A02C","#E4781C","#652B91","#E7298A","#E6AB02")
+#    
+#     plot <- ggplot2::ggplot(dados, aes(x = reorder(`Nomes.e.sobrenomes`,-`Qntd`), label=Qntd)) +
+#       scale_fill_manual(values = pallete_col)+
+#       geom_bar(aes( y = Qntd,fill = `Fase do negocio`),width = 0.7, stat = "identity",fill="black",alpha=0.2) +
+#       geom_richtext(data = dados,aes(`Nomes.e.sobrenomes`, prop*100,label=paste0("<b>",round(prop*100,2),"</b>"), fill = NULL),color=c("#E4781C"),fontface="bold",nudge_x = 0.0,nudge_y = 5) +
+#       geom_line(aes(y = prop*100,group = 1), color = "#273658",size = 1)+
+#       geom_point(aes(y = prop*100),color="black",size = 2.2)+
+#      scale_y_continuous( name = "Qntd", sec.axis = sec_axis(~./100,breaks = seq(0,100,0.05),name="%"))+
+#       axis.theme(title_size = 14,textsize = font_size2,pos_leg = "top",x.angle = 45,vjust = 1,hjust = 1) +
+#       labs(x = "",y = "", title ="")+
+#       theme(#axis.ticks.x = element_blank(),
+#             #axis.text.x = element_blank(),
+#             #axis.ticks.y = element_blank(),
+#             #axis.text.y = element_blank(),
+#             panel.grid.major = element_blank(),
+#             panel.grid.minor = element_blank(),
+#             panel.border = element_blank(),
+#             panel.background = element_rect(fill = "transparent",colour = NA),
+#             plot.background = element_rect(fill = "transparent", color = NA))
+#     plot
+#   
+#   
+# }else{
+#   df1$Lojas <- df1$Lojas %>% str_remove(pattern = "Loja CFZ ")
+#      level_order           <- c("NOVO","PROSPECTAR","NEGOCIAR","ANALISAR","PAGO AO CLIENTE","DESAFIO")
+#     df1$`Fase do negocio` <- factor(df1$`Fase do negocio` ,levels = level_order)
+#     df1$Lojas <- df1$Lojas %>% str_remove(pattern = "Loja CFZ ")
+#     dados <- df1 %>% 
+#       dplyr::group_by(Lojas,`Fase do negocio`) %>% 
+#       filter(`Fase do negocio` != "NOVO")  %>% 
+#       summarise("Qntd" = n()) %>%
+#       dplyr::group_by(Lojas) %>% 
+#       mutate(total = sum(Qntd)) %>%
+#       filter(`Fase do negocio` == "PAGO AO CLIENTE")  %>% 
+#       mutate(prop = Qntd/total)
+#       
+#      totals <- dados %>%
+#       group_by(Lojas) %>%
+#       summarize(total = sum(Qntd))
+#     
+#     pallete_col <- c("#E41A1C","#33A02C","#E4781C","#652B91","#E7298A","#E6AB02")
+#    
+#     plot <- ggplot2::ggplot(dados, aes(x = reorder(Lojas,-`Qntd`), label=Qntd)) +
+#       scale_fill_manual(values = pallete_col)+
+#       geom_bar(aes( y = Qntd,fill = `Fase do negocio`),width = 0.7, stat = "identity",fill="black",alpha=0.2) +
+#       geom_richtext(data = dados,aes(Lojas, prop*100,label=paste0("<b>",round(prop*100,2),"</b>"), fill = NULL),color=c("#E4781C"),fontface="bold",nudge_x = 0.0,nudge_y = 5) +
+#       geom_line(aes(y = prop*100,group = 1), color = "#273658",size = 1)+
+#       geom_point(aes(y = prop*100),color="black",size = 2.2)+
+#      scale_y_continuous( name = "Qntd", sec.axis = sec_axis(~./100,breaks = seq(0,100,0.05),name="%"))+
+#       axis.theme(title_size = 14,textsize = font_size2,pos_leg = "top",x.angle = 45,vjust = 1,hjust = 1) +
+#       labs(x = "",y = "", title ="")+
+#       theme(#axis.ticks.x = element_blank(),
+#             #axis.text.x = element_blank(),
+#             #axis.ticks.y = element_blank(),
+#             #axis.text.y = element_blank(),
+#             panel.grid.major = element_blank(),
+#             panel.grid.minor = element_blank(),
+#             panel.border = element_blank(),
+#             panel.background = element_rect(fill = "transparent",colour = NA),
+#             plot.background = element_rect(fill = "transparent", color = NA))
+#     plot
+#   
+# }
+#  
+    
+```
+      </td>
+  </tr>
+</table>
+
+
+
+
+<hr style="width:100%;text-align:center;margin-left:0;height:4px;color:#652B91;border-width: 2px;">
+
+</div>
+
+
+

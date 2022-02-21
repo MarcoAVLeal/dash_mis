@@ -1,0 +1,299 @@
+---
+output:
+  html_document:
+    css: extra.css
+    self_contained: yes
+    mode: selfcontained
+indent: true
+params:
+  filter: NA
+  versao2: NA 
+---
+
+
+<style type="text/css">
+.main-container {
+  max-width: 1300px;
+  margin-left: auto;
+  margin-right: auto;
+}
+</style>
+
+
+```{r setup, echo  = FALSE, include = FALSE}
+params$filter
+#rm(list=ls())
+library(knitr)
+library(glue)
+#path_source <- "../input/main.R"
+#source(path_source, encoding = "UTF-8")
+Sys.setlocale("LC_TIME", "pt_BR.UTF-8")
+
+library(dplyr)
+library(readxl)
+library(stringr)
+library(ggplot2)
+library(plotly)
+library(ggtext)
+library(flexdashboard)
+source(file = "D:\\OneDrive - Crefaz Financiamentos e Investimentos\\Projeto_Leads_Bitrix\\Dash_Leads_Britrix\\funcoes.R",encoding = "UTF-8")
+
+#df            <- read.csv(file = "D:\\OneDrive - Crefaz Financiamentos e Investimentos\\Projeto_Leads_Bitrix\\Dash_Leads_Britrix\\dados\\report-bitrix.csv",sep = ";")
+df            <- read.csv(file = "Z:\\Usuários\\Nathalia\\IndicadoresVendasBitrix\\report-bitrix.csv",sep = ";")
+colnames(df)  <- c("ID","Nome", "Fase","Fechado","Data de inicio","Pessoa reponsavel ID","Pessoa responsável","Criado em","Modificado em",
+                        "Modificado por ID","Modificado por","CPF","Produto Crefaz","Valor do emprestimo","Desafio","Fase automacao","Fase anterior ao desafio","Lead Fonte",
+                        "Origem do Cliente","Contato Primeiro nome","Contato sobrenome","Contato Fonte","Data de Nascimento")
+users     <- read.csv(file = "D:\\OneDrive - Crefaz Financiamentos e Investimentos\\Projeto_Leads_Bitrix\\Dash_Leads_Britrix\\dados\\users.csv",sep = ";")   
+regionais <- read_xlsx(path = "D:\\OneDrive - Crefaz Financiamentos e Investimentos\\Projeto_Leads_Bitrix\\Dash_Leads_Britrix\\dados\\regionais.xlsx",sheet = "Planilha1")
+
+df <- left_join(x = df,y = users,by=c("Pessoa reponsavel ID"="ID"),keep=TRUE,suffix = c("_LEADS","_users"))
+df <- left_join(x = df,y = regionais,by=c("Departamento"="Departamento"),keep=TRUE,suffix = c("_LEADS","_reg"))
+
+#df <- df %>% mutate("Fase anterior ao desafio" = if_else( `Fase` == "ANALISAR","ANALISAR",`Fase anterior ao desafio`))
+
+df$Fase %>% unique
+df$`Fase anterior ao desafio` %>% unique
+colnames(df)[colnames(df) == "Departamento_reg"] <- "Lojas"
+df1 <- df
+
+ if(params$filter == "NA" || params$filter == "Sem Filtro"|| params$filter =="RESUMO GERAL"){
+      
+      header_name <- "RESUMO GERAL"
+      df1 <- df
+      total_prospec          <- nrow(df1)
+    
+      
+ }else if(str_detect(string = params$filter,pattern = "Loja CFZ")){
+    
+     
+       df1                    <- df %>% filter(Lojas == as.character(params$filter))
+        header_name <- params$filter
+     }else{
+           header_name <- paste0("REGIONAL ",params$filter)
+           df1                    <- df %>% filter(REGIONAL == as.character(params$filter))
+     }
+    
+    total_prospec          <- nrow(df1)
+   
+   
+    
+
+data <- lubridate::today() %>% format("%d/%m/%Y")
+font_size <- 32
+```
+
+
+<center>
+<div style="width: 1300px;"> 
+
+
+<div class="left"><img src='logo.png' alt='logo'/></div>
+<h1  style="color:#273658;font-weight:bold;text-align:center;padding-top:-20px;font-size:36px"> INDICADORES DO FLUXO DE VENDAS DO BITRIX  </h1>
+<div class="right" style="color:#273658;font-size:18px;font-weight:bold;text-align:center;">`r data` <br> DATA DE REFERÊNCIA</div>
+
+
+
+
+
+<hr style="width:100%;text-align:center;margin-left:0;height:2px;color:#652B91;border-width: 1px;">
+<h2 style="color:#E4781C;text-align:center;font-weight:bold;font-size:34px"> `r header_name` </h2>
+<hr style="width:100%;text-align:center;margin-left:0;height:4px;color:#652B91;border-width: 1px;">
+<h1 style="color:#273658;text-align:center;font-weight:bold;font-size:32px">  `r total_prospec`  </h1> 
+<h3 style="color:#273658;text-align:center;font-weight:bold;font-size:32px">  Total  </h3>  
+<hr style="width:100%;text-align:center;margin-left:0;height:4px;color:#652B91;border-width: 2px;">
+</div>
+</center>
+
+<center>
+<div style="width: 1300px;font-size:`r font_size`px;"> 
+
+```{r,echo=FALSE}
+resumo_fases           <- data.frame(Fase = c("PROSPECTAR","NEGOCIAR","ANALISAR","PAGO","DESAFIO"), Qntd. = 0, "QntdP" = 0)
+    
+    
+    aux1                   <- table(df1$Fase) %>% as.data.frame %>% 
+      mutate(Var1 = as.character(Var1)) %>% 
+      mutate(Var1 = if_else(Var1 == "PAGO AO CLIENTE", "PAGO",Var1))
+    
+    aux2                   <- prop.table(table(df1$Fase)) %>% 
+      as.data.frame %>% 
+      mutate(Var1 = as.character(Var1)) %>% 
+      mutate(Var1 = if_else(Var1 == "PAGO AO CLIENTE", "PAGO",Var1)) %>%
+      mutate(Freq = paste0(round(Freq * 100,2),"%"))
+    
+  
+    for(fase in aux1$Var1){
+      #print(fase)
+      resumo_fases[resumo_fases$Fase == fase,"Qntd."] <- aux1[aux1$Var1 == fase,"Freq"]
+      resumo_fases[resumo_fases$Fase == fase,"QntdP"] <- aux2[aux2$Var1 == fase,"Freq"]
+      
+    }
+    
+    colnames(resumo_fases) <- c("Fase","Qntd.","%Qntd.")  
+   
+
+    resumo_fases %>% kable_data(cap = "",foot = NULL)
+
+    
+
+    
+```
+</div>
+</center>
+
+
+<center>
+<div style="width: 1300px;"> 
+```{r, echo=FALSE,fig.height=5}
+
+
+if(params$filter == "NA" || params$filter == "Sem Filtro"|| params$filter =="RESUMO GERAL"){
+      
+     
+    
+      
+ }else  if(str_detect(string = params$filter,pattern = "Loja CFZ")){
+    
+    
+       # level_order <- c("PAGO AO CLIENTE","DESAFIO") 
+    n_user <- length(unique(df$Nomes.e.sobrenomes))
+    nf_user <- length(unique(df1$Nomes.e.sobrenomes))
+    base    <- 200
+    barw    <- 20
+    #concluidos             <- df1 %>% filter(Fase == "PAGO AO CLIENTE" | Fase == "DESAFIO")
+    #concluidos$Fase        <- factor(concluidos$Fase ,levels = level_order)
+    #df1 <-  df1 %>% filter(str_detect(string = Lojas,pattern = "Loja CFZ"))
+    plot <- ggplot2::ggplot(df1, aes(x = forcats::fct_rev(forcats::fct_infreq(`Nomes.e.sobrenomes`)),fill = Fase)) +
+      scale_fill_manual(values = c("#273658","#E4781C","#4CC48F","#652B91"))+
+      geom_bar( position = "stack",stat = "count", width=0.9) +
+      coord_flip() +
+      axis.theme()+
+      axis.theme(title_size = 14,lengend_title_size = 12,lengend_text_size = 12,textsize = 20,pos_leg = "right") +
+      labs(x = "",y = "", title ="")+
+      #geom_text(stat='count', aes(label=paste0("<b>",c("DESAFIO\n","PAGO\n"),rev(..count..),"</b>")),color="white",hjust=-10) +
+      theme(
+        # axis.ticks.x = element_blank(),
+        # axis.text.x = element_blank(),
+        # axis.ticks.y = element_blank(),
+        # axis.text.y = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        panel.background = element_rect(fill = "transparent"),
+        plot.background = element_rect(fill = "transparent", color = NA))
+    plot
+     }else{
+           # level_order <- c("PAGO AO CLIENTE","DESAFIO") 
+    n_lojas <- length(unique(df$Lojas))
+    nf_lojas <- length(unique(df1$Lojas))
+    base    <- 200
+    barw    <- 20
+    #concluidos             <- df1 %>% filter(Fase == "PAGO AO CLIENTE" | Fase == "DESAFIO")
+    #concluidos$Fase        <- factor(concluidos$Fase ,levels = level_order)
+    df1$Lojas <-  df1$Lojas %>% str_remove(pattern = "Loja CFZ ")
+    plot <- ggplot2::ggplot(df1, aes(x = forcats::fct_rev(forcats::fct_infreq(Lojas)),fill = Fase)) +
+      scale_fill_manual(values = c("#273658","#E4781C","#4CC48F","#652B91"))+
+      geom_bar( position = "stack",stat = "count", width=0.9) +
+      coord_flip() +
+      axis.theme()+
+      axis.theme(title_size = 14,lengend_title_size = 12,lengend_text_size = 12,textsize = 20,pos_leg = "right") +
+      labs(x = "",y = "", title ="")+
+       # geom_richtext(aes(y = Qntd,label=paste0("<b style='font-size:30px'>",c("PAGO\n","DESAFIO\n"),..count..,"</b>")),color=c("white"),fill=c("#273658","#E4781C"),label.margin = unit(c(0.5, 0.5, 0.5, 0.5), "lines"),label.padding = unit(c(0.5, 0.5, 0.5, 0.5), "lines"),nudge_y = rev(..count..)*c(-2.5,+1.0),nudge_x = c(0.4,0.4)) +
+      theme(
+            # axis.ticks.x = element_blank(),
+            # axis.text.x = element_blank(),
+            # axis.ticks.y = element_blank(),
+            # axis.text.y = element_blank(),
+            panel.grid.major = element_blank(),
+            panel.grid.minor = element_blank(),
+            panel.border = element_blank(),
+            panel.background = element_rect(fill = "transparent"),
+            plot.background = element_rect(fill = "transparent", color = NA))
+plot
+     }
+    
+ 
+   
+   
+    
+
+  
+  
+
+  
+  
+
+
+
+```
+
+
+
+</div>
+</center>
+
+
+
+
+```{r, echo=FALSE}
+ conversao           <- data.frame(Fase = c("PROSPECTAR","NEGOCIAR","ANALISAR","PAGO"), Qntd. = 0)
+  level_order <- c("PROSPECTAR","NEGOCIAR","ANALISAR","PAGO") %>% rev
+  
+  prospectar          <- df1 %>% 
+    filter(Fase == "DESAFIO" | Fase == "PAGO AO CLIENTE")  %>% nrow
+  
+  negociar            <- df1 %>% 
+    filter( (`Fase anterior ao desafio` == "ANALISAR" | `Fase anterior ao desafio` == "NEGOCIAR") | `Fase` == "PAGO AO CLIENTE") %>% nrow
+  
+  analisar            <- df1 %>% filter(`Fase anterior ao desafio` == "ANALISAR" | `Fase` == "PAGO AO CLIENTE") %>% nrow
+  
+  pagos               <- df1 %>% filter(Fase == "PAGO AO CLIENTE") %>% nrow
+  
+  conversao$Qntd.     <- c(prospectar,negociar,analisar,pagos) 
+  
+  cond = (c(prospectar,negociar,analisar,pagos) > 0) %>% sum
+
+  if(cond > 1){
+    header <- '<h2 style="color:#273658;text-align:center;font-weight:bold;font-size:32px">  CONVERSÃO DOS CONTATOS CONCLUÍDOS  </h2>'
+  }else{
+    
+    header <- ""
+    
+  }
+  
+```  
+
+<hr style="width:100%;text-align:center;margin-left:0;height:2px;color:#652B91;border-width: 1px;">
+<center>
+<div style="width: 1300px;"> 
+`r header`
+```{r,echo=FALSE,fig.align='center'}
+
+
+
+ 
+  if(cond > 1){
+#max(`Qntd.`)-(max(`Qntd.`)/3)
+    plot <- ggplot(conversao, aes(Fase),level = level_order) +
+      geom_bar(aes(y =  `Qntd.`), stat = "identity",fill = "#273658" ) + 
+      geom_bar(aes(y = -`Qntd.`), stat = "identity",fill = "#273658") +
+      geom_richtext(aes(y=0, label= paste("<b style='font-size:30px'>",round(`Qntd.`)," || ",round((`Qntd.`/max(`Qntd.`))*100,2),'%',"</b>")),
+                color='#E4781C') +
+      labs(x = NULL,y = NULL, title =NULL)+
+      scale_x_discrete(limits = level_order)+
+      axis.theme(title_size = 12,textsize = 30) +
+      theme(axis.ticks.x = element_blank(),
+            axis.text.x = element_blank(),
+            panel.grid.major = element_blank(),
+            panel.grid.minor = element_blank(),
+            panel.border = element_blank(),
+            panel.background = element_rect(fill = "transparent"),
+            plot.background = element_rect(fill = "transparent", color = NA))+
+      coord_flip()
+    plot
+   
+}
+
+```
+
+`r   if(cond > 1){raw_html('</div></center><hr style="width:100%;text-align:center;margin-left:0;height:2px;color:#652B91;border-width: 1px;">')}else{}`

@@ -1,0 +1,608 @@
+---
+output:
+  html_document:
+    css: extra.css
+    self_contained: yes
+    mode: selfcontained
+indent: true
+params:
+  filter: NA
+  visao: NA
+  dataframe: NA
+---
+
+
+<style type="text/css">
+.main-container {
+  max-width: 2220px;
+  margin-left: auto;
+  margin-right: auto;
+}
+</style>
+
+
+```{r setup, echo  = FALSE, include = FALSE}
+params$visao
+params$filter
+params$dataframe
+#rm(list=ls())
+library(knitr)
+library(glue)
+#path_source <- "../input/main.R"
+#source(path_source, encoding = "UTF-8")
+Sys.setlocale("LC_TIME", "pt_BR.UTF-8")
+
+library(dplyr)
+library(readxl)
+library(stringr)
+library(ggplot2)
+library(plotly)
+library(ggtext)
+library(flexdashboard)
+library(RMariaDB)
+
+if(str_detect(string = getwd(),pattern = "marco")){
+ path_dados1 = "C:\\Users\\marco\\OneDrive - Crefaz Financiamentos e Investimentos\\Projeto_Leads_Bitrix\\Dash_Leads_Britrix_V3\\dados\\"  
+path_dados = "C:\\Users\\marco\\OneDrive - Crefaz Financiamentos e Investimentos\\Projeto_Leads_Bitrix\\Dash_Leads_Britrix_V3\\dados\\"  
+path_source = "C:\\Users\\marco\\OneDrive - Crefaz Financiamentos e Investimentos\\Projeto_Leads_Bitrix\\Dash_Leads_Britrix_V3\\"
+  
+}else{
+  path_dados1 = "D:\\OneDrive - Crefaz Financiamentos e Investimentos\\Projeto_Leads_Bitrix\\Dash_Leads_Britrix_V3\\dados\\"
+  path_dados = "Z:\\Usuários\\Nathalia\\IndicadoresVendasBitrix\\"
+  path_source = "D:\\OneDrive - Crefaz Financiamentos e Investimentos\\Projeto_Leads_Bitrix\\Dash_Leads_Britrix_V3\\"
+}
+source(file = paste0(path_source,"funcoes.R"),encoding = "UTF-8")
+
+conn = dbConnect(MySQL(), user='crefaz', password='B1Tr1X@Cr3faz#9716', dbname='bitrix', host='192.168.1.48')
+
+df <- dbGetQuery(conn = conn,statement = "select * from DEAL")
+
+df <- df %>% dplyr::filter( pipeline =="LOJA CFZ" )
+
+getwd()
+
+
+dbDisconnect(conn)
+
+
+
+names_df          <- c("ID","Tipo","Pipeline", "Fase do negocio","Negocio Recorrente","Negocio Repetido","Contato Fonte","Modificado por ID","Criado por","Pessoa reponsavel ID",
+                       "Data prevista de fechamento","Data de inicio","Valor do emprestimo","Origem do Cliente","Data exportacao","Contato","Grupo de fase" ,
+                      "Base","Produto Crefaz", "Fase automacao",  "Data negociar","Data analisar", "Data prospectar","Modificado em","Desafio","Desafio retencao"
+                      
+                      )
+
+
+calendario         <- read_xlsx(path = "D:\\OneDrive - Crefaz Financiamentos e Investimentos\\Python_projetos\\relatorio_esteira\\DCalendario.xlsx",sheet = "Calendario")
+calendario         = calendario[c("Dia","Class Não Útil")]
+colnames(calendario) <- c("Data","Dia_util")
+calendario$Class_Dia <- is.na(calendario$Dia_util)
+calendario$Data      <- as.Date(calendario$Data,format = "%d/%m/%Y")
+
+
+
+colnames(df)      <- names_df
+write.csv(x = df,file = paste0(path_dados1,"report-bitrix.csv"),row.names = FALSE)
+
+users             <- read.csv(file = paste0(path_dados,"users.xls.csv"),sep = ";")   
+users$ID          <- as.character(users$ID)
+
+regionais         <- read_xlsx(path = paste0(path_dados,"regionais.xlsx"),sheet = "Planilha1")
+
+df                <- left_join(x = df,y = users,by=c("Pessoa reponsavel ID"="ID"),keep=TRUE,suffix = c("_LEADS","_users"))
+df                <- left_join(x = df,y = regionais,by=c("Departamento"="Departamento"),keep=TRUE,suffix = c("_LEADS","_reg"))
+
+
+colnames(df)[colnames(df) == "Departamento_reg"] <- "Lojas"
+
+
+df                <- df %>% filter(str_detect(string = Lojas,pattern = "Loja CFZ"))
+
+
+
+# df                <- df %>% filter(str_detect(REGIONAL,pattern = "GILBERTO FELICIO") | str_detect(REGIONAL,pattern = "MAYSA CARVALHO") | str_detect(REGIONAL,pattern = "SC"))
+
+
+df                <- df %>% mutate("Fase do negocio" = ifelse(`Fase do negocio` == "PAGO AO CLIENTE","PAGO",`Fase do negocio`))
+df                <- df %>% mutate("Fase do negocio" = ifelse(`Fase do negocio` == "EM ANÃ\u0081LISE","EM ANÁLISE",`Fase do negocio`))
+# df                <- df %>% mutate("Origem do Cliente"  = ifelse(`Origem do Cliente` == "","Não identificada",`Origem do Cliente`),
+#                                    "Fonte"              = ifelse(`Contato Fonte` =="",`Lead Fonte`,`Contato Fonte`),
+#                                    "Origem do Cliente1" = ifelse(`Origem do Cliente` == "Fonte" & `Contato Fonte` == "" & `Lead Fonte` == "","Fonte (erro de tabulação)",ifelse(Fonte != "","Fonte",`Origem do Cliente`)),
+#                                    "Data fechado"       = ifelse(Fechado == "Sim",`Data prevista de fechamento`, NA),
+#                                    "Data criado"        = ifelse(`Origem do Cliente1` == "Fonte"| `Origem do Cliente1` =="Não identificada",NA,`Criado em`))
+
+df                <- df %>% mutate("Origem do Cliente"  = ifelse(`Origem do Cliente` == "" | is.na(`Origem do Cliente`) | `Origem do Cliente` == "NA"  ,"Não identificada",`Origem do Cliente`),
+                                   # "Fonte"              = ifelse(`Contato Fonte` =="",`Lead Fonte`,`Contato Fonte`),
+                                   "Origem do Cliente1" = ifelse(!is.na(`Contato Fonte`) ,"Fonte", `Origem do Cliente`),
+                                   "Data fechado"       = ifelse(`Fase do negocio` == "PAGO" | `Fase do negocio` == "DESAFIO",`Data prevista de fechamento`, NA),
+                                   "Data criado"        = ifelse(`Origem do Cliente1` == "Fonte" | `Origem do Cliente1` =="Não identificada",NA,`Data de inicio`))
+
+
+
+#df$`Criado em`         <- as.Date(df$`Criado em`,format = "%d/%m/%Y")
+df$`Data fechado`       <- lubridate::as_date(df$`Data fechado` , format = "%Y-%m-%d %H:%M:%S")
+df$`Data analisar`      <- lubridate::as_date(df$`Data analisar`, format = "%Y-%m-%d %H:%M:%S")
+df$`Data criado`        <- lubridate::as_date(df$`Data criado`, format = "%Y-%m-%d %H:%M:%S")
+df$`Data negociar`      <- lubridate::as_date(df$`Data negociar`, format = "%Y-%m-%d %H:%M:%S")
+df$`Data prospectar`    <- lubridate::as_date(df$`Data prospectar`, format = "%Y-%m-%d %H:%M:%S")
+df$`Data de inicio`     <- lubridate::as_date(df$`Data de inicio`, format = "%Y-%m-%d %H:%M:%S")
+df$`Modificado em`      <- lubridate::as_date(df$`Modificado em` , format = "%Y-%m-%d %H:%M:%S")
+
+
+
+#df1 <- df
+
+
+
+
+
+ if(params$filter == "NA" || params$filter == "Sem Filtro"|| params$filter =="RESUMO GERAL"){
+      
+      header_name <- "RESUMO GERAL"
+      df1         <- df
+      total_prospec          <- nrow(df1)
+      leads_tratados         <- df1 %>% filter(`Fase do negocio` != "NOVO") %>% nrow
+      pagos                  <- df1 %>% filter(`Fase do negocio` == "PAGO") %>% nrow
+      taxa_tratados          <- paste0(round((pagos/leads_tratados)*100,2)," %")
+      
+ }else{
+    
+     if(str_detect(string = params$filter,pattern = "Loja CFZ")){
+       df1                    <- df %>% filter(Lojas == as.character(params$filter))
+        header_name <- params$filter
+        print(header_name)
+     }else{
+           header_name <- paste0("REGIONAL ",params$filter)
+           df1                    <- df %>% filter(REGIONAL == as.character(params$filter))
+     }
+    
+    total_prospec          <- nrow(df1)
+      leads_tratados         <- df1 %>% filter(`Fase do negocio` != "NOVO") %>% nrow
+      pagos                  <- df1 %>% filter(`Fase do negocio` == "PAGO") %>% nrow
+      taxa_tratados          <- paste0(round((pagos/leads_tratados)*100,2)," %")
+   
+   
+    }
+
+data <- lubridate::today() %>% format("%d/%m/%Y")
+font_size32  <- 32
+font_size20 <- 20
+font_size24 <- 24
+font_size30 <- 30
+```
+
+
+<center>
+<div class='parent', style="width: 2220px;"> 
+
+
+<table>
+  <tr style="width:2220px;">
+  <td valign="top" style="width: 740px;">
+  
+<div ><img style='padding-left:25px;padding-top:25px;' src='logo.png' width='350' alt='logo'/></div>
+
+</td>
+ <td valign="top" style="width: 740px;">
+ <h1  style="color:#273658;font-weight:bold;text-align:center;padding-top:0px;font-size:50px"> INDICADORES BITRIX: RELATÓRIO  </h1>
+
+ </td>
+ <td valign="top"  style="width: 740px;">
+ <div style="color:#273658;font-size:28px;font-weight:bold;text-align:center;padding-right:25px;padding-top:25px;">`r data` <br> DATA </div>
+
+
+ </td>
+</tr>
+
+ <tr>
+  <td valign="top" colspan="3">
+ <hr style="width:100%;text-align:center;margin-left:0;height:2px;color:#652B91;border-width: 1px;"> 
+  <h2 style="color:#E4781C;text-align:center;font-weight:bold;font-size:40px"> `r header_name` </h2>
+<hr style="width:100%;text-align:center;margin-left:0;height:4px;color:#652B91;border-width: 1px;">
+
+</td>
+
+</tr>
+
+<tr>
+<td  valign="top" style="width: 820px; ">
+    
+
+<h1 style="color:#273658;text-align:center;font-weight:bold;font-size:50px">  `r total_prospec`  </h1> 
+<h3 style="color:#273658;text-align:center;font-weight:bold;font-size:32px">  Total  </h3>  
+<hr style="width:100%;text-align:center;margin-left:0;height:4px;color:#652B91;border-width: 2px;">
+    
+<!-- <h3 style='color:#273658;text-align:center;font-weight:bold;'>PROPORÇÃO DE LEADS POR FASE</h3> -->
+
+    ```{r,echo=FALSE}
+ 
+    resumo_fases           <- data.frame(Fase = c("NOVO","PROSPECTANDO","NEGOCIANDO","EM ANÁLISE","PAGO","DESAFIO"), Qntd. = 0, "QntdP" = 0)
+  
+  aux1                   <- table(df1$`Fase do negocio`) %>% as.data.frame %>%
+    mutate(Var1 = as.character(Var1)) %>%
+    mutate(Var1 = if_else(Var1 == "PAGO", "PAGO",Var1))
+  
+  aux2                   <- prop.table(table(df1$`Fase do negocio`)) %>%
+    as.data.frame %>%
+    mutate(Var1 = as.character(Var1)) %>%
+    mutate(Var1 = if_else(Var1 == "PAGO", "PAGO",Var1)) %>%
+    mutate(Freq = paste0(round(Freq * 100,2),"%"))
+  
+  
+  for(fase in aux1$Var1){
+    #print(fase)
+    resumo_fases[resumo_fases$Fase == fase,"Qntd."] <- aux1[aux1$Var1 == fase,"Freq"]
+    resumo_fases[resumo_fases$Fase == fase,"QntdP"] <- aux2[aux2$Var1 == fase,"Freq"]
+    
+  }
+  
+  colnames(resumo_fases) <- c("Fase","Qntd.","%")
+  resumo_fases <- resumo_fases  %>%
+    mutate(prop = Qntd. / sum(resumo_fases$Qntd.) *100) %>%
+    mutate(ypos = cumsum(prop)- 0.5*prop ) %>%
+    dplyr::select("Fase","Qntd.","%")
+   
+
+    resumo_fases %>% kable_data(cap = "",foot = NULL)
+
+```
+
+
+
+<hr style="width:100%;text-align:center;margin-left:0;height:4px;color:#652B91;border-width: 1px;">
+<h1 style="color:#273658;text-align:center;font-weight:bold;font-size:50px">  `r taxa_tratados`  </h1> 
+<h3 style="color:#273658;text-align:center;font-weight:bold;font-size:32px">  TAXA DE PAGOS/LEADS TRATADOS  </h3>  
+
+<!--<h3 style='color:#273658;text-align:center;font-weight:bold;'>CADASTRO DE LEADS NA DATA DE REFERÊNCIA</h3>-->
+
+</td>
+
+<td colspan="2" valign="top" style="width: 1400px; ">
+
+<h3 style='color:#273658;text-align:center;font-weight:bold;font-size:32px'>CONTATO EM CADA FASE</h3>    
+```{r,echo=FALSE,message=FALSE,warning=FALSE}
+if(TRUE){
+   if(params$visao == "Lojas"){
+    Total <- sum  
+   
+    table <- table(df1$Nomes.e.sobrenomes,df1$`Fase do negocio`)  %>% as.data.frame
+    table <- reshape2::dcast(table, Var1 ~ Var2, value.var="Freq") 
+ 
+    #table <- table %>% mutate("Taxa de Pagos" = paste0(round((PAGO/Total)*100,2)," %"))
+    colnames(table)[1] <- c("Usuário")
+   
+    table_fases_group <- matrix(data = 0,nrow = nrow(table),ncol = 7) %>% as.data.frame
+    colnames(table_fases_group) <- c("Usuário", "NOVO","PROSPECTANDO","NEGOCIANDO","EM ANÁLISE", "PAGO","DESAFIO")
+    for(name in colnames(table)){
+      
+      table_fases_group[name] <- table[name]
+      
+      
+    }
+   
+    table_fases_group <- table_fases_group %>% mutate("Total" =  PROSPECTANDO + NEGOCIANDO + `EM ANÁLISE` + PAGO + DESAFIO)
+    table_fases_group <- table_fases_group %>% mutate("Taxa de Pagos" = ifelse(is.nan(PAGO/Total),"0 %",paste0(round((PAGO/Total)*100,2)," %")))
+    table_fases_group %>% kable_data(cap = "",foot = NULL)
+        
+    
+  }else{
+   Total <- sum  
+    
+  
+    df1$Lojas <- str_replace(string = df1$Lojas,pattern = "Loja CFZ ",replacement = "")
+    table <- table(df1$Lojas,df1$`Fase do negocio`)  %>% as.data.frame
+    table <- reshape2::dcast(table, Var1 ~ Var2, value.var="Freq") 
+ 
+   
+    colnames(table)[1] <- c("Lojas")
+   
+    table_fases_group <- matrix(data = 0,nrow = nrow(table),ncol = 7) %>% as.data.frame
+    colnames(table_fases_group) <- c("Lojas", "NOVO","PROSPECTANDO","NEGOCIANDO","EM ANÁLISE", "PAGO","DESAFIO")
+    for(name in colnames(table)){
+      
+      table_fases_group[name] <- table[name]
+      
+      
+    }
+   
+    table_fases_group <- table_fases_group %>% mutate("Total" =  PROSPECTANDO + NEGOCIANDO + `EM ANÁLISE` + PAGO + DESAFIO)
+    table_fases_group <- table_fases_group %>% mutate("Taxa de Pagos" = ifelse(is.nan(PAGO/Total),"0 %",paste0(round((PAGO/Total)*100,2)," %")))
+    table_fases_group %>% kable_data(cap = "",foot = NULL)
+    
+  }
+  
+  
+}else{
+  
+  #   table_fases_group <- df1 %>% filter(`Fase do negocio` != "DESAFIO")
+  #   if(params$visao == "Lojas"){
+  #   Total <- sum  
+  # 
+  #  table_fases_group <- addmargins( table(table_fases_group$Nomes.e.sobrenomes,table_fases_group$`Fase do negocio`),quiet = TRUE,FUN = Total) %>% as.data.frame
+  #   
+  #  table_fases_group <- reshape2::dcast(table_fases_group, Var1 ~ Var2, value.var="Freq") 
+  #  table_fases_group <- table_fases_group["Var1", "NOVO","PROSPECTAR","NEGOCIAR","PAGO","DESAFIO"]
+  #  table_fases_group <- table_fases_group %>% mutate("Total" = PROSPECTAR + NEGOCIAR + PAGO + DESAFIO)
+  #  
+  #  table_fases_group <- table_fases_group %>% mutate("Taxa de Pagos" = paste0(round((PAGO/Total)*100,2)," %"))
+  #  colnames(table_fases_group)[1] <- c("Usuário")
+  #  
+  #  
+  #  table_fases_group %>% kable_data(cap = "",foot = NULL)
+  #       
+  #   
+  # }else{
+  #   table_fases_group$Lojas <- table_fases_group$Lojas %>% str_remove(pattern = "Loja CFZ ")
+  #    Total <- sum  
+  #  table_fases_group <- addmargins( table(table_fases_group$Lojas,table_fases_group$`Fase do negocio`),quiet = TRUE,FUN = Total) %>% as.data.frame
+  #   
+  #  table_fases_group <- reshape2::dcast(table_fases_group, Var1 ~ Var2, value.var="Freq") 
+  # table_fases_group <- table_fases_group %>% mutate("Taxa de Pagos" = paste0(round((PAGO/Total)*100,2)," %"))
+  #  
+  #  colnames(table_fases_group)[1] <- c("Lojas")
+  #  table_fases_group %>% kable_data(cap = "",foot = NULL)
+  #   
+  #   
+  # }
+  # 
+  
+  
+  
+}
+ 
+  
+
+```
+
+</td>
+</tr>
+<td  colspan="3">
+<hr style="width:100%;text-align:center;margin-left:0;height:4px;color:#652B91;border-width: 2px;">
+<tr>
+</tr>
+<tr>
+<td  valign="top">
+```{r,echo=FALSE}
+
+  Total <- sum
+      dados2 <- df %>% dplyr::select(`Data criado`,`Data prospectar`, `Data fechado`, `Data analisar`, `Data negociar`,ID_LEADS) %>%
+      reshape2::melt(id.vars = "ID_LEADS",measure.vars = c("Data criado","Data prospectar","Data fechado", "Data analisar", "Data negociar")) %>%
+      mutate("Atributo"      = ifelse(variable == "Data criado","Criou Lead",
+                                      ifelse(variable == "Data prospectar","Moveu para prospectando",
+                                          ifelse(variable == "Data negociar","Moveu para negociar",
+                                             ifelse(variable == "Data analisar","Moveu para analisar",
+                                                   ifelse(variable == "Data fechado","Fechou lead(Desafio ou pago)",variable))))))
+
+
+    completedados2 <- dados2[complete.cases(dados2),]
+
+    dados2                <- left_join(completedados2,df,by = c("ID_LEADS"))
+    dados2                <- left_join(dados2,calendario, by = c("value" = "Data"))
+    data1 <- lubridate::today()
+    dados2 <- dados2[which(!dados2$value == data1),]
+    data_ref              <- format(x = max(dados2$`Data de inicio`[dados2$Class_Dia]),"%d/%m/%Y")
+    dados2               <- dados2 %>% filter(value == max(dados2$`Data de inicio`[dados2$Class_Dia]))
+  
+    
+    total_movimentacoes2 <- dados2 %>% nrow
+    
+    
+      dados <- df1 %>% dplyr::select(`Data criado`,`Data prospectar`, `Data fechado`, `Data analisar`, `Data negociar`,ID_LEADS) %>%
+      reshape2::melt(id.vars = "ID_LEADS",measure.vars = c("Data criado","Data prospectar","Data fechado", "Data analisar", "Data negociar")) %>%
+      mutate("Atributo"      = ifelse(variable == "Data criado","Criou Lead",
+                                      ifelse(variable == "Data prospectar","Moveu para prospectando",
+                                          ifelse(variable == "Data negociar","Moveu para negociando",
+                                             ifelse(variable == "Data analisar","Moveu para em análise",
+                                                   ifelse(variable == "Data fechado","Fechou lead(Desafio ou pago)",variable))))))
+   
+   
+    completedados <- dados[complete.cases(dados),]
+    dados               <- left_join(completedados,df1,by = c("ID_LEADS"))
+    dados   <- dados %>% dplyr::mutate("Atributo" = ifelse(Atributo == "Fechou lead(Desafio ou pago)",paste0("Moveu para ",`Fase do negocio`),Atributo))
+   
+    
+    dados               <- dados %>% filter(value == max(dados2$value[dados2$Class_Dia]))
+    total_movimentacoes <- dados %>%  nrow
+
+```
+ 
+<h1 style="color:#273658;text-align:center;font-weight:bold;font-size:50px">  `r total_movimentacoes`  </h1> 
+<h3 style="color:#E4781C;text-align:center;font-weight:bold;font-size:32px">  TOTAL DE MOVIMENTAÇÕES NA DATA REFERÊNCIA  </h3>  
+<hr style="width:100%;text-align:center;margin-left:0;height:4px;color:#652B91;border-width: 2px;">
+    
+<!-- <h3 style='color:#273658;text-align:center;font-weight:bold;'>PROPORÇÃO DE LEADS POR FASE</h3> -->
+
+```{r,echo=FALSE}
+  if(params$visao == "Lojas"){
+   
+    table_movimentacoes <- table(dados$Atributo) %>% as.data.frame
+    
+    if(nrow(table_movimentacoes) > 0){
+      
+        resumo_movimentacoes           <- data.frame(mov = c("Criou Lead","Moveu para prospectando","Moveu para negociando","Moveu para em análise","Moveu para PAGO","Moveu para DESAFIO"), Qntd. = 0)
+  
+ 
+  
+  
+  for(movimentacao in table_movimentacoes$Var1){
+  
+    resumo_movimentacoes[resumo_movimentacoes$mov == movimentacao,"Qntd."] <- table_movimentacoes[table_movimentacoes$Var1 == movimentacao,"Freq"]
+    
+  }
+    
+    resumo_movimentacoes <- resumo_movimentacoes %>% mutate("%" = paste0(round( (`Qntd.`/total_movimentacoes)*100,2)," %"))
+   
+    
+    
+    colnames(resumo_movimentacoes) <- c("Movimentação","Qtnd.","%")
+    resumo_movimentacoes %>% kable_data(cap = "",foot = NULL)
+      
+    }else{
+      
+       resumo_movimentacoes           <- data.frame(mov = c("Criou Lead","Moveu para prospectando", "Moveu para negociando","Moveu para em análise","Moveu para PAGO","Moveu para DESAFIO"), Qntd. = 0,"%" = 0)
+       colnames(resumo_movimentacoes) <- c("Movimentação","Qtnd.","%")
+       resumo_movimentacoes %>% kable_data(cap = "",foot = NULL)
+    }
+    
+  
+        
+    
+  }else{
+   
+    
+     table_movimentacoes <- table(dados$Atributo) %>% as.data.frame
+    
+    if(nrow(table_movimentacoes) > 0){
+      
+        resumo_movimentacoes           <- data.frame(mov = c("Criou Lead","Moveu para prospectando", "Moveu para negociando","Moveu para em análise","Moveu para PAGO","Moveu para DESAFIO"), Qntd. = 0)
+  
+ 
+  
+  
+  for(movimentacao in table_movimentacoes$Var1){
+ 
+    resumo_movimentacoes[resumo_movimentacoes$mov == movimentacao,"Qntd."] <- table_movimentacoes[table_movimentacoes$Var1 == movimentacao,"Freq"]
+    
+  }
+    
+    resumo_movimentacoes <- resumo_movimentacoes %>% mutate("%" = paste0(round( (`Qntd.`/total_movimentacoes)*100,2)," %"))
+   
+    
+    
+    colnames(resumo_movimentacoes) <- c("Movimentação","Qtnd.","%")
+    resumo_movimentacoes %>% kable_data(cap = "",foot = NULL)
+      
+    }else{
+      
+       resumo_movimentacoes           <- data.frame(mov = c("Criou Lead","Moveu para prospectando", "Moveu para negociando","Moveu para em análise","Moveu para PAGO","Moveu para DESAFIO"), Qntd. = 0,"%" = 0)
+       colnames(resumo_movimentacoes) <- c("Movimentação","Qtnd.","%")
+       resumo_movimentacoes %>% kable_data(cap = "",foot = NULL)
+    }
+    
+  
+    
+  }
+
+```
+
+
+<hr style="width:100%;text-align:center;margin-left:0;height:4px;color:#652B91;border-width: 1px;">
+<h1 style="color:#273658;text-align:center;font-weight:bold;font-size:50px">  `r data_ref`  </h1> 
+<h3 style="color:#E4781C;text-align:center;font-weight:bold;font-size:32px">  DATA REFERÊNCIA  </h3>  
+
+<!--<h3 style='color:#273658;text-align:center;font-weight:bold;'>CADASTRO DE LEADS NA DATA DE REFERÊNCIA</h3>-->
+
+</td>
+
+<td colspan="2" valign="top">
+
+<h3 style='color:#E4781C;text-align:center;font-weight:bold;font-size:32px'> MOVIMENTAÇÕES DE LEADS NA DATA REFERÊNCIA </h3>    
+```{r,echo=FALSE,message=FALSE,warning=FALSE}
+if(TRUE){
+   if(params$visao == "Lojas"){
+      Total <- sum
+   
+    
+    table_movimentacoes <- table(dados$Nomes.e.sobrenomes,dados$Atributo) %>% as.data.frame
+    if(nrow(table_movimentacoes) > 0){
+       table_movimentacoes <- reshape2::dcast(table_movimentacoes, Var1 ~ Var2, value.var="Freq")
+   
+    
+    
+     table_fases_group <- matrix(data = 0,nrow = nrow(table_movimentacoes),ncol = 7) %>% as.data.frame
+    colnames(table_fases_group) <- c("Var1", "Criou Lead","Moveu para prospectando", "Moveu para negociando","Moveu para em análise","Moveu para PAGO","Moveu para DESAFIO")
+    for(name in colnames(table_movimentacoes)){
+      
+      table_fases_group[name] <- table_movimentacoes[name]
+      
+      
+    }
+    
+    
+    
+    
+     colnames(table_fases_group)[1] <- c("Usuário")
+     table_fases_group <- table_fases_group  %>% mutate("Total" = `Criou Lead` + `Moveu para prospectando` + `Moveu para negociando` + `Moveu para em análise`+ `Moveu para PAGO` + `Moveu para DESAFIO`)
+     table_fases_group %>% kable_data(cap = "",foot = NULL)
+      
+    }else{
+      
+      table_fases_group <- matrix(data = 0,nrow = 1,ncol = 7) %>% as.data.frame
+      colnames(table_fases_group) <- c("Usuário", "Criou Lead","Moveu para prospectando", "Moveu para negociando","Moveu para em análise","Moveu para PAGO","Moveu para DESAFIO")
+      table_fases_group %>% kable_data(cap = "",foot = NULL)
+      
+    }
+   
+        
+    
+  }else{
+        Total <- sum
+   
+    
+    table_movimentacoes <- table(dados$Lojas,dados$Atributo) %>% as.data.frame
+    
+    if(nrow(table_movimentacoes) > 0){
+       table_movimentacoes <- reshape2::dcast(table_movimentacoes, Var1 ~ Var2, value.var="Freq")
+   
+    
+    
+     table_fases_group <- matrix(data = 0,nrow = nrow(table_movimentacoes),ncol = 7) %>% as.data.frame
+    colnames(table_fases_group) <- c("Var1", "Criou Lead","Moveu para prospectando", "Moveu para negociando","Moveu para em análise","Moveu para PAGO","Moveu para DESAFIO")
+    for(name in colnames(table_movimentacoes)){
+      
+      table_fases_group[name] <- table_movimentacoes[name]
+      
+      
+    }
+    
+    
+    
+    
+    colnames(table_fases_group)[1] <- c("Lojas")
+    table_fases_group <- table_fases_group  %>% mutate("Total" = `Criou Lead` + `Moveu para prospectando` + `Moveu para negociando` + `Moveu para em análise` + `Moveu para PAGO` + `Moveu para DESAFIO`)
+    table_fases_group$Lojas <-  str_replace(string = table_fases_group$Lojas,pattern = "Loja CFZ ",replacement = "")
+    table_fases_group %>% kable_data(cap = "",foot = NULL)
+      
+      
+    }else{
+      
+      
+       table_fases_group <- matrix(data = 0,nrow = 1,ncol = 7) %>% as.data.frame
+      colnames(table_fases_group) <- c("Lojas","Criou Lead","Moveu para prospectando", "Moveu para negociando","Moveu para em análise","Moveu para PAGO","Moveu para DESAFIO")
+       table_fases_group %>% kable_data(cap = "",foot = NULL)
+      
+    }
+   
+    
+    
+  }
+  
+  
+}else{
+  
+  
+  
+  
+  
+  
+  
+}
+ 
+  
+
+```
+
+</td>
+</tr>
+<tr>
+</table>
+
+
+
+
+<hr style="width:100%;text-align:center;margin-left:0;height:4px;color:#652B91;border-width: 2px;">
+
+</div>
+</center>
+
+

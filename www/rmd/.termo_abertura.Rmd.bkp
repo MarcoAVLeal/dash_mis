@@ -1,0 +1,221 @@
+---
+header-includes:
+- \usepackage[T1]{fontenc}
+- \usepackage{lmodern}
+- \usepackage{scrextend}
+- \changefontsizes[18pt]{12pt}
+- \usepackage[utf8]{inputenc}
+- \usepackage[brazil]{babel}
+- \usepackage{multicol}
+- \usepackage{setspace}
+- \usepackage{hyperref}
+- \usepackage{fancyref}
+- \usepackage{fontspec}
+- \setmainfont{[font.ttf]}
+- \usepackage{enumerate}
+- \usepackage{background}
+- \usepackage{nopageno}
+- \backgroundsetup{scale=1,angle = 0, opacity = 1, contents = {\includegraphics[width = \paperwidth,  height = \paperheight] {../input/fundo.pdf}}}
+- \usepackage{indentfirst}
+- \linespread{0.8}
+documentclass: article
+fontsize: 12pt
+classoption: a4paper
+geometry: left=3cm,right=2cm,top=5.5cm,bottom=4.5cm
+output:
+  pdf_document:
+    latex_engine: xelatex
+    keep_tex: false
+    number_section: false
+indent: false
+params:
+  contratante_nome_abertura: NA
+  numero_projeto_abertura: NA
+  nome_projeto_abertura: NA
+  autor_projeto_abertura: NA
+  revisor_projeto_abertura: NA
+  resumo_projeto_abertura: NA
+  gerente_projeto_abertura: NA
+  prazo_projeto_abertura: NA
+  numero_parcelas_abertura: NA
+  gerente_nome_abertura: NA
+  correcao_banco_abertura: NA
+  horas_correcao_banco_abertura: NA
+  elaboracao_relatorio_abertura: NA
+  horas_elaboracao_relatorio_abertura: NA
+  pesquisa_mercado_abertura: NA
+  horas_pesquisa_mercado_abertura: NA
+  pesquisa_satisfacao_abertura: NA
+  horas_pesquisa_satisfacao_abertura: NA
+  analise_descritiva_abertura: NA
+  horas_analise_descritiva_abertura: NA
+  teste_correlacao_abertura: NA
+  horas_teste_correlacao_abertura: NA
+  teste_geral_abertura: NA
+  horas_teste_geral_abertura: NA
+  plano_amostral_abertura: NA
+  horas_plano_amostral_abertura: NA
+  validacao_metodo_abertura: NA
+  horas_validacao_metodo_abertura: NA
+  analise_experimento_abertura: NA
+  horas_analise_experimento_abertura: NA
+  tipo_cliente_abertura: NA
+---
+
+```{r setup, echo  = FALSE, include = FALSE}
+library(knitr)
+path_source <- "../input/main.R"
+source(path_source)
+
+# Vetor lógico dos serviços selecionados
+bool <- c(params$correcao_banco_abertura,
+          params$elaboracao_relatorio_abertura,
+          params$pesquisa_mercado_abertura,
+          params$pesquisa_satisfacao_abertura,
+          params$analise_descritiva_abertura,
+          params$teste_correlacao_abertura,
+          params$teste_geral_abertura,
+          params$plano_amostral_abertura,
+          params$validacao_metodo_abertura,
+          params$analise_experimento_abertura)
+
+# Seleção dos serviços selecionados no banco de preços
+este_banco <- servicos[bool,]
+
+# Vetor com as horas dos serviços
+horas <- c(params$horas_correcao_banco_abertura,
+           params$horas_elaboracao_relatorio_abertura,
+           params$horas_pesquisa_mercado_abertura,
+           params$horas_pesquisa_satisfacao_abertura,
+           params$horas_analise_descritiva_abertura,
+           params$horas_teste_correlacao_abertura,
+           params$horas_teste_geral_abertura,
+           params$horas_plano_amostral_abertura,
+           params$horas_validacao_metodo_abertura,
+           params$horas_analise_experimento_abertura)
+
+# Seleção das horas dos serviços selecionados
+horas <- horas[bool]
+
+# Vetor de preço do tipo de cliente selecionado
+preco_cliente <- switch(params$tipo_cliente_abertura,
+                        "Geral" = este_banco$Geral,
+                        "Ejs e parceiros" = este_banco$Ej_parceiro,
+                        "Empresa" = este_banco$Empresas)
+
+# Preço total do projeto
+preco_projeto_abertura <- sum(preco_cliente*horas)+10
+
+# Primeira coluna da tabela final
+servico <- c(este_banco$Serviço, "Materiais", "Total")
+
+# Segunda coluna da tabela final
+hora <- c(horas, "-", as.character(sum(horas)))
+
+# Terceira coluna da tabela final
+valorhora <- c(paste("R$", format(preco_cliente, nsmall = 2)), "-", "")
+
+# Quarta coluna da tabela final
+total <- c(paste("R$", format(preco_cliente*as.numeric(horas),
+                              nsmall = 2)), "R$ 10.00",
+           paste("R$", format(preco_projeto_abertura,
+                 nsmall = 2)))
+
+# Tabela final
+novo_banco <- data.frame(Serviços = servico,
+                         Horas = hora,
+                         ValorHora = valorhora,
+                         Total = total)
+
+Sys.setlocale("LC_TIME", "pt_BR.UTF-8")
+```
+
+\begin{Large}
+\begin{center}
+TERMO DE ABERTURA DE PROJETO\\
+Nº `r params$numero_projeto_abertura`
+\end{center}
+\end{Large}
+
+\noindent
+\textbf{\large Nome do Projeto:} `r params$nome_projeto_abertura`\newline
+\textbf{\large Elaborado por:} `r params$autor_projeto_abertura`\newline
+\textbf{\large Revisado por:} `r params$revisor_projeto_abertura`
+
+\section{Resumo do Projeto}
+
+`r params$resumo_projeto_abertura`
+
+\section{Gerente do Projeto}
+
+`r params$gerente_nome_abertura`
+
+\section{Atribuições e Responsabilidades}
+
+\begin{itemize}
+  \item Atuar como o ponto central de contato para toda comunicação formal relacionada ao projeto entre a empresa e o cliente.
+  \item Assegurar que os membros da equipe do projeto estejam cientes de suas responsabilidades e também, que todos os compromissos assumidos pelos indivíduos sejam realizados.
+  \item Gerenciar os compromissos contratuais para realizá-los em tempo, dentro do orçamento e com satisfação do cliente.
+  \item Elaborar o relatório final e qualquer outro relatório previamente solicitado pelo cliente.
+  \item Controlar os custos, cronograma, orçamento e variações técnicas dentro das margens estabelecidas do projeto.
+  \item Manter toda documentação atualizada.
+  \item Seguir todos os processos e padrões metodológicos.
+  \item Reportar formalmente o status do projeto à diretoria de projetos, evitando surpresas.
+\end{itemize}
+
+\newpage
+
+\section{Premissas}
+
+Os dados estarão disponíveis para a Estats Consultoria até `r format(params$prazo_projeto_abertura+30, format = "%d/%m/%Y")`, não havendo alteração nos mesmos após essa data.
+
+\section{Restrições e Riscos}
+A qualidade e a veracidade dos resultados estão limitadas às características refletidas pelos dados amostrais, uma vez que cabe à Estats Consultoria apenas a análise dos dados coletados, não tendo a mesma participado do planejamento amostral e da elaboração do instrumento de coleta de dados.
+
+\section{Cronograma e planejamento do projeto}
+
+\begin{center}
+\begin{large}
+```{r, echo = FALSE}
+kable(novo_banco , "latex",
+      col.names = c("Atividades", "Horas", "Valor/Hora", "Total"))
+```
+\end{large}
+\end{center}
+
+\section{Investimento e Prazo}
+
+Investimento: `r paste("R$", format(preco_projeto_abertura, nsmall = 2))`\newline
+Prazo: `r format(params$prazo_projeto_abertura, format = "%d/%m/%Y")`\newline
+
+\newpage
+
+\textbf{As Partes concordam que o projeto seja iniciado e assinam o presente termo dando por iniciadas todas as responsabilidades e atividades da Estats Consultoria, referentes a este projeto.}\newline
+
+\vspace{2cm}
+
+\noindent\rule{8cm}{0.4pt}
+\noindent
+`r params$gerente_nome_abertura`\newline
+Gerente de Projetos\newline
+Estats Consultoria\newline
+
+\vspace{2cm}
+
+\noindent\rule{8cm}{0.4pt}
+\noindent
+`r diretor_projetos$nome`\newline
+Diretor de Projetos\newline
+Estats Consultoria\newline
+
+\vspace{2cm}
+
+\noindent\rule{8cm}{0.4pt}
+\noindent
+`r params$contratante_nome_abertura`\newline
+
+\vfill
+
+\begin{center}
+Maringá, `r format(Sys.Date(), format = "%d de %B de %Y")`
+\end{center}

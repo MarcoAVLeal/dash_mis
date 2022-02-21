@@ -1,0 +1,73 @@
+.html-widget.gauge {
+  height: 100%; /*or try sth like 320px instead of 100%, whatever you prefer*/
+  padding-bottom: ;
+  display: inline-block;
+}
+
+.html-widget.gauge svg {
+  height: 100%; /*or try sth like 320px instead of 100%, whatever you prefer*/
+  margin-top: 0px;
+  margin-bottom: 0px;
+  display: inline-block;
+}
+
+
+.my-header h1 { 
+  display: inline;
+}
+
+
+.left{display:inline-block;float:left}
+.right{display:inline-block; float:right}
+.center{display:inline-block; float:center}
+
+.inline-block-child {
+  display: inline-block;
+}
+
+.paddingBetweenCols td {
+  padding: 0 15px;
+}
+
+
+.table {
+    table-layout: auto;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+
+
+.table th:first-child,
+.table td:first-child {
+  font-size: 30px
+}
+
+
+.table th {
+  font-size: 30px
+}
+
+.table td {
+  font-size: 38px
+}
+
+
+td {
+  padding-left: 7.5px;
+  padding-right: 7.5px;
+}
+
+td:first-child {
+  padding-left: 0;
+  width: 350px;
+}
+
+td:last-child {
+  padding-right: 0;
+  width: 200px;
+}
+
+table {
+    border-spacing:30px 0px;
+  }

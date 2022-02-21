@@ -1,0 +1,262 @@
+---
+output:
+  pdf_document:
+    latex_engine: xelatex
+    keep_tex: false
+    number_section: false
+    template: template.tex
+indent: true
+params:
+  nome_contratante_contrato: NA
+  informacoes_contratante: NA
+  servico_contrato: NA
+  preco_projeto_contrato: NA
+  prazo_projeto_contrato: NA
+  numero_parcelas_contrato: NA
+  testemunha_primeira_contrato: NA
+  testemunha_segunda_contrato: NA
+  forma_pagamento_contrato: NA
+  etapa_1_contrato: NA
+  etapa_2_contrato: NA
+  etapa_3_contrato: NA
+  etapa_4_contrato: NA
+  etapa_5_contrato: NA
+  etapa_6_contrato: NA
+  etapa_7_contrato: NA
+  etapa_8_contrato: NA
+  etapa_9_contrato: NA
+  etapa_10_contrato: NA
+---
+
+```{r setup, echo  = FALSE, include = FALSE}
+library(knitr)
+library(glue)
+path_source <- "../input/main.R"
+source(path_source, encoding = "UTF-8")
+Sys.setlocale("LC_TIME", "pt_BR.UTF-8")
+
+etapa_null <- function(etapa)
+{
+  if(etapa == "") return(FALSE)
+  return(TRUE)
+}
+
+fun_etapas <- function()
+{
+  ret_ <- glue("\\item  Primeira etapa: {params$etapa_1_contrato}")
+  if(etapa_null(params$etapa_2_contrato)) {ret_ <- paste(ret_, glue(" Segunda etapa: {params$etapa_2_contrato}"), sep = "\\item ")} else {return(ret_)}
+  if(etapa_null(params$etapa_3_contrato)) {ret_ <- paste(ret_, glue(" Terceira etapa: {params$etapa_3_contrato}"), sep = "\\item ")} else {return(ret_)}
+  if(etapa_null(params$etapa_4_contrato)) {ret_ <- paste(ret_, glue(" Quarta etapa: {params$etapa_4_contrato}"), sep = "\\item ")} else {return(ret_)}
+  if(etapa_null(params$etapa_5_contrato)) {ret_ <- paste(ret_, glue(" Quinta etapa: {params$etapa_5_contrato}"), sep = "\\item ")} else {return(ret_)}
+  if(etapa_null(params$etapa_6_contrato)) {ret_ <- paste(ret_, glue(" Sexta etapa: {params$etapa_6_contrato}"), sep = "\\item ")} else {return(ret_)}
+  if(etapa_null(params$etapa_7_contrato)) {ret_ <- paste(ret_, glue(" Sétima etapa: {params$etapa_7_contrato}"), sep = "\\item ")} else {return(ret_)}
+  if(etapa_null(params$etapa_8_contrato)) {ret_ <- paste(ret_, glue(" Oitava etapa: {params$etapa_8_contrato}"), sep = "\\item ")} else {return(ret_)}
+  if(etapa_null(params$etapa_9_contrato)) {ret_ <- paste(ret_, glue(" Nona etapa: {params$etapa_9_contrato}"), sep = "\\item ")} else {return(ret_)}
+  if(etapa_null(params$etapa_10_contrato)) {ret_ <- paste(ret_, glue(" Décima etapa: {params$etapa_10_contrato}"), sep = "\\item ")} else {return(ret_)}
+  return(ret_)
+}
+
+fun_testemunhas <- function(etapa)
+{
+  n_testemunhas <- sum(c(etapa_null(params$testemunha_primeira_contrato), etapa_null(params$testemunha_segunda_contrato)))
+  if(etapa == "texto")
+  {
+    if(n_testemunhas == 2) return(" juntamente com duas (2) testemunhas.")
+    if(n_testemunhas == 1) return(" juntamente com uma (1) testemunha.")
+    if(n_testemunhas == 0) return(".")
+  } else if(etapa == "primeira")
+  {
+    if(n_testemunhas >= 1) return(glue("\\rule{'{8cm}'}{'{0.4pt}'}\\newline \n {params$testemunha_primeira_contrato}\\newline \n \\indent Testemunha 1\\newline"))
+    if(n_testemunhas == 0) return("")
+  } else
+  {
+    if(n_testemunhas == 2) return(glue("\\rule{'{8cm}'}{'{0.4pt}'}\\newline \n {params$testemunha_segunda_contrato}\\newline \n \\indent Testemunha 2\\newline"))
+    else return("")
+  }
+}
+
+```
+
+\begin{center}
+\begin{Large}
+ \textbf{CONTRATO DE PRESTAÇÃO DE SERVIÇO}
+\end{Large}
+\end{center}
+
+\section*{DA IDENTIFICAÇÃO DAS PARTES}
+
+`r params$informacoes_contratante`, doravante denominado \textbf{CONTRATANTE}.
+
+\textbf{CONTRATADA}: Estats Consultoria, pessoa jurídica de direito privado, inscrita no CNPJ sob n°19.872.827/0001-13, com sede no Jd. Universitário - Avenida Colombo, n° 5790 - Bloco E90 - Sala 018 na cidade de Maringá, estado do Paraná, CEP 87.020-900, neste ato representado pelo seu presidente, `r paste0(presidente$profissao, ", ",
+      presidente$nome, ", portador do CPF n°", presidente$cpf)`;
+
+_**As partes acima identificadas têm, entre si, justo e acertado o presente Contrato, que se regerá pelas cláusulas seguintes e pelas condições descritas no presente.**_
+
+\section*{DO OBJETO DO CONTRATO}
+
+**Cláusula 1ª**. O \textbf{CONTRATADA} se propõe, com presente contrato, a promover o projeto de prestação de serviço visando à consultoria técnica em Estatística e do Trabalho para o \textbf{CONTRATANTE}, sobre as matérias especificadas no parágrafo 3º da cláusula 1ª. 
+
+\vspace{0.5cm}
+
+\noindent §1º - O \textbf{CONTRATADA}, com o trabalho proposto, atingirá seu objetivo fundamental que é a complementação da formação profissional de seus membros; 
+
+\vspace{0.5cm}
+
+\noindent §2º - O projeto constituir-se-á na formação de um grupo de trabalho composto por alunos de graduação do curso de Estatística, orientados – caso haja necessidade – por um professor do Centro de Ciências Exatas da Universidade Estadual de Maringá ou profissional capacitado, os quais em conjunto farão o estudo em apreço. 
+
+\vspace{0.5cm}
+
+\noindent §3º Os serviços a serem prestados são: `r params$servico_contrato`. Além destas, o \textbf{CONTRATANTE} possui o direito de receber todo o aparato técnico para a execução da prestação de serviço, bem como a garantia de ser sanado em quaisquer de suas dúvidas pela equipe da prestação de serviço a ser realizada.
+
+\newpage
+
+\section*{DAS ETAPAS DO PROJETO}
+
+**Cláusula 2ª**. O projeto será dividido nas seguintes etapas:
+
+\begin{enumerate}[a)]
+`r fun_etapas()`
+\end{enumerate}
+
+\newpage
+
+\section*{DAS OBRIGAÇÕES DA CONTRATADA}
+
+**Cláusula 3ª**. São deveres do \textbf{CONTRATADA}:
+
+\begin{enumerate}[a)]
+\item Utilizar das técnicas disponíveis para a realização das atividades aliadas à consultoria, empregando seus melhores esforços na consecução da mesma. 
+\item A \textbf{CONTRATADA} se limita a realizar apenas os objetivos descritos em contrato no parágrafo 3 º da cláusula 1ª. Qualquer serviço fora desses descritos solicitados por parte da \textbf{CONTRATANTE} deverá ser elaborado em uma nova proposta de prestação de serviço, sendo firmado outro contrato, não se responsabilizando a \textbf{CONTRATADA} pelos serviços não acordados. 
+\item Disponibilizar uma equipe capacitada para a realização de pesquisas e desenvolvimento do projeto no âmbito da matéria da consultoria devida e nomear um gerente desta equipe, responsável pela administração das atividades. 
+\item O \textbf{CONTRATADA} não se responsabiliza pelos erros já presentes na primeira versão do banco de dados disponibilizado pelo CONTRATANTE.
+\item A consultoria prestada pelo \textbf{CONTRATADA} visa propor soluções aos problemas descritos e enfrentados pela CONTRATANTE. Quaisquer consequências ou resultados não relacionados a tais problemas não serão de responsabilidade desta.
+\item Administrar o presente contrato. 
+\item Arquivar os documentos derivados do presente contrato e apresentá-los quando exigidos por quem de direito. 
+\item A implantação e execução do projeto apresentado pelo \textbf{CONTRATADA} ficam a cargo desta, sendo a \textbf{CONTRATANTE} responsável pelos consequentes gastos relacionados à execução do projeto, tais como material de escritório e despesas advindas da implantação e execução do projeto. 
+\item Recolher os impostos que incidirem sobre as atividades do projeto, com recursos deste.
+\item Fornecer relatórios, constando resultados sobre a consecução do projeto, devendo ser entregue para a CONTRATANTE, ao término da última etapa, disposta na cláusula 2ª deste contrato.
+\end{enumerate}
+
+\newpage
+
+\section*{DAS OBRIGAÇÕES DA CONTRATANTE}
+
+**Cláusula 4ª**. São direitos e deveres da **CONTRATANTE**:
+
+\begin{enumerate}[a)]
+\item Realizar o pagamento conforme disposto na cláusula 7ª deste contrato. 
+\item Participar, através de pessoa especialmente credenciada, das reuniões referentes a este contrato. 
+\item Caso haja atraso na entrega dos documentos e informações necessárias para o cumprimento do projeto e isto implicar em atraso na realização do mesmo, a \textbf{CONTRATADA} não se responsabiliza pelos valores adicionais do projeto, devendo estes serem arcados pela CONTRATANTE. 
+\item Receber relatórios dos trabalhos, na forma e datas estabelecidas neste contrato. 
+\item Fornecer todas as informações que o \textbf{CONTRATADA} julgar necessário para plena execução dos trabalhos. 
+\end{enumerate}
+
+\section*{DO BANCO DE DADOS}
+
+**Cláusula 5ª**. O \textbf{CONTRATADA} somente se responsabiliza pelo erro de organização estrutural do banco de dados disponibilizado pela \textbf{CONTRATANTE} e, não pelo erro de informações. 
+
+\vspace{0.5cm}
+
+\noindent \textbf{Cláusula 6ª}. Caso haja erro de informações no banco de dados disponibilizado pela \textbf{CONTRATANTE}, o \textbf{CONTRATADA} tem o direito de prorrogar o prazo de entrega do relatório e cobrar, além do valor total citado na cláusula 7ª, pelas horas extras previstas necessárias para correção das análises conforme descrito no parágrafo 3 º da cláusula 1ª. Se os dados disponibilizados pela \textbf{CONTRATANTE} não permitirem a análise proposta conforme descrito no parágrafo 3º da cláusula 1ª, cabe o \textbf{CONTRATADA} alterar a forma de execução do projeto ou mesmo rescindir o presente contrato por inviabilidade de execução do mesmo. 
+
+\vspace{0.5cm}
+
+\noindent \textbf{Parágrafo único}: Em caso de rescisão do presente contrato pelo fato dos dados disponibilizados pela \textbf{CONTRATANTE} não permitirem a análise proposta conforme descrito no parágrafo 3º da cláusula 1ª, a \textbf{CONTRATANTE} pagará o \textbf{CONTRATADA} um valor conforme descrito na cláusula 11ª. 
+
+\newpage
+
+\section*{DO VALOR E DA FORMA DE PAGAMENTO}
+
+**Cláusula 7ª**. O desenvolvimento completo do projeto por parte da \textbf{CONTRATADA} possui valor de `r paste("R$", format(params$preco_projeto_contrato, nsmall = 2))`, já incluso os impostos previsto por lei e o valor de materiais a serem utilizados no projeto, a ser pago pela \textbf{CONTRATANTE} à \textbf{CONTRATADA} da seguinte forma:
+
+O montante será pago `r params$forma_pagamento_contrato`, conforme ilustrado no quadro a seguir:
+
+\begin{center}
+```{r, echo = FALSE}
+gerar_tabela_preco(params$numero_parcelas_contrato,
+                   params$preco_projeto_contrato,
+                   params$prazo_projeto_contrato,
+                   params$forma_pagamento_contrato)
+```
+\end{center}
+
+\noindent \textbf{Parágrafo único}: O pagamento integral do projeto poderá ser feito com ao Diretor Administrativo-Financeiro da Estats Consultoria, do valor `r params$forma_pagamento_contrato`.
+
+\section*{DO PRAZO}
+
+**Cláusula 8ª**. O presente contrato irá vigorar a partir da assinatura do mesmo até o pagamento do valor total do projeto conforme citado na cláusula 7ª, e o cumprimento de todas as etapas dispostas na cláusula 2ª, podendo ser prorrogado, se for do interesse de ambas as partes. 
+
+\section*{DA RESCISÃO}
+       
+**Cláusula 9ª**. Este contrato poderá ser rescindido a qualquer tempo, pelas partes, devendo a interessada notificar a outra, por escrito, com antecedência mínima de 15 dias. 
+
+\vspace{0.5cm}
+       
+\noindent \textbf{Cláusula 10ª}. A rescisão do presente instrumento extinguirá os direitos e obrigações que as partes tenham entre si. 
+
+\vspace{0.5cm}
+
+\noindent \textbf{Cláusula 11ª}. Em caso de rescisão, o \textbf{CONTRATADA} remeterá ao \textbf{CONTRATANTE} um relatório dos trabalhos realizados até o momento da interrupção. A \textbf{CONTRATANTE} pagará o \textbf{CONTRATADA} um valor proporcional ao trabalho efetuado sobre as bases da cláusula 3ª, acrescido de cláusula penal de 10% (dez por cento) do valor total citado na cláusula 7ª. 
+
+\newpage
+
+\section*{DAS PENALIDADES}
+
+**Cláusula 12ª**. O não pagamento do(s) valor(es) previsto(s) no presente contrato na data do(s) vencimento(s), fará incidir sobre o(s) mesmo(s), mora em 2% (dois inteiro por cento) por dia, sobre o valor mensal do contrato, com 
+as consequências daí advindas, que implicarão em multa de 30% (trinta inteiro por cento), sobre o valor do contrato. 
+
+\section*{DA CESSÃO}
+
+**Cláusula 13ª**. Este contrato não poderá ser cedido ou transferido sem o consentimento prévio e expresso de ambas as partes, obrigando-se as partes ao cumprimento deste contrato, por si e por seus sucessores. 
+
+\section*{DA TOLERÂNCIA}
+
+**Cláusula 14ª**. A tolerância e/ou qualquer concessão feita por uma das partes à outra, de forma escrita ou verbal, não implica em novação ou alteração contratual constituindo-se em mera liberdade das partes.
+
+\newpage
+
+\section*{PUBLICIDADE COMERCIAL}
+
+**Cláusula 15ª**. Fica assegurado o \textbf{CONTRATADA} o direto de utilizar o nome da \textbf{CONTRATANTE} (denominação oficial e pública) para fins de divulgação da carteira de clientes do \textbf{CONTRATADA}. 
+
+\section*{DAS CONDIÇÕES GERAIS}
+       
+**Cláusula 16ª**. O \textbf{CONTRATADA} não possuirá horário fixo de entrada e saída na empresa, uma vez que não existirá vínculo empregatício.
+
+\vspace{0.5cm}
+
+\noindent \textbf{Cláusula 17ª}. É livre o \textbf{CONTRATADA} ter seus próprios clientes, fora do âmbito deste contrato.
+
+\section*{DO FORO}
+
+**Cláusula 18ª**. Para dirimir quaisquer controvérsias oriundas deste contrato, as partes elegem o foro da comarca de Maringá, Estado do Paraná, excluindo qualquer outro que mais privilegiado seja;
+
+\newpage
+
+\noindent Por estarem assim justos e contratadas, firmam o presente instrumento, em duas vias de igual teor`r fun_testemunhas("texto")`
+
+\vspace{2cm}
+
+\rule{8cm}{0.4pt}\newline
+`r params$nome_contratante_contrato`\newline
+\indent Contratante
+
+\vspace{1cm}
+
+\rule{8cm}{0.4pt}\newline
+`r presidente$nome`\newline
+\indent Presidente da Estats Consultoria\newline
+
+\vspace{1cm}
+
+`r fun_testemunhas("primeira")`
+
+\vspace{1cm}
+
+`r fun_testemunhas("segunda")`
+
+\vfill
+
+\begin{center}
+Maringá, `r format(Sys.Date(), format = "%d de %B de %Y")`
+\end{center}

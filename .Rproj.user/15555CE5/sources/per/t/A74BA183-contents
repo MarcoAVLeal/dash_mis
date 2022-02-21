@@ -1,0 +1,51 @@
+source(file = "librarys.R")
+shinyServer(function(input, output, session) {
+
+x <- read.csv(file = 'dados\\2022_02.csv') 
+output$msgbox_bitrix1 <- renderValueBox({
+    shinydashboard::valueBox(subtitle = NULL,value = x[1,"total"], 
+                             width = 4,icon = tags$i(class = "fas fa-phone", style="font-size: 12px"), color = "navy")
+})
+
+output$msgbox_bitrix2 <- renderValueBox({
+    shinydashboard::valueBox(subtitle = NULL,value = x[1,"pending"], 
+                             width = 4,icon = tags$i(class = "fas fa-phone", style="font-size: 12px"), color = "navy")
+})
+
+output$msgbox_bitrix3 <- renderValueBox({
+    shinydashboard::valueBox(subtitle = NULL,value = x[1,"sent"], 
+                             width = 4,icon = tags$i(class = "fas fa-phone", style="font-size: 12px"), color = "navy")
+})
+output$msgbox_bitrix4 <- renderValueBox({
+    shinydashboard::valueBox(subtitle = NULL,value = x[2,"total"], 
+                             width = 4,icon = tags$i(class = "fas fa-phone", style="font-size: 12px"), color = "navy")
+})
+
+output$msgbox_bitrix5 <- renderValueBox({
+    shinydashboard::valueBox(subtitle = NULL,value = x[2,"pending"], 
+                             width = 4,icon = tags$i(class = "fas fa-phone", style="font-size: 12px"), color = "navy")
+})
+
+output$msgbox_bitrix6 <- renderValueBox({
+    shinydashboard::valueBox(subtitle = NULL,value = x[2,"sent"], 
+                             width = 4,icon = tags$i(class = "fas fa-phone", style="font-size: 12px"), color = "navy")
+})
+
+output$msgbox_bitrix7 <- renderValueBox({
+    shinydashboard::valueBox(subtitle = NULL,value = x[3,"total"], 
+                             width = 4,icon = tags$i(class = "fas fa-phone", style="font-size: 12px"), color = "navy")
+})
+
+output$msgbox_bitrix8 <- renderValueBox({
+    shinydashboard::valueBox(subtitle = NULL,value = x[3,"pending"], 
+                             width = 4,icon = tags$i(class = "fas fa-phone", style="font-size: 12px"), color = "navy")
+})
+
+output$msgbox_bitrix9 <- renderValueBox({
+    shinydashboard::valueBox(subtitle = NULL,value = x[3,"sent"], 
+                             width = 4,icon = tags$i(class = "fas fa-phone", style="font-size: 12px"), color = "navy")
+})
+    
+    
+    
+})

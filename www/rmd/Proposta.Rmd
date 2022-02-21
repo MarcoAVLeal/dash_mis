@@ -1,0 +1,93 @@
+---
+output:
+  pdf_document:
+    latex_engine: xelatex
+    keep_tex: true
+    number_section: false
+    template: template.tex
+indent: true
+params:
+  gerente_nome_proposta: NA
+  gerente_cargo_proposta: NA
+  objetivo_projeto_proposta: NA
+  metodologia_projeto_proposta: NA
+  preco_projeto_proposta: NA
+  numero_parcelas_proposta: NA
+  prazo_projeto_proposta: NA
+  etapa_1_proposta: NA
+  etapa_2_proposta: NA
+  etapa_3_proposta: NA
+  etapa_4_proposta: NA
+  etapa_5_proposta: NA
+  etapa_6_proposta: NA
+  etapa_7_proposta: NA
+  etapa_8_proposta: NA
+  etapa_9_proposta: NA
+  etapa_10_proposta: NA
+---
+
+```{r setup, echo  = FALSE, include = FALSE}
+#- \usepackage[brazil]{babel}
+library(knitr)
+path_source <- "../input/main.R"
+source(path_source, encoding = "UTF-8")
+Sys.setlocale("LC_TIME", "pt_BR.UTF-8")
+
+etapa_null <- function(etapa)
+{
+  if(etapa == "") return(FALSE)
+  return(TRUE)
+}
+
+fun_etapas <- function()
+{
+  ret_ <- glue("\\item  Primeira etapa: {params$etapa_1_proposta}")
+  if(etapa_null(params$etapa_2_proposta)) {ret_ <- paste(ret_, glue(" Segunda etapa: {params$etapa_2_proposta}"), sep = "\\item ")} else {return(ret_)}
+  if(etapa_null(params$etapa_3_proposta)) {ret_ <- paste(ret_, glue(" Terceira etapa: {params$etapa_3_proposta}"), sep = "\\item ")} else {return(ret_)}
+  if(etapa_null(params$etapa_4_proposta)) {ret_ <- paste(ret_, glue(" Quarta etapa: {params$etapa_4_proposta}"), sep = "\\item ")} else {return(ret_)}
+  if(etapa_null(params$etapa_5_proposta)) {ret_ <- paste(ret_, glue(" Quinta etapa: {params$etapa_5_proposta}"), sep = "\\item ")} else {return(ret_)}
+  if(etapa_null(params$etapa_6_proposta)) {ret_ <- paste(ret_, glue(" Sexta etapa: {params$etapa_6_proposta}"), sep = "\\item ")} else {return(ret_)}
+  if(etapa_null(params$etapa_7_proposta)) {ret_ <- paste(ret_, glue(" Sétima etapa: {params$etapa_7_proposta}"), sep = "\\item ")} else {return(ret_)}
+  if(etapa_null(params$etapa_8_proposta)) {ret_ <- paste(ret_, glue(" Oitava etapa: {params$etapa_8_proposta}"), sep = "\\item ")} else {return(ret_)}
+  if(etapa_null(params$etapa_9_proposta)) {ret_ <- paste(ret_, glue(" Nona etapa: {params$etapa_9_proposta}"), sep = "\\item ")} else {return(ret_)}
+  if(etapa_null(params$etapa_10_proposta)) {ret_ <- paste(ret_, glue(" Décima etapa: {params$etapa_10_proposta}"), sep = "\\item ")} else {return(ret_)}
+  return(ret_)
+}
+```
+
+\noindent
+Caro cliente,
+
+A partir de estudos realizados apresentamos a proposta de prestação de serviço, afim de formalizar o trabalho a ser desenvolvido pela Estats Consultoria. Ao ser aceita, será elaborado o contrato de prestação de serviços.
+
+\begin{center}
+A Estats Consultoria agradece desde já o interesse e a escolha pela nossa empresa. 
+\end{center}
+\flushleft{Atenciosamente,}
+
+\begin{center}
+`r params$gerente_nome_proposta`\\
+`r params$gerente_cargo_proposta`
+\end{center}
+
+`r params$contratante_nome_proposta`
+
+\newpage
+
+\section{Objetivo do Projeto}
+
+`r params$objetivo_projeto_proposta`
+
+\section{Metodologia}
+
+`r params$metodologia_projeto_proposta`
+
+\section{Investimento e Prazo}
+
+O investimento total do projeto é de `r paste("R$", format(params$preco_projeto_proposta, digits = 2))`, e o prazo para a conclusão e entrega é dia `r format(params$prazo_projeto_proposta, format = "%d/%m/%Y")`
+
+\vfill
+
+\begin{center}
+Maringá, `r format(Sys.Date(), format = "%d de %B de %Y")`
+\end{center}
