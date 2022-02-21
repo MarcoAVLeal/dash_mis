@@ -25,7 +25,7 @@ espaco_html <<- function(n=6){
 credentials[["mleal"]]$pass == "mleal"
 
 
-shinyServer(function(input, output, session) {
+server <- function(input, output, session) {
     # input$username <- "mleal"
     # input$password <- "mleal"
     ######################################               ###########################################################
@@ -529,4 +529,4 @@ shinyServer(function(input, output, session) {
     )
 
   
-})
+}
