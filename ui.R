@@ -47,7 +47,7 @@ info_box_bg = "#D8DEE9"
 ),
 #tags$a(href='https://site.crefaz.com.br/',tags$img(src='logo2.png',width = 80 ),"MIS")
 #options = list(sidebarExpandOnHover = TRUE),
-header = dashboardHeader(title = strong("MIS"),userOutput("user"),leftUi = tagList(logo= tags$a(href='https://site.crefaz.com.br/',tags$img(src='logo2.png',width = 80 )))),
+header = dashboardHeader(title = strong("MIS"),userOutput("user"),leftUi = tagList(logo= tags$a(href='https://site.crefaz.com.br/',tags$img(src='https://site.crefaz.com.br/public/site/images/logo.png',width = 80 )))),
 sidebar = dashboardSidebar(sidebarMenu(
     id = "tabs",
     menuItem(text = "Página1", tabName = "page1",icon = icon("home")),
