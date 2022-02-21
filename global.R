@@ -22,10 +22,10 @@ library(shinycssloaders)
 library(DT)
 library(reshape2)
 #source(file = "funcoes.R",encoding = "UTF-8")
-read_url_csv <- function(url, sep = ",",enc = "utf-8"){
+read_url_csv <- function(url, sep = ","){
   tmpFile <- tempfile()
   download.file(url, destfile = tmpFile)
-  url_csv <- read.csv(tmpFile, sep = sep,encoding = enc)
+  url_csv <- read.csv(tmpFile, sep = sep)
   return(url_csv)
 }
 
@@ -55,7 +55,9 @@ names_df          <- c("ID","Tipo","Pipeline", "Fase do negocio","Negocio Recorr
                        "Data prevista de fechamento","Data de inicio","Valor do emprestimo","Origem do Cliente","Data exportacao","Contato","Grupo de fase" ,
                        "Base","Produto Crefaz", "Fase automacao",  "Data negociar","Data analisar", "Data prospectar","Modificado em","Desafio","Desafio retencao"
 )
+
 colnames(df) <- names_df
+df$`Fase do negocio` <- ifelse(df$`Fase do negocio` == "EM ANÃ\u0081LISE","EM ANÁLISE",df$`Fase do negocio`)
 df$`Pessoa reponsavel ID`          <- as.character(df$`Pessoa reponsavel ID` )
 
 onedrive_url <- "https://crefaz-my.sharepoint.com/:x:/g/personal/gestaodedados4_crefaz_onmicrosoft_com/ES9Opw7qVkROh6yxmaC8ARQB1_RuzanE2l8fl3U7p6r4KQ?download=1"
@@ -63,11 +65,11 @@ onedrive_url <- "https://crefaz-my.sharepoint.com/:x:/g/personal/gestaodedados4_
 users             <- read_url_csv(onedrive_url,sep = ";")
 users$ID          <- as.character(users$ID)
 
-# library(readxl)
-# url <- "https://crefaz-my.sharepoint.com/:x:/g/personal/gestaodedados4_crefaz_onmicrosoft_com/EaODUUKwdOFJtbyx6MQHshsBjMAYRqYYyXr-el08rDnpxQ?download=1"
-# destfile <- "regionais.xlsx"
-# curl::curl_download(url, destfile)
-# regionais <- read_excel(destfile,sheet = "Planilha1")
+library(readxl)
+url <- "https://crefaz-my.sharepoint.com/:x:/g/personal/gestaodedados4_crefaz_onmicrosoft_com/EaODUUKwdOFJtbyx6MQHshsBjMAYRqYYyXr-el08rDnpxQ?download=1"
+destfile <- "regionais.xlsx"
+curl::curl_download(url, destfile)
+regionais <- read_excel(destfile,sheet = "Planilha1")
 
 
 df                <- left_join(x = df,y = users,by=c("Pessoa reponsavel ID"="ID"),keep=TRUE,suffix = c("_LEADS","_users"))
@@ -94,9 +96,6 @@ df                <- df %>% filter(str_detect(string = Lojas,pattern = "Loja CFZ
 
 
 
-# df                <- df %>% filter(str_detect(REGIONAL,pattern = "GILBERTO FELICIO") | str_detect(REGIONAL,pattern = "MAYSA CARVALHO") | str_detect(REGIONAL,pattern = "SC"))
-
-
 df                <- df %>% mutate("Fase do negocio" = ifelse(`Fase do negocio` == "PAGO AO CLIENTE","PAGO",`Fase do negocio`))
 df                <- df %>% mutate("Fase do negocio" = ifelse(`Fase do negocio` == "EM ANÁLISE","EM ANÁLISE",`Fase do negocio`))
 # df                <- df %>% mutate("Origem do Cliente"  = ifelse(`Origem do Cliente` == "","Não identificada",`Origem do Cliente`),
@@ -111,7 +110,7 @@ df                <- df %>% mutate("Origem do Cliente"  = ifelse(`Origem do Clie
                                    "Data fechado"       = ifelse(`Fase do negocio` == "PAGO" | `Fase do negocio` == "DESAFIO",`Data prevista de fechamento`, NA),
                                    "Data criado"        = ifelse(`Origem do Cliente1` == "Fonte" | `Origem do Cliente1` =="Não identificada",NA,`Data de inicio`))
 
-#df$`Data de inicio` %>% range
+
 
 #df$`Criado em`         <- as.Date(df$`Criado em`,format = "%d/%m/%Y")
 df$`Data fechado`       <- lubridate::as_date(df$`Data fechado` , format = "%Y-%m-%d %H:%M:%S")
