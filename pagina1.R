@@ -49,7 +49,7 @@ div(
                    ),
                    column(width = 3,
                           selectInput(inputId = "regional",label =  "REGIONAL:",
-                                      choices = c(sort(unique(df[,"REGIONAL"]))),
+                                      choices = c(sort(unique(df[,"Regional"]))),
                                       #choices = NULL,
                                       multiple = TRUE)
                    ),
