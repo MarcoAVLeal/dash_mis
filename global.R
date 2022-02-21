@@ -42,10 +42,11 @@ url <- "https://crefaz-my.sharepoint.com/:x:/g/personal/gestaodedados4_crefaz_on
 destfile <- "calendario.xlsx"
 curl::curl_download(url, destfile)
 calendario <- read_excel(destfile,sheet = "Calendario")
-calendario         = calendario[c("Dia","Class Não Útil")]
-colnames(calendario) <- c("Data","Dia_util")
+calendario         = calendario[c("Dia","Class Não Útil","Dia Útil2")]
+colnames(calendario) <- c("Data","Dia_util","Dia_Util2")
 calendario$Class_Dia <- is.na(calendario$Dia_util)
 calendario$Data      <- as.Date(calendario$Data,format = "%d/%m/%Y")
+calendario$Class_Dia <- ifelse(calendario$`Dia_Util2` == "Sábado",TRUE,calendario$Class_Dia)
 
 onedrive_url <- "https://crefaz-my.sharepoint.com/:x:/g/personal/gestaodedados4_crefaz_onmicrosoft_com/ESjlRAy5mzVJh3LRucNvoTYBa5x7ReX2691dJ-5uwaob4w?download=1"
 df <- read_url_csv(onedrive_url)
@@ -70,10 +71,23 @@ regionais <- read_excel(destfile,sheet = "Planilha1")
 
 
 df                <- left_join(x = df,y = users,by=c("Pessoa reponsavel ID"="ID"),keep=TRUE,suffix = c("_LEADS","_users"))
-df                <- left_join(x = df,y = regionais,by=c("Departamento"="Departamento"),keep=TRUE,suffix = c("_LEADS","_reg"))
+#df                <- left_join(x = df,y = regionais,by=c("Departamento"="Departamento"),keep=TRUE,suffix = c("_LEADS","_reg"))
 
+df$Regional       <- str_replace(string = df$Regional,pattern = "Super. ES 2 Lojas CFZ",replacement = "SIMONE FREITAS")
+df$Regional       <- str_replace(string = df$Regional,pattern = "Super. RJ Lojas CFZ",replacement = "MAYSA CARVALHO")
+df$Regional       <- str_replace(string = df$Regional,pattern = "Super. RS Lojas CFZ",replacement = "WAGNER RIBEIRO")
+df$Regional       <- str_replace(string = df$Regional,pattern = "Super. CE lojas CFZ",replacement = "GILBERTO FELICIO")
+df$Regional       <- str_replace(string = df$Regional,pattern = "Super. Lojas SC",replacement = "REGIONAL SC")
+df$Regional       <- str_replace(string = df$Regional,pattern = "Sup. Estadual Eliana",replacement = "ELIANA PORRINO")
+df$Regional       <- str_replace(string = df$Regional,pattern = "Regional Yrlon",replacement = "YRLON ALVES")
+df$Regional       <- str_replace(string = df$Regional,pattern = "Regional Mirele CFZ",replacement = "MIRELE DUARTE")
+df$Regional       <- str_replace(string = df$Regional,pattern = "Regional Helen",replacement = "HELEN CAROLINA")
+df$Regional       <- str_replace(string = df$Regional,pattern = "Regional Dejamile",replacement = "DEJAMILE SOUZA")
+df$Regional       <- str_replace(string = df$Regional,pattern = "Regional Helen",replacement = "HELEN CAROLINA")
+df$Regional       <- str_replace(string = df$Regional,pattern = "Regional Igor",replacement = "IGOR ASSIS")
 
-colnames(df)[colnames(df) == "Departamento_reg"] <- "Lojas"
+colnames(df)[colnames(df) == "Departamento"] <- "Lojas"
+
 
 
 df                <- df %>% filter(str_detect(string = Lojas,pattern = "Loja CFZ"))
@@ -109,7 +123,6 @@ df$`Data de inicio`     <- lubridate::as_date(df$`Data de inicio`, format = "%Y-
 df$`Modificado em`      <- lubridate::as_date(df$`Modificado em` , format = "%Y-%m-%d %H:%M:%S")
 
 
-df$`Data de inicio` %>% range
 
 df1 <- df
 

@@ -378,7 +378,7 @@ server <- function(input, output, session) {
       
       if (length(input$regional)){
         
-        f2 = data$REGIONAL %in% input$regional
+        f2 = data$Regional %in% input$regional
         data = data[f2,]
         #updateSelectInput(session = session,inputId = "canal",choices = c(sort(unique(data[,"Lojas"]))),selected = input$canal)
       }
@@ -506,7 +506,7 @@ server <- function(input, output, session) {
       
       if (length(input$regional)){
         
-        f2 = data$REGIONAL %in% input$regional
+        f2 = data$Regional %in% input$regional
         data = data[f2,]
         #updateSelectInput(session = session,inputId = "canal",choices = c(sort(unique(data[,"Lojas"]))),selected = input$canal)
       }
