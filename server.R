@@ -198,58 +198,58 @@ server <- function(input, output, session) {
     onedrive_url <- "https://crefaz-my.sharepoint.com/:x:/g/personal/gestaodedados4_crefaz_onmicrosoft_com/Ea1IGOUCSa1Mjlev_QvrNLAB4I_qcKHjWy908-RxDbWPcQ?download=1"
     x <- read_url_csv(onedrive_url)
     
-    output$msgbox_bitrix1 <- renderValueBox({
-      shinydashboard::valueBox(subtitle = tags$p("TOTAL", style = "font-size:100%;color:#E4781C;font-weight:bold;"),
-                               value =tags$p(x[1,"total"], style = "font-size:50%;color:#E4781C;font-weight:bold") , 
-                               width = 4, color = "navy")
-    })
-    
-    output$msgbox_bitrix2 <- renderValueBox({
-      shinydashboard::valueBox(subtitle = tags$p("PENDENTE", style = "font-size:100%;color:#E4781C;font-weight:bold;"),
-                               value =tags$p(x[1,"pending"], style = "font-size:50%;color:#E4781C;font-weight:bold") , 
-                               width = 4 , color = "navy")
-    })
-    
-    output$msgbox_bitrix3 <- renderValueBox({
-      shinydashboard::valueBox(subtitle = tags$p("ENVIADO", style = "font-size:100%;color:#E4781C;font-weight:bold;"),
-                               value =tags$p(x[1,"sent"], style = "font-size:50%;color:#E4781C;font-weight:bold") , 
-                               width = 4, color = "navy")
-    })
-    output$msgbox_bitrix4 <- renderValueBox({
-      shinydashboard::valueBox(subtitle = tags$p("TOTAL", style = "font-size:100%;color:#E4781C;font-weight:bold;"),
-                               value =tags$p(x[2,"total"], style = "font-size:50%;color:#E4781C;font-weight:bold") , 
-                               width = 4, color = "navy")
-    })
-    
-    output$msgbox_bitrix5 <- renderValueBox({
-      shinydashboard::valueBox(subtitle = tags$p("PENDENTE", style = "font-size:100%;color:#E4781C;font-weight:bold;"),
-                               value =tags$p(x[2,"pending"], style = "font-size:50%;color:#E4781C;font-weight:bold") , 
-                               width = 4,icon = tags$i(class = "fas fa-phone", style="font-size: 12px"), color = "navy")
-    })
-    
-    output$msgbox_bitrix6 <- renderValueBox({
-      shinydashboard::valueBox(subtitle = tags$p("ENVIADO", style = "font-size:100%;color:#E4781C;font-weight:bold;"),
-                               value =tags$p(x[2,"sent"], style = "font-size:50%;color:#E4781C;font-weight:bold") , 
-                               width = 4, color = "navy")
-    })
-    
-    output$msgbox_bitrix7 <- renderValueBox({
-      shinydashboard::valueBox(subtitle = tags$p("TOTAL", style = "font-size:100%;color:#E4781C;font-weight:bold;"),
-                               value =tags$p(x[3,"total"], style = "font-size:50%;color:#E4781C;font-weight:bold") , 
-                               width = 4, color = "navy")
-    })
-    
-    output$msgbox_bitrix8 <- renderValueBox({
-      shinydashboard::valueBox(subtitle =tags$p("PENDENTE", style = "font-size:100%;color:#E4781C;font-weight:bold;"),
-                               value =tags$p(x[3,"pending"], style = "font-size:50%;color:#E4781C;font-weight:bold") , 
-                               width = 4, color = "navy")
-    })
-    
-    output$msgbox_bitrix9 <- renderValueBox({
-      shinydashboard::valueBox(subtitle = tags$p("ENVIADO", style = "font-size:100%;color:#E4781C;font-weight:bold;"),
-                               value =tags$p(x[3,"sent"], style = "font-size:50%;color:#E4781C;font-weight:bold") , 
-                               width = 4, color = "navy")
-    })
+    # output$msgbox_bitrix1 <- renderValueBox({
+    #   shinydashboard::valueBox(subtitle = tags$p("TOTAL", style = "font-size:100%;color:#E4781C;font-weight:bold;"),
+    #                            value =tags$p(x[1,"total"], style = "font-size:50%;color:#E4781C;font-weight:bold") , 
+    #                            width = 4, color = "navy")
+    # })
+    # 
+    # output$msgbox_bitrix2 <- renderValueBox({
+    #   shinydashboard::valueBox(subtitle = tags$p("PENDENTE", style = "font-size:100%;color:#E4781C;font-weight:bold;"),
+    #                            value =tags$p(x[1,"pending"], style = "font-size:50%;color:#E4781C;font-weight:bold") , 
+    #                            width = 4 , color = "navy")
+    # })
+    # 
+    # output$msgbox_bitrix3 <- renderValueBox({
+    #   shinydashboard::valueBox(subtitle = tags$p("ENVIADO", style = "font-size:100%;color:#E4781C;font-weight:bold;"),
+    #                            value =tags$p(x[1,"sent"], style = "font-size:50%;color:#E4781C;font-weight:bold") , 
+    #                            width = 4, color = "navy")
+    # })
+    # output$msgbox_bitrix4 <- renderValueBox({
+    #   shinydashboard::valueBox(subtitle = tags$p("TOTAL", style = "font-size:100%;color:#E4781C;font-weight:bold;"),
+    #                            value =tags$p(x[2,"total"], style = "font-size:50%;color:#E4781C;font-weight:bold") , 
+    #                            width = 4, color = "navy")
+    # })
+    # 
+    # output$msgbox_bitrix5 <- renderValueBox({
+    #   shinydashboard::valueBox(subtitle = tags$p("PENDENTE", style = "font-size:100%;color:#E4781C;font-weight:bold;"),
+    #                            value =tags$p(x[2,"pending"], style = "font-size:50%;color:#E4781C;font-weight:bold") , 
+    #                            width = 4,icon = tags$i(class = "fas fa-phone", style="font-size: 12px"), color = "navy")
+    # })
+    # 
+    # output$msgbox_bitrix6 <- renderValueBox({
+    #   shinydashboard::valueBox(subtitle = tags$p("ENVIADO", style = "font-size:100%;color:#E4781C;font-weight:bold;"),
+    #                            value =tags$p(x[2,"sent"], style = "font-size:50%;color:#E4781C;font-weight:bold") , 
+    #                            width = 4, color = "navy")
+    # })
+    # 
+    # output$msgbox_bitrix7 <- renderValueBox({
+    #   shinydashboard::valueBox(subtitle = tags$p("TOTAL", style = "font-size:100%;color:#E4781C;font-weight:bold;"),
+    #                            value =tags$p(x[3,"total"], style = "font-size:50%;color:#E4781C;font-weight:bold") , 
+    #                            width = 4, color = "navy")
+    # })
+    # 
+    # output$msgbox_bitrix8 <- renderValueBox({
+    #   shinydashboard::valueBox(subtitle =tags$p("PENDENTE", style = "font-size:100%;color:#E4781C;font-weight:bold;"),
+    #                            value =tags$p(x[3,"pending"], style = "font-size:50%;color:#E4781C;font-weight:bold") , 
+    #                            width = 4, color = "navy")
+    # })
+    # 
+    # output$msgbox_bitrix9 <- renderValueBox({
+    #   shinydashboard::valueBox(subtitle = tags$p("ENVIADO", style = "font-size:100%;color:#E4781C;font-weight:bold;"),
+    #                            value =tags$p(x[3,"sent"], style = "font-size:50%;color:#E4781C;font-weight:bold") , 
+    #                            width = 4, color = "navy")
+    # })
     
     
     
