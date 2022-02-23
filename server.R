@@ -20,7 +20,7 @@ library(shinyWidgets)
 library(shinycssloaders)
 library(DT)
 library(reshape2)
-Sys.setlocale("LC_TIME", "pt_BR.UTF-8")
+
 if( stringr::str_detect(string = getwd(),pattern = "marco")){
   path_pg1 <-  source(file = "https://raw.githubusercontent.com/MarcoAVLeal/dash_mis/main/pagina1.R",encoding = "UTF-8",local = F)
   path_pg2 <-  source(file = "https://raw.githubusercontent.com/MarcoAVLeal/dash_mis/main/pagina2.R",encoding = "UTF-8",local = F)
