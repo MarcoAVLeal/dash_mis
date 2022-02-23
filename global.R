@@ -57,7 +57,7 @@ df <- read_url_csv(onedrive_url,enc = "cp1252")
 #                        "Base","Produto Crefaz", "Fase automacao",  "Data negociar","Data analisar", "Data prospectar","Modificado em","Desafio","Desafio retencao"
 # )
 
-colnames(df) <- names_df
+#colnames(df) <- names_df
 df$`Fase do negocio` <- ifelse(df$`Fase do negocio` == "EM ANÃ\u0081LISE","EM ANÁLISE",df$`Fase do negocio`)
 df$`Pessoa reponsavel ID`          <- as.character(df$`Pessoa reponsavel ID` )
 
