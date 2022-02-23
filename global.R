@@ -50,7 +50,7 @@ calendario$Data      <- as.Date(calendario$Data,format = "%d/%m/%Y")
 calendario$Class_Dia <- ifelse(calendario$`Dia_Util2` == "Sábado",TRUE,calendario$Class_Dia)
 
 onedrive_url <- "https://crefaz-my.sharepoint.com/:x:/g/personal/gestaodedados4_crefaz_onmicrosoft_com/ESjlRAy5mzVJh3LRucNvoTYBa5x7ReX2691dJ-5uwaob4w?download=1"
-df <- read_url_csv(onedrive_url,enc = "utf-8")
+df <- read_url_csv(onedrive_url,enc = "latin1")
 
 names_df          <- c("ID","Tipo","Pipeline", "Fase do negocio","Negocio Recorrente","Negocio Repetido","Contato Fonte","Modificado por ID","Criado por","Pessoa reponsavel ID",
                        "Data prevista de fechamento","Data de inicio","Valor do emprestimo","Origem do Cliente","Data exportacao","Contato","Grupo de fase" ,
@@ -63,7 +63,7 @@ df$`Pessoa reponsavel ID`          <- as.character(df$`Pessoa reponsavel ID` )
 
 onedrive_url <- "https://crefaz-my.sharepoint.com/:x:/g/personal/gestaodedados4_crefaz_onmicrosoft_com/ES9Opw7qVkROh6yxmaC8ARQB1_RuzanE2l8fl3U7p6r4KQ?download=1"
 
-users             <- read_url_csv(onedrive_url,sep = ";")
+users             <- read_url_csv(onedrive_url,sep = ";",enc = "latin1")
 users$ID          <- as.character(users$ID)
 
 library(readxl)

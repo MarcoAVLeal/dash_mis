@@ -20,7 +20,7 @@ library(shinyWidgets)
 library(shinycssloaders)
 library(DT)
 library(reshape2)
-#Sys.setlocale("LC_TIME", "pt_BR.UTF-8")
+
 if( stringr::str_detect(string = getwd(),pattern = "marco")){source(file = "https://raw.githubusercontent.com/MarcoAVLeal/dash_mis/main/librarys.R")
 }else{source(file = "https://raw.githubusercontent.com/MarcoAVLeal/dash_mis/main/librarys.R",encoding = "utf-8")}
 
