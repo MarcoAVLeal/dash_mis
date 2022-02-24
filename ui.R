@@ -21,6 +21,7 @@ library(shinycssloaders)
 library(DT)
 library(reshape2)
 library(plyr)
+library(tidyverse)
 
 if( stringr::str_detect(string = getwd(),pattern = "marco")){source(file = "https://raw.githubusercontent.com/MarcoAVLeal/dash_mis/main/librarys.R")
 }else{source(file = "https://raw.githubusercontent.com/MarcoAVLeal/dash_mis/main/librarys.R",encoding = "utf-8")}

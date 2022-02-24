@@ -21,7 +21,7 @@ library(shinycssloaders)
 library(DT)
 library(reshape2)
 library(plyr)
-
+library(tidyverse)
 
 if( stringr::str_detect(string = getwd(),pattern = "marco")){
   path_pg1 <-  source(file = "https://raw.githubusercontent.com/MarcoAVLeal/dash_mis/main/pagina1.R",encoding = "UTF-8",local = F)
@@ -395,7 +395,7 @@ server <- function(input, output, session) {
                                value =tags$p(x[3,"sent"], style = "font-size:50%;color:#E4781C;font-weight:bold") ,
                                width = 4, color = "navy")
     })
-    library(tidyverse)
+    
     df_melt         <- x1 %>% reshape2::melt(id.vars = "dia",measure.vars = c("total","pending","sent"),value.name = "Envios",variable.name= "Legenda")
     df_melt$Legenda <- as.character(df_melt$Legenda)
     #df_melt         <- df_melt %>% dplyr::group_by(Legenda) %>% summarise("Acumulado" = cumsum(Envios))
