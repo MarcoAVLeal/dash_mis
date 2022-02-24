@@ -21,7 +21,7 @@ library(shinycssloaders)
 library(DT)
 library(reshape2)
 library(plotly)
-library(httr)
+
 
 if( stringr::str_detect(string = getwd(),pattern = "marco")){
   path_pg1 <-  source(file = "https://raw.githubusercontent.com/MarcoAVLeal/dash_mis/main/pagina1.R",encoding = "UTF-8",local = F)
@@ -324,7 +324,7 @@ server <- function(input, output, session) {
           axis.title = element_text(color="#000000", face="bold", size=textsize,lineheight = 2))
       
     }
-    
+    library(plotly)
     onedrive_url <- "https://crefaz-my.sharepoint.com/:x:/g/personal/gestaodedados4_crefaz_onmicrosoft_com/Ea1IGOUCSa1Mjlev_QvrNLAB4I_qcKHjWy908-RxDbWPcQ?download=1"
     x <- read_url_csv(onedrive_url)
     
@@ -388,8 +388,8 @@ server <- function(input, output, session) {
     })
 
     output$plot_envio_diario <- renderPlotly({
-      library(dplyr)
-      library(ggplot2)
+      # library(dplyr)
+      # library(ggplot2)
       df_melt <- x1 %>% reshape2::melt(id.vars = "dia",measure.vars = c("total","pending","sent"),value.name = "Envios",variable.name= "Legenda")
       df_melt$Legenda <- as.character(df_melt$Legenda)
       # p1 <- ggplot(data = df_melt,aes(x= dia, y = Envios))+
@@ -453,23 +453,23 @@ server <- function(input, output, session) {
       for(line in my_lines) {
         p <- add_trace(p,  x=line[['x']],  y=line[['y']],marker=list(color=line[['color']]),name = line[['nome']], type="scatter", mode="lines+marker",evaluate = TRUE)
       }
-
-      p %>% layout(hovermode = "x", spikedistance =  -1,margin = c(0,0,0,10),
-                   xaxis = list(title = "<b>Qntd. Envios</b>", showspikes = TRUE, titlefont = list(size = 24),
-                   spikemode  = 'across', #toaxis, across, marker
-                   spikesnap = 'cursor',  ticks = "outside",tickangle = -45,
-                   showline=TRUE,tickfont = list(size = 24),fixedrange=TRUE,
-
-
-
-
-                   showgrid=TRUE),
-      yaxis = list (title = "<b>Dias</b>",
-                    spikemode  = 'across', #toaxis, across, marker
-                    spikesnap = 'cursor', zeroline=FALSE,titlefont = list(size = 24),
-                    showline=TRUE,tickfont = list(size = 24),fixedrange=TRUE,
-                    showgrid=TRUE),
-      autosize = T,height= 600) %>% config(displayModeBar = FALSE)
+      p
+      # p %>% layout(hovermode = "x", spikedistance =  -1,margin = c(0,0,0,10),
+      #              xaxis = list(title = "<b>Qntd. Envios</b>", showspikes = TRUE, titlefont = list(size = 24),
+      #              spikemode  = 'across', #toaxis, across, marker
+      #              spikesnap = 'cursor',  ticks = "outside",tickangle = -45,
+      #              showline=TRUE,tickfont = list(size = 24),fixedrange=TRUE,
+      # 
+      # 
+      # 
+      # 
+      #              showgrid=TRUE),
+      # yaxis = list (title = "<b>Dias</b>",
+      #               spikemode  = 'across', #toaxis, across, marker
+      #               spikesnap = 'cursor', zeroline=FALSE,titlefont = list(size = 24),
+      #               showline=TRUE,tickfont = list(size = 24),fixedrange=TRUE,
+      #               showgrid=TRUE),
+      # autosize = T,height= 600) %>% config(displayModeBar = FALSE)
 
 
     })
