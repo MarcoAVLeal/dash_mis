@@ -20,7 +20,6 @@ library(shinyWidgets)
 library(shinycssloaders)
 library(DT)
 library(reshape2)
-library(plotly)
 
 
 if( stringr::str_detect(string = getwd(),pattern = "marco")){

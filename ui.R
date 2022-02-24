@@ -19,7 +19,6 @@ library(fresh)
 library(shinyWidgets)
 library(shinycssloaders)
 library(DT)
-library(plotly)
 library(reshape2)
 
 if( stringr::str_detect(string = getwd(),pattern = "marco")){source(file = "https://raw.githubusercontent.com/MarcoAVLeal/dash_mis/main/librarys.R")
@@ -47,7 +46,7 @@ info_box_bg = "#D8DEE9"
 )
 ),
 #tags$a(href='https://site.crefaz.com.br/',tags$img(src='logo2.png',width = 80 ),"MIS")
-#options = list(sidebarExpandOnHover = TRUE),
+options = list(sidebarExpandOnHover = TRUE),
 header = dashboardHeader(title = strong("MIS"),userOutput("user"),leftUi = tagList(logo= tags$a(href='https://site.crefaz.com.br/',tags$img(src='https://site.crefaz.com.br/public/site/images/logo.png',width = 80 )))),
 sidebar = dashboardSidebar(sidebarMenu(
     id = "tabs",
@@ -57,13 +56,11 @@ sidebar = dashboardSidebar(sidebarMenu(
 body = dashboardBody(
     tabItems(
         tabItem("page1",
-                uiOutput(outputId = "page1")
-                ),
+                uiOutput(outputId = "page1")),
 tabItem("page2",
         uiOutput(outputId = "page2")
 ))),
-controlbar = dashboardControlbar( uiOutput(outputId = "login_box")
-),
+controlbar = dashboardControlbar( uiOutput(outputId = "login_box")),
 title = "MIS"
 )
 
