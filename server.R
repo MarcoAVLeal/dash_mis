@@ -398,7 +398,7 @@ server <- function(input, output, session) {
         scale_color_manual(values = c("darkgreen", "red","darkblue")) + 
         # scale_x_continuous(breaks = seq(0,1*input$cut_renda1,0.05*input$cut_renda1))
         # scale_y_continuous(breaks = seq(0,1,0.1))+
-        axis.theme(title_size = 12,textsize = 12,pos_leg = "bottom",x.angle = 45,vjust = 1,hjust=1);p1
+        axis.theme(title_size = 12,textsize = 12,pos_leg = "bottom",x.angle = 45,vjust = 1,hjust=1)
         # geom_vline(xintercept = df_acumulado$cutoff,
         #            linetype = "dashed", colour = "red", alpha = 0.75) +
         # geom_segment(aes(x = max(df_acumulado$cutoff),
@@ -419,10 +419,6 @@ server <- function(input, output, session) {
                                            spikemode  = 'across', #toaxis, across, marker
                                            spikesnap = 'cursor',  ticks = "outside",tickangle = -45,
                                            showline=TRUE,tickfont = list(size = 24),fixedrange=TRUE,
-                                           
-                                           
-                                           
-                                           
                                            showgrid=TRUE), 
                               yaxis = list (title = "<b>Dias</b>",
                                             spikemode  = 'across', #toaxis, across, marker
