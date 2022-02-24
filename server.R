@@ -414,7 +414,8 @@ server <- function(input, output, session) {
         #          y = max(df_acumulado$maxmau) + max(df_acumulado$max_diff)/2, label=paste0("KS.: ",round(df_acumulado$max_diff,3),"\nCutoff:",df_acumulado$cutoff),
         #          color="black")
         # 
-      ggplotly(p1)
+      ggplotly(p1)%>%
+        layout(hovermode = "x unified")
       
       
       
