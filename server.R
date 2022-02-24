@@ -329,9 +329,17 @@ server <- function(input, output, session) {
     
     onedrive_url <- "https://crefaz-my.sharepoint.com/:x:/g/personal/gestaodedados4_crefaz_onmicrosoft_com/EZYuY8kORyJIoTYUo9RwWMABYEkZTA2OXtxrUXnrLef9pQ?download=1"
     
+    
+    
     x1 <- read_url_csv(onedrive_url)
     
     x1
+    
+    contatos <- read_url_csv(url = "https://crefaz-my.sharepoint.com/:x:/g/personal/gestaodedados4_crefaz_onmicrosoft_com/EUJqJfojMwtMilqTonJmeoABp57gRp0UWzWlzdmo_xDLCA?download=1",sep = ";",enc = "latin1")
+    qtd_contatos_enviados <- contatos %>% dplyr::filter(CELULAR != "(44) 99890-6216") %>% dplyr::summarise(
+                                                                                              qtd_filiais   = n(),
+                                                                                              qtd_regionais = length(unique(Regional)),
+                                                                                              qtd_dir       = qtd_regionais*3)
     
     output$msgbox_bitrix1 <- renderValueBox({
       shinydashboard::valueBox(subtitle = tags$p("TOTAL", style = "font-size:100%;color:#E4781C;font-weight:bold;"),
@@ -392,6 +400,21 @@ server <- function(input, output, session) {
     df_melt_acumulado  <- tapply(X = df_melt$Envios,INDEX = df_melt$Legenda,FUN = cumsum) 
     acumulado         <- c(df_melt_acumulado$total,df_melt_acumulado$pending,df_melt_acumulado$sent)
     df_melt$Acumulado <- acumulado
+    medias <-  tapply(X = df_melt$Envios,INDEX = df_melt$Legenda,FUN = mean) %>% ldply(data.frame)
+    df_melt$Media <- ifelse(df_melt$Legenda == "Pendente",) 
+    
+    vline <- function(x = 0, color = "green") {
+      list(
+        type = "line",
+        #y0 = 0,
+        #y1 = 1,
+        yref = "paper",
+        x0 = x,
+        x1 = x,
+        line = list(color = color, dash="dot")
+      )
+    }
+    
     
     output$plot_envio_diario <- renderPlotly({
       
@@ -401,7 +424,11 @@ server <- function(input, output, session) {
         scale_color_manual(values = c("darkgreen", "red","darkblue")) +
         # scale_x_continuous(breaks = seq(0,1*input$cut_renda1,0.05*input$cut_renda1))
         # scale_y_continuous(breaks = seq(0,1,0.1))+
-        axis.theme(title_size = 12,textsize = 12,pos_leg = "bottom",x.angle = 45,vjust = 1,hjust=1)
+        axis.theme(title_size = 12,textsize = 12,pos_leg = "bottom",x.angle = 45,vjust = 1,hjust=1) +
+        geom_vline(xintercept = max(df_melt$dia),
+                   linetype = "dashed", colour = "red", alpha = 1,size = 1.5) +
+        geom_hline(yintercept = sum(qtd_contatos_enviados),
+                   linetype = "dashed", colour = "red", alpha = 1,size = 1.5) 
      plot <- ggplotly(p1) %>% layout(hovermode = "x", spikedistance =  -1,margin = c(0,0,0,10),
                               xaxis = list(title = "<b>Qntd. Envios</b>", showspikes = TRUE, titlefont = list(size = 24),
                                            spikemode  = 'across', #toaxis, across, marker
@@ -412,7 +439,7 @@ server <- function(input, output, session) {
                                             spikemode  = 'across', #toaxis, across, marker
                                             spikesnap = 'cursor', zeroline=FALSE,titlefont = list(size = 24),
                                             showline=TRUE,tickfont = list(size = 20),fixedrange=TRUE,
-                                            showgrid=TRUE),height = 480) %>% config(displayModeBar = FALSE)
+                                            showgrid=TRUE),height = 480) %>% config(displayModeBar = FALSE) 
     plot  
       
     })
