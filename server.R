@@ -324,7 +324,7 @@ server <- function(input, output, session) {
           axis.title = element_text(color="#000000", face="bold", size=textsize,lineheight = 2))
       
     }
-    library(plotly)
+
     onedrive_url <- "https://crefaz-my.sharepoint.com/:x:/g/personal/gestaodedados4_crefaz_onmicrosoft_com/Ea1IGOUCSa1Mjlev_QvrNLAB4I_qcKHjWy908-RxDbWPcQ?download=1"
     x <- read_url_csv(onedrive_url)
     
