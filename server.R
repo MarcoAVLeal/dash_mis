@@ -387,7 +387,24 @@ server <- function(input, output, session) {
                                width = 4, color = "navy")
     })
 
-  
+    output$plot_envio_diario <- renderPlot({
+      
+      
+      df_melt <- x1 %>% reshape2::melt(id.vars = "dia",measure.vars = c("total","pending","sent"),value.name = "Envios",variable.name= "Legenda")
+      df_melt$Legenda <- as.character(df_melt$Legenda)
+      
+      
+      p1 <- ggplot(data = df_melt,aes(x= dia, y = Envios))+
+        geom_point(size = 1.2, alpha = 0.75)+
+        geom_line(size = 1.2, alpha = 0.75,aes(color  = Legenda,group = Legenda))+
+        scale_color_manual(values = c("darkgreen", "red","darkblue")) +
+        # scale_x_continuous(breaks = seq(0,1*input$cut_renda1,0.05*input$cut_renda1))
+        # scale_y_continuous(breaks = seq(0,1,0.1))+
+        axis.theme(title_size = 12,textsize = 12,pos_leg = "bottom",x.angle = 45,vjust = 1,hjust=1)
+      p1
+      
+      
+    })
     
     ######################################               ###########################################################
     ###################################### Informações Bitrix ###########################################################
