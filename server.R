@@ -386,7 +386,7 @@ server <- function(input, output, session) {
                                width = 4, color = "navy")
     })
 
-    output$plot_envio_diario <- renderPlot({
+    output$plot_envio_diario <- renderPlotly({
       
       
       df_melt <- x1 %>% reshape2::melt(id.vars = "dia",measure.vars = c("total","pending","sent"),value.name = "Envios",variable.name= "Legenda")
@@ -400,7 +400,18 @@ server <- function(input, output, session) {
         # scale_x_continuous(breaks = seq(0,1*input$cut_renda1,0.05*input$cut_renda1))
         # scale_y_continuous(breaks = seq(0,1,0.1))+
         axis.theme(title_size = 12,textsize = 12,pos_leg = "bottom",x.angle = 45,vjust = 1,hjust=1)
-      p1
+      ggplotly(p1) %>% layout(hovermode = "x", spikedistance =  -1,margin = c(0,0,0,10),
+                              xaxis = list(title = "<b>Qntd. Envios</b>", showspikes = TRUE, titlefont = list(size = 24),
+                                           spikemode  = 'across', #toaxis, across, marker
+                                           spikesnap = 'cursor',  ticks = "outside",tickangle = -45,
+                                           showline=TRUE,tickfont = list(size = 24),fixedrange=TRUE,
+                                           showgrid=TRUE),
+                              yaxis = list (title = "<b>Dias</b>",
+                                            spikemode  = 'across', #toaxis, across, marker
+                                            spikesnap = 'cursor', zeroline=FALSE,titlefont = list(size = 24),
+                                            showline=TRUE,tickfont = list(size = 24),fixedrange=TRUE,
+                                            showgrid=TRUE),
+                              autosize = T,height= 600) %>% config(displayModeBar = FALSE)
       
       
     })
