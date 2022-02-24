@@ -425,7 +425,7 @@ server <- function(input, output, session) {
                                             spikesnap = 'cursor', zeroline=FALSE,titlefont = list(size = 24),
                                             showline=TRUE,tickfont = list(size = 24),fixedrange=TRUE,
                                             showgrid=TRUE),
-                              autosize = T,height= 600) %>% config(displayModeBar = FALSE)
+                              autosize = T) %>% config(displayModeBar = FALSE)
       # df_melt %>%
       # plot_ly(x=~dia, y=~Envios, type="scatter", mode="lines+marker", color=~Legenda) %>% layout(hovermode = TRUE, spikedistance =  -1,margin = c(0,0,0,10),
       #                                                                                            xaxis = list(title = "<b>NÚMERO DE CASOS</b>", showspikes = TRUE, titlefont = list(size = 24),
