@@ -82,9 +82,4 @@ div(
                ),
       tabPanel(title = "panel3", "Panel 3 content")
     
-  )
-  
- 
-  
-  
-  )
+  ))

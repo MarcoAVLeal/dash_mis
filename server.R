@@ -413,7 +413,7 @@ server <- function(input, output, session) {
     
     dataset <- reactive({
       data = df1
-      print(input$canal)
+      
       if (length(input$canal)){
         f1 =  data$Lojas %in% input$canal
         data = data[f1,]
@@ -443,7 +443,7 @@ server <- function(input, output, session) {
       })
       
       group_count <- as.character(input$visao)
-      print(input$visao)
+     
       Total <- sum  
       #as.character(input$visao)
       table <- table(data[,c(group_count)],data$`Fase do negocio`)  %>% as.data.frame
@@ -541,7 +541,7 @@ server <- function(input, output, session) {
     
     dataset1 <- reactive({
       data = df1
-      print(input$canal)
+     
       if (length(input$canal)){
         f1 =  data$Lojas %in% input$canal
         data = data[f1,]
@@ -599,7 +599,7 @@ server <- function(input, output, session) {
           
           
           for(movimentacao in table_movimentacoes$Var1){
-            #print(fase)
+            
             resumo_movimentacoes[resumo_movimentacoes$mov == movimentacao,"Qntd."] <- table_movimentacoes[table_movimentacoes$Var1 == movimentacao,"Freq"]
             
           }

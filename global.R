@@ -96,7 +96,6 @@ colnames(df)[colnames(df) == "Departamento"] <- "Lojas"
 df                <- df %>% filter(str_detect(string = Lojas,pattern = "Loja CFZ"))
 
 
-df$`Fase do negocio` %>% unique
 
 
 df                <- df %>% mutate("Fase do negocio" = ifelse(`Fase do negocio` == "PAGO AO CLIENTE","PAGO",`Fase do negocio`))
