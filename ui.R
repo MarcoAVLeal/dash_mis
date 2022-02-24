@@ -1,3 +1,4 @@
+rm(list=ls())
 library(shiny)
 library(shinyWidgets)
 library(shinydashboard)
