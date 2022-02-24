@@ -21,7 +21,7 @@ library(shinyWidgets)
 library(shinycssloaders)
 library(DT)
 library(reshape2)
-
+library(plyr)
 #source(file = "funcoes.R",encoding = "UTF-8")
 read_url_csv <- function(url, sep = ",",enc = "UTF-8"){
   tmpFile <- tempfile()
