@@ -406,12 +406,12 @@ server <- function(input, output, session) {
                               xaxis = list(title = "<b>Qntd. Envios</b>", showspikes = TRUE, titlefont = list(size = 24),
                                            spikemode  = 'across', #toaxis, across, marker
                                            spikesnap = 'cursor',  ticks = "outside",tickangle = -45,
-                                           showline=TRUE,tickfont = list(size = 24),fixedrange=TRUE,
+                                           showline=TRUE,tickfont = list(size = 20),fixedrange=TRUE,
                                            showgrid=TRUE),
                               yaxis = list (title = "<b>Dias</b>",
                                             spikemode  = 'across', #toaxis, across, marker
                                             spikesnap = 'cursor', zeroline=FALSE,titlefont = list(size = 24),
-                                            showline=TRUE,tickfont = list(size = 24),fixedrange=TRUE,
+                                            showline=TRUE,tickfont = list(size = 20),fixedrange=TRUE,
                                             showgrid=TRUE),height = 480) %>% config(displayModeBar = FALSE)
     plot  
       
@@ -431,12 +431,12 @@ server <- function(input, output, session) {
                                       xaxis = list(title = "<b>Qntd. Envios</b>", showspikes = TRUE, titlefont = list(size = 24),
                                                    spikemode  = 'across', #toaxis, across, marker
                                                    spikesnap = 'cursor',  ticks = "outside",tickangle = -45,
-                                                   showline=TRUE,tickfont = list(size = 24),fixedrange=TRUE,
+                                                   showline=TRUE,tickfont = list(size = 20),fixedrange=TRUE,
                                                    showgrid=TRUE),
                                       yaxis = list (title = "<b>Dias</b>",
                                                     spikemode  = 'across', #toaxis, across, marker
                                                     spikesnap = 'cursor', zeroline=FALSE,titlefont = list(size = 24),
-                                                    showline=TRUE,tickfont = list(size = 24),fixedrange=TRUE,
+                                                    showline=TRUE,tickfont = list(size = 20),fixedrange=TRUE,
                                                     showgrid=TRUE),height = 480) %>% config(displayModeBar = FALSE)
       plot  
       
