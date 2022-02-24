@@ -391,7 +391,7 @@ server <- function(input, output, session) {
       library(dplyr)
       library(ggplot2)
       df_melt <- x1 %>% reshape2::melt(id.vars = "dia",measure.vars = c("total","pending","sent"),value.name = "Envios",variable.name= "Legenda")
-      df_melt$Legenda <- as.character(df_melt$Legenda)
+      #df_melt$Legenda <- as.character(df_melt$Legenda)
       p1 <- ggplot(data = df_melt,aes(x= dia, y = Envios))+
         geom_point(size = 1.2, alpha = 0.75)+
         geom_line(size = 1.2, alpha = 0.75,aes(color  = Legenda,group = Legenda))+
@@ -426,50 +426,7 @@ server <- function(input, output, session) {
                                             showline=TRUE,tickfont = list(size = 24),fixedrange=TRUE,
                                             showgrid=TRUE),
                               autosize = T) %>% config(displayModeBar = FALSE)
-      # df_melt %>%
-      # plot_ly(x=~dia, y=~Envios, type="scatter", mode="lines+marker", color=~Legenda) %>% layout(hovermode = TRUE, spikedistance =  -1,margin = c(0,0,0,10),
-      #                                                                                            xaxis = list(title = "<b>NÚMERO DE CASOS</b>", showspikes = TRUE, titlefont = list(size = 24),
-      #                                                                                                         spikemode  = 'across', #toaxis, across, marker
-      #                                                                                                         spikesnap = 'cursor',  ticks = "outside",tickangle = -45,
-      #                                                                                                         showline=TRUE,tickfont = list(size = 24),fixedrange=TRUE,
-      #                                                                                                         
-      #                                                                                                         
-      #                                                                                                         
-      #                                                                                                         
-      #                                                                                                         showgrid=TRUE), 
-      #                                                                                            yaxis = list (title = "<b>CIDADES</b>",
-      #                                                                                                          spikemode  = 'across', #toaxis, across, marker
-      #                                                                                                          spikesnap = 'cursor', zeroline=FALSE,titlefont = list(size = 24),
-      #                                                                                                          showline=TRUE,tickfont = list(size = 24),fixedrange=TRUE,
-      #                                                                                                          showgrid=TRUE),
-      #                                                                                            autosize = T,height= 600) %>% config(displayModeBar = FALSE)
-      # my_lines <- list(
-      #   list(x=x1$dia, y=x1$total, color='red',nome = "Total"),
-      #   list(x=x1$dia, y=x1$pending, color='blue',nome = "Pendente"),
-      #   list(x=x1$dia, y=x1$sent, color='green',nome = "Enviado")
-      # )
-      # p <- plot_ly(data = x1)
-      # names <- c("total","pending","sent")
-      # for(line in my_lines) {
-      #   p <- add_trace(p,  x=line[['x']],  y=line[['y']],marker=list(color=line[['color']]),name = line[['nome']], type="scatter", mode="lines+marker",evaluate = TRUE)
-      # }
-      # 
-      # p %>% layout(hovermode = "x", spikedistance =  -1,margin = c(0,0,0,10),
-      #              xaxis = list(title = "<b>Qntd. Envios</b>", showspikes = TRUE, titlefont = list(size = 24),
-      #              spikemode  = 'across', #toaxis, across, marker
-      #              spikesnap = 'cursor',  ticks = "outside",tickangle = -45,
-      #              showline=TRUE,tickfont = list(size = 24),fixedrange=TRUE,
-      # 
-      # 
-      # 
-      # 
-      #              showgrid=TRUE),
-      # yaxis = list (title = "<b>Dias</b>",
-      #               spikemode  = 'across', #toaxis, across, marker
-      #               spikesnap = 'cursor', zeroline=FALSE,titlefont = list(size = 24),
-      #               showline=TRUE,tickfont = list(size = 24),fixedrange=TRUE,
-      #               showgrid=TRUE),
-      # autosize = T,height= 600) %>% config(displayModeBar = FALSE)
+      
 
 
     })
