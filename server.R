@@ -385,17 +385,17 @@ server <- function(input, output, session) {
                                value =tags$p(x[3,"sent"], style = "font-size:50%;color:#E4781C;font-weight:bold") ,
                                width = 4, color = "navy")
     })
+    
+    df_melt         <- x1 %>% reshape2::melt(id.vars = "dia",measure.vars = c("total","pending","sent"),value.name = "Envios",variable.name= "Legenda")
+    df_melt$Legenda <- as.character(df_melt$Legenda)
+    df_melt         <- df_melt %>% dplyr::group_by(Legenda) %>% mutate("Acumulado" = cumsum(Envios))
+    
 
     output$plot_envio_diario <- renderPlotly({
       
-      
-      df_melt <- x1 %>% reshape2::melt(id.vars = "dia",measure.vars = c("total","pending","sent"),value.name = "Envios",variable.name= "Legenda")
-      df_melt$Legenda <- as.character(df_melt$Legenda)
-      
-      
-      p1 <- ggplot(data = df_melt,aes(x= dia, y = Envios))+
+      p1 <- ggplot(data = df_melt,aes(x= dia, y = Envios)) +
         geom_point(size = 1.2, alpha = 0.75)+
-        geom_line(size = 1.2, alpha = 0.75,aes(color  = Legenda,group = Legenda))+
+        geom_line(size = 1.2, alpha = 0.75,aes(color  = Legenda,group = Legenda)) +
         scale_color_manual(values = c("darkgreen", "red","darkblue")) +
         # scale_x_continuous(breaks = seq(0,1*input$cut_renda1,0.05*input$cut_renda1))
         # scale_y_continuous(breaks = seq(0,1,0.1))+
@@ -415,6 +415,34 @@ server <- function(input, output, session) {
     plot  
       
     })
+    
+    
+    output$plot_envio_acumulado <- renderPlotly({
+      
+      p1 <- ggplot(data = df_melt,aes(x= dia, y = Acumulado)) +
+        geom_point(size = 1.2, alpha = 0.75)+
+        geom_line(size = 1.2, alpha = 0.75,aes(color  = Legenda,group = Legenda)) +
+        scale_color_manual(values = c("darkgreen", "red","darkblue")) +
+        # scale_x_continuous(breaks = seq(0,1*input$cut_renda1,0.05*input$cut_renda1))
+        # scale_y_continuous(breaks = seq(0,1,0.1))+
+        axis.theme(title_size = 12,textsize = 12,pos_leg = "bottom",x.angle = 45,vjust = 1,hjust=1)
+      plot <- ggplotly(p1) %>% layout(hovermode = "x", spikedistance =  -1,margin = c(0,0,0,10),
+                                      xaxis = list(title = "<b>Qntd. Envios</b>", showspikes = TRUE, titlefont = list(size = 24),
+                                                   spikemode  = 'across', #toaxis, across, marker
+                                                   spikesnap = 'cursor',  ticks = "outside",tickangle = -45,
+                                                   showline=TRUE,tickfont = list(size = 24),fixedrange=TRUE,
+                                                   showgrid=TRUE),
+                                      yaxis = list (title = "<b>Dias</b>",
+                                                    spikemode  = 'across', #toaxis, across, marker
+                                                    spikesnap = 'cursor', zeroline=FALSE,titlefont = list(size = 24),
+                                                    showline=TRUE,tickfont = list(size = 24),fixedrange=TRUE,
+                                                    showgrid=TRUE),
+                                      autosize = T,height= 600) %>% config(displayModeBar = FALSE)
+      plot  
+      
+    })
+    
+
     
     ######################################               ###########################################################
     ###################################### Informações Bitrix ###########################################################

@@ -32,9 +32,11 @@ div(
                                        withSpinner(valueBoxOutput("msgbox_bitrix7"),proxy.height = "10px",size = 0.5),
                                        valueBoxOutput("msgbox_bitrix8"),
                                        valueBoxOutput("msgbox_bitrix9")))),
-               plotlyOutput(outputId = "plot_envio_diario"),
+               fluiRow(column = 6, plotlyOutput(outputId = "plot_envio_diario"),
+                       column = 6, plotlyOutput(outputId = "plot_envio_acumulado") )),
+               
               
-                   HTML('<hr style="color: purple;">')),
+                  
       tabPanel(title = p("Indicadores Bitrix",style="color:#E4781C;text-align:center;font-weight:bold;font-size:14px"), 
                    HTML("<div style='color:#273658;text-align:center;font-weight:bold;'><h1 style='color:#273658;text-align:center;font-weight:bold;'>INDICADORES DO FLUXO DE VENDAS DO BITRIX</h1> </div>"),
                    HTML('<hr style="color: purple;">'),
