@@ -340,6 +340,7 @@ server <- function(input, output, session) {
                                                                                               qtd_filiais   = n(),
                                                                                               qtd_regionais = length(unique(Regional)),
                                                                                               qtd_dir       = qtd_regionais*3)
+    x1$`Qntd. Esperada` <- qtd_contatos_enviados %>% sum
     
     output$msgbox_bitrix1 <- renderValueBox({
       shinydashboard::valueBox(subtitle = tags$p("TOTAL", style = "font-size:100%;color:#E4781C;font-weight:bold;"),
@@ -401,7 +402,7 @@ server <- function(input, output, session) {
     acumulado         <- c(df_melt_acumulado$total,df_melt_acumulado$pending,df_melt_acumulado$sent)
     df_melt$Acumulado <- acumulado
     medias <-  tapply(X = df_melt$Envios,INDEX = df_melt$Legenda,FUN = mean) %>% ldply(data.frame)
-    df_melt$Media <- ifelse(df_melt$Legenda == "Pendente",) 
+    #df_melt$Media <- ifelse(df_melt$Legenda == "Pendente",) 
     
     vline <- function(x = 0, color = "green") {
       list(
@@ -426,9 +427,9 @@ server <- function(input, output, session) {
         # scale_y_continuous(breaks = seq(0,1,0.1))+
         axis.theme(title_size = 12,textsize = 12,pos_leg = "bottom",x.angle = 45,vjust = 1,hjust=1) +
         geom_vline(xintercept = max(df_melt$dia),
-                   linetype = "dashed", colour = "red", alpha = 1,size = 1.5) +
+                   linetype = "dashed", colour = "red", alpha = 1,size = 0.8) +
         geom_hline(yintercept = sum(qtd_contatos_enviados),
-                   linetype = "dashed", colour = "red", alpha = 1,size = 1.5) 
+                   linetype = "dashed", colour = "red", alpha = 1,size = 0.8) 
      plot <- ggplotly(p1) %>% layout(hovermode = "x", spikedistance =  -1,margin = c(0,0,0,10),
                               xaxis = list(title = "<b>Qntd. Envios</b>", showspikes = TRUE, titlefont = list(size = 24),
                                            spikemode  = 'across', #toaxis, across, marker
