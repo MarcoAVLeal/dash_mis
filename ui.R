@@ -19,6 +19,7 @@ library(fresh)
 library(shinyWidgets)
 library(shinycssloaders)
 library(DT)
+library(plotly)
 library(reshape2)
 
 if( stringr::str_detect(string = getwd(),pattern = "marco")){source(file = "https://raw.githubusercontent.com/MarcoAVLeal/dash_mis/main/librarys.R")
