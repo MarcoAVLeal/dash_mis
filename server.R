@@ -412,7 +412,7 @@ server <- function(input, output, session) {
                                             spikemode  = 'across', #toaxis, across, marker
                                             spikesnap = 'cursor', zeroline=FALSE,titlefont = list(size = 24),
                                             showline=TRUE,tickfont = list(size = 24),fixedrange=TRUE,
-                                            showgrid=TRUE)) %>% config(displayModeBar = FALSE)
+                                            showgrid=TRUE),height = 480) %>% config(displayModeBar = FALSE)
     plot  
       
     })
@@ -437,7 +437,7 @@ server <- function(input, output, session) {
                                                     spikemode  = 'across', #toaxis, across, marker
                                                     spikesnap = 'cursor', zeroline=FALSE,titlefont = list(size = 24),
                                                     showline=TRUE,tickfont = list(size = 24),fixedrange=TRUE,
-                                                    showgrid=TRUE)) %>% config(displayModeBar = FALSE)
+                                                    showgrid=TRUE),height = 480) %>% config(displayModeBar = FALSE)
       plot  
       
     })

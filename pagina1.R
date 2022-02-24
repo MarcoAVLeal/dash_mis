@@ -32,8 +32,8 @@ div(
                                        withSpinner(valueBoxOutput("msgbox_bitrix7"),proxy.height = "10px",size = 0.5),
                                        valueBoxOutput("msgbox_bitrix8"),
                                        valueBoxOutput("msgbox_bitrix9")))),
-               fluidRow(column = 6, plotlyOutput(outputId = "plot_envio_diario"),
-                       column = 6, plotlyOutput(outputId = "plot_envio_acumulado") )),
+               fluidRow(column = 6, plotlyOutput(outputId = "plot_envio_diario",height = 480),
+                       column = 6, plotlyOutput(outputId = "plot_envio_acumulado",height = 480) )),
                
               
                   
