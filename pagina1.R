@@ -35,7 +35,7 @@ div(
                                    fluidRow(column = 6, plotlyOutput(outputId = "plot_envio_diario",height = 480),
                                             column = 6, plotlyOutput(outputId = "plot_envio_acumulado",height = 480) )),
                             column(width = 3,
-                                   dateRangeInput(inputId = "data_consulta_msg",label = "Data",min = "2022-01-01", max = lubridate::today(),
+                                   dateRangeInput(inputId = "data_consulta_msg",label = "Data",min = "2022-01-01", max = lubridate::today()),
                                    withSpinner(DTOutput(outputId = "tb_msg_bitrix"),hide.ui = FALSE,proxy.height = "10px",size = 0.5),)
                             )),
                    
