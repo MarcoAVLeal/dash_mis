@@ -35,11 +35,8 @@ div(
                                    fluidRow(column = 6, plotlyOutput(outputId = "plot_envio_diario",height = 480),
                                             column = 6, plotlyOutput(outputId = "plot_envio_acumulado",height = 480) )),
                             column(width = 3,
-                                   dateInput(inputId = "data_consulta_msg",label = "Data",value = max(x1$dia))
-                                  
-                                   
-                                   
-                                   ))),
+                                   dateInput(inputId = "data_consulta_msg",label = "Data",value = max(x1$dia)))
+                            )),
                    
                
               
