@@ -326,7 +326,7 @@ server <- function(input, output, session) {
     ###################################### Renderiznado Info Whatsapp ###########################################################
     ######################################                            ###########################################################  
     
-
+    df_msg_bitrix <- reactive({
     onedrive_url <- "https://crefaz-my.sharepoint.com/:x:/g/personal/gestaodedados4_crefaz_onmicrosoft_com/Ea1IGOUCSa1Mjlev_QvrNLAB4I_qcKHjWy908-RxDbWPcQ?download=1"
     x <- read_url_csv(onedrive_url)
     
@@ -344,6 +344,8 @@ server <- function(input, output, session) {
                                                                                               qtd_regionais = length(unique(Regional)),
                                                                                               qtd_dir       = qtd_regionais*3)
     x1$`Qntd. Esperada` <- qtd_contatos_enviados %>% sum
+    
+    x1 <- x1 %>% dplyr::filter(dia >= input$data_consulta_msg[1] & dia <= input$data_consulta_msg[2])
     
     output$msgbox_bitrix1 <- renderValueBox({
       shinydashboard::valueBox(subtitle = tags$p("TOTAL", style = "font-size:100%;color:#E4781C;font-weight:bold;"),
@@ -476,8 +478,8 @@ server <- function(input, output, session) {
       plot  
       
     })
-    
-
+    x1
+    })
     
     ######################################               ###########################################################
     ###################################### Informações Bitrix ###########################################################
@@ -737,6 +739,26 @@ server <- function(input, output, session) {
     
     output$table_movimentacoes <- renderDT(
       dataset1(),
+      extensions = 'Buttons',server = FALSE,
+      options = list(
+        lengthChange = FALSE,
+        # scrollX=TRUE,
+        # lengthMenu = c(5,10,15),
+        paging = TRUE,
+        searching = TRUE,
+        # fixedColumns = TRUE,
+        # autoWidth = TRUE,
+        # ordering = TRUE,
+        dom = 'Bfrtip',
+        buttons = c('copy', 'csv', 'excel','pdf')
+      ) ,
+      class = "display"
+    )
+    
+    
+    
+    output$tb_msg_bitrix <- renderDT(
+      df_msg_bitrix(),
       extensions = 'Buttons',server = FALSE,
       options = list(
         lengthChange = FALSE,
