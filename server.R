@@ -325,19 +325,18 @@ server <- function(input, output, session) {
     ######################################                            ###########################################################
     ###################################### Renderiznado Info Whatsapp ###########################################################
     ######################################                            ###########################################################  
-    
-    df_msg_bitrix <- reactive({
-    onedrive_url <- "https://crefaz-my.sharepoint.com/:x:/g/personal/gestaodedados4_crefaz_onmicrosoft_com/Ea1IGOUCSa1Mjlev_QvrNLAB4I_qcKHjWy908-RxDbWPcQ?download=1"
     x <- read_url_csv(onedrive_url)
     
     onedrive_url <- "https://crefaz-my.sharepoint.com/:x:/g/personal/gestaodedados4_crefaz_onmicrosoft_com/EZYuY8kORyJIoTYUo9RwWMABYEkZTA2OXtxrUXnrLef9pQ?download=1"
     
     
-    mes_atual = lubridate::month(x1$dia) == max(unique(lubridate::month(x1$dia)))
-    hoje = lubridate::today() == x1$dia
+    
     x1 <- read_url_csv(onedrive_url)
     
     x1$dia <- lubridate::as_date(x1$dia)
+    df_msg_bitrix <- reactive({
+    onedrive_url <- "https://crefaz-my.sharepoint.com/:x:/g/personal/gestaodedados4_crefaz_onmicrosoft_com/Ea1IGOUCSa1Mjlev_QvrNLAB4I_qcKHjWy908-RxDbWPcQ?download=1"
+
     
     contatos <- read_url_csv(url = "https://crefaz-my.sharepoint.com/:x:/g/personal/gestaodedados4_crefaz_onmicrosoft_com/EUJqJfojMwtMilqTonJmeoABp57gRp0UWzWlzdmo_xDLCA?download=1",sep = ";",enc = "latin1")
     qtd_contatos_enviados <- contatos %>% dplyr::filter(CELULAR != "(44) 99890-6216") %>% dplyr::summarise(
@@ -347,7 +346,8 @@ server <- function(input, output, session) {
     x1$`Qntd. Esperada` <- qtd_contatos_enviados %>% sum
     
     x1 <- x1 %>% dplyr::filter(dia >= input$data_consulta_msg[1] & dia <= input$data_consulta_msg[2])
-    
+    mes_atual = lubridate::month(x1$dia) == max(unique(lubridate::month(x1$dia)))
+    hoje = lubridate::today() == x1$dia
     output$msgbox_bitrix1 <- renderValueBox({
       shinydashboard::valueBox(subtitle = tags$p("TOTAL", style = "font-size:100%;color:#E4781C;font-weight:bold;"),
                                value =tags$p(sum(x1[,"total"]), style = "font-size:50%;color:#E4781C;font-weight:bold") ,
@@ -391,7 +391,7 @@ server <- function(input, output, session) {
 
     output$msgbox_bitrix8 <- renderValueBox({
       shinydashboard::valueBox(subtitle =tags$p("PENDENTE", style = "font-size:100%;color:#E4781C;font-weight:bold;"),
-                               value =tags$p(sum(x1[hoje,"pending"]), style = "font-size:50%;color:#E4781C;font-weight:bold") ,
+                               value =tags$p(sum(x1[hoje,"pending"]), style = "font-size:50%;color:#E4781C;font-weight:bold"),
                                width = 4, color = "navy")
     })
 
