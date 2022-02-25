@@ -385,19 +385,19 @@ server <- function(input, output, session) {
 
     output$msgbox_bitrix7 <- renderValueBox({
       shinydashboard::valueBox(subtitle = tags$p("TOTAL", style = "font-size:100%;color:#E4781C;font-weight:bold;"),
-                               value =tags$p(x[3,"total"], style = "font-size:50%;color:#E4781C;font-weight:bold") ,
+                               value =tags$p(x[hoje,"total"], style = "font-size:50%;color:#E4781C;font-weight:bold") ,
                                width = 4, color = "navy")
     })
 
     output$msgbox_bitrix8 <- renderValueBox({
       shinydashboard::valueBox(subtitle =tags$p("PENDENTE", style = "font-size:100%;color:#E4781C;font-weight:bold;"),
-                               value =tags$p(x[3,"pending"], style = "font-size:50%;color:#E4781C;font-weight:bold") ,
+                               value =tags$p(x[hoje,"pending"], style = "font-size:50%;color:#E4781C;font-weight:bold") ,
                                width = 4, color = "navy")
     })
 
     output$msgbox_bitrix9 <- renderValueBox({
       shinydashboard::valueBox(subtitle = tags$p("ENVIADO", style = "font-size:100%;color:#E4781C;font-weight:bold;"),
-                               value =tags$p(x[3,"sent"], style = "font-size:50%;color:#E4781C;font-weight:bold") ,
+                               value =tags$p(x[hoje,"sent"], style = "font-size:50%;color:#E4781C;font-weight:bold") ,
                                width = 4, color = "navy")
     })
     
