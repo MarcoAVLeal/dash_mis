@@ -23,6 +23,29 @@ library(reshape2)
 library(plyr)
 library(tidyverse)
 
+axis.theme <- function(x.angle = 0,vjust=0,hjust=0.5,pos_leg="top",textsize = 10,lengend_title_size = 10,lengend_text_size = 8,title_size = 16){
+  
+  
+  theme_bw()  +
+    theme(
+      axis.text.x = element_text(angle = x.angle,face = "bold",size = textsize,hjust=hjust, vjust=vjust),
+      axis.text.y = element_text(angle = 0,face = "bold",size = textsize),
+      legend.background = element_rect(fill = "transparent", colour = NA,size = 2),
+      panel.background = element_rect(fill = "transparent", colour = NA),
+      plot.background = element_rect(fill = "white", colour = NA),
+      axis.title.x = element_text(colour = "black",size = textsize,face = "bold"),
+      axis.title.y = element_text(colour = "black",size = textsize,face = "bold"),
+      legend.title = element_text(colour = "black",size = lengend_title_size),
+      legend.position = pos_leg,
+      legend.text = element_text(colour = "black",size = lengend_text_size,face = "bold"),
+      panel.grid = element_line(linetype="dashed"),
+      panel.grid.major = element_line(colour = "gray"),
+      title =element_text(size=title_size, face='bold',hjust = 0.5),
+      plot.title = element_text(hjust = 0.5),
+      axis.title = element_text(color="#000000", face="bold", size=textsize,lineheight = 2))
+  
+}
+
 if( stringr::str_detect(string = getwd(),pattern = "marco")){
   path_pg1 <-  source(file = "https://raw.githubusercontent.com/MarcoAVLeal/dash_mis/main/pagina1.R",encoding = "UTF-8",local = F)
   path_pg2 <-  source(file = "https://raw.githubusercontent.com/MarcoAVLeal/dash_mis/main/pagina2.R",encoding = "UTF-8",local = F)
@@ -302,28 +325,7 @@ server <- function(input, output, session) {
     ######################################                            ###########################################################
     ###################################### Renderiznado Info Whatsapp ###########################################################
     ######################################                            ###########################################################  
-    axis.theme <- function(x.angle = 0,vjust=0,hjust=0.5,pos_leg="top",textsize = 10,lengend_title_size = 10,lengend_text_size = 8,title_size = 16){
-      
-      
-      theme_bw()  +
-        theme(
-          axis.text.x = element_text(angle = x.angle,face = "bold",size = textsize,hjust=hjust, vjust=vjust),
-          axis.text.y = element_text(angle = 0,face = "bold",size = textsize),
-          legend.background = element_rect(fill = "transparent", colour = NA,size = 2),
-          panel.background = element_rect(fill = "transparent", colour = NA),
-          plot.background = element_rect(fill = "white", colour = NA),
-          axis.title.x = element_text(colour = "black",size = textsize,face = "bold"),
-          axis.title.y = element_text(colour = "black",size = textsize,face = "bold"),
-          legend.title = element_text(colour = "black",size = lengend_title_size),
-          legend.position = pos_leg,
-          legend.text = element_text(colour = "black",size = lengend_text_size,face = "bold"),
-          panel.grid = element_line(linetype="dashed"),
-          panel.grid.major = element_line(colour = "gray"),
-          title =element_text(size=title_size, face='bold',hjust = 0.5),
-          plot.title = element_text(hjust = 0.5),
-          axis.title = element_text(color="#000000", face="bold", size=textsize,lineheight = 2))
-      
-    }
+    
 
     onedrive_url <- "https://crefaz-my.sharepoint.com/:x:/g/personal/gestaodedados4_crefaz_onmicrosoft_com/Ea1IGOUCSa1Mjlev_QvrNLAB4I_qcKHjWy908-RxDbWPcQ?download=1"
     x <- read_url_csv(onedrive_url)
@@ -334,7 +336,7 @@ server <- function(input, output, session) {
     
     x1 <- read_url_csv(onedrive_url)
     
-    x1
+    x1$dia <- lubridate::as_date(x1$dia)
     
     contatos <- read_url_csv(url = "https://crefaz-my.sharepoint.com/:x:/g/personal/gestaodedados4_crefaz_onmicrosoft_com/EUJqJfojMwtMilqTonJmeoABp57gRp0UWzWlzdmo_xDLCA?download=1",sep = ";",enc = "latin1")
     qtd_contatos_enviados <- contatos %>% dplyr::filter(CELULAR != "(44) 99890-6216") %>% dplyr::summarise(
@@ -345,19 +347,19 @@ server <- function(input, output, session) {
     
     output$msgbox_bitrix1 <- renderValueBox({
       shinydashboard::valueBox(subtitle = tags$p("TOTAL", style = "font-size:100%;color:#E4781C;font-weight:bold;"),
-                               value =tags$p(x[1,"total"], style = "font-size:50%;color:#E4781C;font-weight:bold") ,
+                               value =tags$p(sum(x1[,"total"]), style = "font-size:50%;color:#E4781C;font-weight:bold") ,
                                width = 4, color = "navy")
     })
 
     output$msgbox_bitrix2 <- renderValueBox({
       shinydashboard::valueBox(subtitle = tags$p("PENDENTE", style = "font-size:100%;color:#E4781C;font-weight:bold;"),
-                               value =tags$p(x[1,"pending"], style = "font-size:50%;color:#E4781C;font-weight:bold") ,
+                               value =tags$p(sum(x1[,"pending"]), style = "font-size:50%;color:#E4781C;font-weight:bold") ,
                                width = 4 , color = "navy")
     })
 
     output$msgbox_bitrix3 <- renderValueBox({
       shinydashboard::valueBox(subtitle = tags$p("ENVIADO", style = "font-size:100%;color:#E4781C;font-weight:bold;"),
-                               value =tags$p(x[1,"sent"], style = "font-size:50%;color:#E4781C;font-weight:bold") ,
+                               value =tags$p(sum(x1[,"sent"]), style = "font-size:50%;color:#E4781C;font-weight:bold") ,
                                width = 4, color = "navy")
     })
     output$msgbox_bitrix4 <- renderValueBox({
@@ -424,7 +426,7 @@ server <- function(input, output, session) {
         geom_point(size = 1.2, alpha = 0.75)+
         geom_line(size = 1.2, alpha = 0.75,aes(color  = Legenda,group = Legenda)) +
         scale_color_manual(values = c("darkgreen", "red","darkblue")) +
-        # scale_x_continuous(breaks = seq(0,1*input$cut_renda1,0.05*input$cut_renda1))
+         scale_x_continuous(breaks = seq(min(x1$dia),max(x1$dia),by = paste(length(unique(lubridate::month(x1$dia))),"days") ) )+
         # scale_y_continuous(breaks = seq(0,1,0.1))+
         axis.theme(title_size = 12,textsize = 12,pos_leg = "bottom",x.angle = 45,vjust = 1,hjust=1) +
         geom_vline(xintercept = max(df_melt$dia),
@@ -432,12 +434,12 @@ server <- function(input, output, session) {
         geom_hline(yintercept = sum(qtd_contatos_enviados),
                    linetype = "dashed", colour = "red", alpha = 1,size = 0.8) 
      plot <- ggplotly(p1) %>% layout(hovermode = "x", spikedistance =  -1,margin = c(0,0,0,10),
-                              xaxis = list(title = "<b>Qntd. Envios</b>", showspikes = TRUE, titlefont = list(size = 24),
+                              xaxis = list(title = "<b>Dias</b>", showspikes = TRUE, titlefont = list(size = 24),
                                            spikemode  = 'across', #toaxis, across, marker
                                            spikesnap = 'cursor',  ticks = "outside",tickangle = -45,
                                            showline=TRUE,tickfont = list(size = 20),fixedrange=TRUE,
                                            showgrid=TRUE),
-                              yaxis = list (title = "<b>Dias</b>",
+                              yaxis = list (title = "<b>Qntd. Envios</b>",
                                             spikemode  = 'across', #toaxis, across, marker
                                             spikesnap = 'cursor', zeroline=FALSE,titlefont = list(size = 24),
                                             showline=TRUE,tickfont = list(size = 20),fixedrange=TRUE,
@@ -454,17 +456,19 @@ server <- function(input, output, session) {
         geom_line(size = 1.2, alpha = 0.75,aes(color  = Legenda,group = Legenda)) +
         scale_color_manual(values = c("darkgreen", "red","darkblue")) +
         geom_hline(yintercept = 5000,
-                   linetype = "dashed", colour = "red", alpha = 1,size = 0.8) 
-        # scale_x_continuous(breaks = seq(0,1*input$cut_renda1,0.05*input$cut_renda1))
+                   linetype = "dashed", colour = "red", alpha = 1,size = 0.8) +  
+        geom_vline(xintercept = max(df_melt$dia),
+                   linetype = "dashed", colour = "red", alpha = 1,size = 0.8) +
+      scale_x_continuous(breaks = seq(min(x1$dia),max(x1$dia),by = paste(length(unique(lubridate::month(x1$dia))),"days") ) )+
         # scale_y_continuous(breaks = seq(0,1,0.1))+
         axis.theme(title_size = 12,textsize = 12,pos_leg = "bottom",x.angle = 45,vjust = 1,hjust=1)
       plot <- ggplotly(p1) %>% layout(hovermode = "x", spikedistance =  -1,margin = c(0,0,0,10),
-                                      xaxis = list(title = "<b>Qntd. Envios</b>", showspikes = TRUE, titlefont = list(size = 24),
+                                      xaxis = list(title = "<b>Dias</b>", showspikes = TRUE, titlefont = list(size = 24),
                                                    spikemode  = 'across', #toaxis, across, marker
                                                    spikesnap = 'cursor',  ticks = "outside",tickangle = -45,
                                                    showline=TRUE,tickfont = list(size = 20),fixedrange=TRUE,
                                                    showgrid=TRUE),
-                                      yaxis = list (title = "<b>Dias</b>",
+                                      yaxis = list (title = "<b>Qntd. Envios</b>",
                                                     spikemode  = 'across', #toaxis, across, marker
                                                     spikesnap = 'cursor', zeroline=FALSE,titlefont = list(size = 24),
                                                     showline=TRUE,tickfont = list(size = 20),fixedrange=TRUE,
