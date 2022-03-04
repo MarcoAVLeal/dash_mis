@@ -62,7 +62,7 @@ colnames(df) <- names_df
 df$`Fase do negocio` <- ifelse(df$`Fase do negocio` == "EM ANÃ\u0081LISE","EM ANÁLISE",df$`Fase do negocio`)
 df$`Pessoa reponsavel ID`          <- as.character(df$`Pessoa reponsavel ID` )
 
-onedrive_url <- "https://crefaz-my.sharepoint.com/:x:/g/personal/gestaodedados4_crefaz_onmicrosoft_com/ES9Opw7qVkROh6yxmaC8ARQB1_RuzanE2l8fl3U7p6r4KQ?download=1"
+onedrive_url <- "https://crefaz-my.sharepoint.com/:x:/g/personal/gestaodedados4_crefaz_onmicrosoft_com/EZXxlt-n_LxOnG4KTsPLxaIBVslbvDa-2z7_1_-0Y3B1NQ?download=1"
 
 users             <- read_url_csv(onedrive_url,sep = ";",enc = "latin1")
 users$ID          <- as.character(users$ID)
@@ -74,8 +74,12 @@ curl::curl_download(url, destfile)
 regionais <- read_excel(destfile,sheet = "Planilha1")
 
 
+
+
 df                <- left_join(x = df,y = users,by=c("Pessoa reponsavel ID"="ID"),keep=TRUE,suffix = c("_LEADS","_users"))
 #df                <- left_join(x = df,y = regionais,by=c("Departamento"="Departamento"),keep=TRUE,suffix = c("_LEADS","_reg"))
+
+
 
 df$Regional       <- str_replace(string = df$Regional,pattern = "Super. ES 2 Lojas CFZ",replacement = "SIMONE FREITAS")
 df$Regional       <- str_replace(string = df$Regional,pattern = "Super. RJ Lojas CFZ",replacement = "MAYSA CARVALHO")
@@ -93,10 +97,7 @@ df$Regional       <- str_replace(string = df$Regional,pattern = "Regional Igor",
 colnames(df)[colnames(df) == "Departamento"] <- "Lojas"
 
 
-
 df                <- df %>% filter(str_detect(string = Lojas,pattern = "Loja CFZ"))
-
-
 
 
 df                <- df %>% mutate("Fase do negocio" = ifelse(`Fase do negocio` == "PAGO AO CLIENTE","PAGO",`Fase do negocio`))
