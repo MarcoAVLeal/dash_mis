@@ -334,7 +334,7 @@ server <- function(input, output, session) {
       xanchor = "center",
       yanchor = "top",
       x = 0.5,
-      y = 1.1,
+      y = 1.25,
       font = list(
         family = "sans-serif",
         size = 12,
