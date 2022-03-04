@@ -328,7 +328,16 @@ server <- function(input, output, session) {
     x <- read_url_csv(onedrive_url)
     
     onedrive_url <- "https://crefaz-my.sharepoint.com/:x:/g/personal/gestaodedados4_crefaz_onmicrosoft_com/EZYuY8kORyJIoTYUo9RwWMABYEkZTA2OXtxrUXnrLef9pQ?download=1"
-    
+    l <- list(
+      title = list(text='<b> Legenda </b>'),
+      orientation = 'h',
+      font = list(
+        family = "sans-serif",
+        size = 12,
+        color = "#000"),
+      bgcolor = "#E2E2E2",
+      bordercolor = "#FFFFFF",
+      borderwidth = 2)
     
     
     x1 <- read_url_csv(onedrive_url)
@@ -437,7 +446,7 @@ server <- function(input, output, session) {
                    linetype = "dashed", colour = "red", alpha = 1,size = 0.8) +
         geom_hline(yintercept = sum(qtd_contatos_enviados),
                    linetype = "dashed", colour = "red", alpha = 1,size = 0.8) 
-     plot <- ggplotly(p1) %>% layout(hovermode = "x", spikedistance =  -1,margin = c(0,0,0,10),legend = list(x = 0.05, y = 1),
+     plot <- ggplotly(p1) %>% layout(hovermode = "x", spikedistance =  -1,margin = c(0,0,0,10),legend = l,
                               xaxis = list(title = "<b>Dias</b>", showspikes = TRUE, titlefont = list(size = 24),
                                            spikemode  = 'across', #toaxis, across, marker
                                            spikesnap = 'cursor',  ticks = "outside",tickangle = -45,
@@ -466,7 +475,7 @@ server <- function(input, output, session) {
       scale_x_continuous(breaks = seq(min(x1$dia),max(x1$dia),by = paste(length(unique(lubridate::month(x1$dia))),"days") ) )+
         # scale_y_continuous(breaks = seq(0,1,0.1))+
         axis.theme(title_size = 12,textsize = 12,pos_leg = "bottom",x.angle = 45,vjust = 1,hjust=1)
-      plot <- ggplotly(p1) %>% layout(hovermode = "y", spikedistance =  -1,margin = c(0,0,0,10),legend = list(x = 0.05, y = 1),
+      plot <- ggplotly(p1) %>% layout(hovermode = "y", spikedistance =  -1,margin = c(0,0,0,10),legend = l,
                                       xaxis = list(title = "<b>Dias</b>", showspikes = TRUE, titlefont = list(size = 24),
                                                    spikemode  = 'across', #toaxis, across, marker
                                                    spikesnap = 'cursor',  ticks = "outside",tickangle = -45,
@@ -503,7 +512,7 @@ server <- function(input, output, session) {
         scale_x_continuous(breaks = seq(min(x1$dia),max(x1$dia),by = paste(length(unique(lubridate::month(x1$dia))),"days") ) )+
         # scale_y_continuous(breaks = seq(0,1,0.1))+
         axis.theme(title_size = 12,textsize = 12,pos_leg = "bottom",x.angle = 45,vjust = 1,hjust=1)
-      plot <- ggplotly(p1) %>% layout(hovermode = "y", spikedistance =  -1,margin = c(0,0,0,10),legend = list(x = 0.05, y = 1),
+      plot <- ggplotly(p1) %>% layout(hovermode = "y", spikedistance =  -1,margin = c(0,0,0,10),legend = l,
                                       xaxis = list(title = "<b>Dias</b>", showspikes = TRUE, titlefont = list(size = 24),
                                                    spikemode  = 'across', #toaxis, across, marker
                                                    spikesnap = 'cursor',  ticks = "outside",tickangle = -45,
