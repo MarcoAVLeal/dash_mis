@@ -33,8 +33,8 @@ div(
                                                        valueBoxOutput("msgbox_bitrix8"),
                                                        valueBoxOutput("msgbox_bitrix9")))
                                             ),
-                                   fluidRow(column = 6,width=6, plotlyOutput(outputId = "plot_envio_diario",height = 480),
-                                            column = 6,width=6, plotlyOutput(outputId = "plot_envio_acumulado",height = 480) ),
+                                   fluidRow(column(width=6, plotlyOutput(outputId = "plot_envio_diario",height = 480),
+                                            column(width=6, plotlyOutput(outputId = "plot_envio_acumulado",height = 480) )),
                                    fluidRow(column = 6,width=6, plotlyOutput(outputId = "plot_envio_acumulado_mes",height = 480),
                                             column = 6,width=6 )
                                    ),
