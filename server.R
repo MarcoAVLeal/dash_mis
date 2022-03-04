@@ -331,6 +331,9 @@ server <- function(input, output, session) {
     l <- list(
       title = list(text='<b> Legenda </b>'),
       orientation = 'h',
+      xanchor = "center",
+      yanchor = "top"
+      x = 0.5,
       font = list(
         family = "sans-serif",
         size = 12,
