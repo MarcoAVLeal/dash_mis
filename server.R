@@ -334,6 +334,7 @@ server <- function(input, output, session) {
     x1 <- read_url_csv(onedrive_url)
     
     x1$dia <- lubridate::as_date(x1$dia)
+    x2     <- x1
     df_msg_bitrix <- reactive({
     onedrive_url <- "https://crefaz-my.sharepoint.com/:x:/g/personal/gestaodedados4_crefaz_onmicrosoft_com/Ea1IGOUCSa1Mjlev_QvrNLAB4I_qcKHjWy908-RxDbWPcQ?download=1"
 
@@ -451,15 +452,15 @@ server <- function(input, output, session) {
       
     })
     
+   
     
     output$plot_envio_acumulado <- renderPlotly({
+     
       
       p1 <- ggplot(data = df_melt,aes(x= dia, y = Acumulado)) +
         geom_point(size = 1.2, alpha = 0.75)+
         geom_line(size = 1.2, alpha = 0.75,aes(color  = Legenda,group = Legenda)) +
         scale_color_manual(values = c("darkgreen", "red","darkblue")) +
-        geom_hline(yintercept = 5000,
-                   linetype = "dashed", colour = "red", alpha = 1,size = 0.8) +  
         geom_vline(xintercept = max(df_melt$dia),
                    linetype = "dashed", colour = "red", alpha = 1,size = 0.8) +
       scale_x_continuous(breaks = seq(min(x1$dia),max(x1$dia),by = paste(length(unique(lubridate::month(x1$dia))),"days") ) )+
@@ -479,6 +480,45 @@ server <- function(input, output, session) {
       plot  
       
     })
+    
+    
+    output$plot_envio_acumulado_mes <- renderPlotly({
+      x2 <- x2 %>% dplyr::filter( lubridate::month(dia) == lubridate::month(lubridate::today()))
+      
+      df_melt         <- x2 %>% reshape2::melt(id.vars = "dia",measure.vars = c("total","pending","sent"),value.name = "Envios",variable.name= "Legenda")
+      df_melt$Legenda <- as.character(df_melt$Legenda)
+      #df_melt         <- df_melt %>% dplyr::group_by(Legenda) %>% summarise("Acumulado" = cumsum(Envios))
+      df_melt_acumulado  <- tapply(X = df_melt$Envios,INDEX = df_melt$Legenda,FUN = cumsum) 
+      acumulado         <- c(df_melt_acumulado$total,df_melt_acumulado$pending,df_melt_acumulado$sent)
+      df_melt$Acumulado <- acumulado
+      
+      p1 <- ggplot(data = df_melt,aes(x= dia, y = Acumulado)) +
+        geom_point(size = 1.2, alpha = 0.75)+
+        geom_line(size = 1.2, alpha = 0.75,aes(color  = Legenda,group = Legenda)) +
+        scale_color_manual(values = c("darkgreen", "red","darkblue")) +
+        geom_hline(yintercept = 5000,
+                   linetype = "dashed", colour = "red", alpha = 1,size = 0.8) +  
+        geom_vline(xintercept = max(df_melt$dia),
+                   linetype = "dashed", colour = "red", alpha = 1,size = 0.8) +
+        scale_x_continuous(breaks = seq(min(x1$dia),max(x1$dia),by = paste(length(unique(lubridate::month(x1$dia))),"days") ) )+
+        # scale_y_continuous(breaks = seq(0,1,0.1))+
+        axis.theme(title_size = 12,textsize = 12,pos_leg = "bottom",x.angle = 45,vjust = 1,hjust=1)
+      plot <- ggplotly(p1) %>% layout(hovermode = "y", spikedistance =  -1,margin = c(0,0,0,10),
+                                      xaxis = list(title = "<b>Dias</b>", showspikes = TRUE, titlefont = list(size = 24),
+                                                   spikemode  = 'across', #toaxis, across, marker
+                                                   spikesnap = 'cursor',  ticks = "outside",tickangle = -45,
+                                                   showline=TRUE,tickfont = list(size = 20),fixedrange=TRUE,
+                                                   showgrid=TRUE),
+                                      yaxis = list (title = "<b>Qntd. Envios</b>",
+                                                    spikemode  = 'across', #toaxis, across, marker
+                                                    spikesnap = 'cursor', zeroline=FALSE,titlefont = list(size = 24),
+                                                    showline=TRUE,tickfont = list(size = 20),fixedrange=TRUE,
+                                                    showgrid=TRUE),height = 480) %>% config(displayModeBar = FALSE)
+      plot  
+      
+    })
+    
+    
     x1
     })
     

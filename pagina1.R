@@ -33,8 +33,10 @@ div(
                                                        valueBoxOutput("msgbox_bitrix8"),
                                                        valueBoxOutput("msgbox_bitrix9")))
                                             ),
-                                   fluidRow(column = 6, plotlyOutput(outputId = "plot_envio_diario",height = 480),
-                                            column = 6, plotlyOutput(outputId = "plot_envio_acumulado",height = 480) )
+                                   fluidRow(column = 6,width=6, plotlyOutput(outputId = "plot_envio_diario",height = 480),
+                                            column = 6,width=6, plotlyOutput(outputId = "plot_envio_acumulado",height = 480) ),
+                                   fluidRow(column = 6,width=6, plotlyOutput(outputId = "plot_envio_acumulado_mes",height = 480),
+                                            column = 6,width=6 )
                                    ),
                             column(width = 3,
                                    dateRangeInput(inputId = "data_consulta_msg",label = "Data", language = "pt-BR",start = lubridate::as_date("2022-01-01"), end = lubridate::today()),
