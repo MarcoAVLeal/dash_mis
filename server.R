@@ -332,7 +332,7 @@ server <- function(input, output, session) {
       title = list(text='<b> Legenda </b>'),
       orientation = 'h',
       xanchor = "center",
-      yanchor = "top"
+      yanchor = "top",
       x = 0.5,
       font = list(
         family = "sans-serif",
