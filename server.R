@@ -561,8 +561,6 @@ server <- function(input, output, session) {
     
     dataset <- reactive({
       
-      
-     
       data = df1
       
       counter$countervalue <- counter$countervalue + 1
