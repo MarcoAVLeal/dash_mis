@@ -554,13 +554,13 @@ server <- function(input, output, session) {
                                "resposta_do_cliente","cpf","retrabalho_desafio","ID_users" , "COD_PR",  "Nomes.e.sobrenomes" ,   "Lojas" ,  "Regional" ,   "active"  ,"Origem do Cliente1",   "Data fechado" ,  "Data criado"
         )
         colnames(df) <- names_df
-        
+        data = df1
       }
      
       
       
       counter$countervalue <- counter$countervalue + 1
-      data = df1
+      
       
       if (length(input$canal)){
         f1 =  data$Lojas %in% input$canal
