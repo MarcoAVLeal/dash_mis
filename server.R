@@ -544,7 +544,7 @@ server <- function(input, output, session) {
     
     dataset <- reactive({
       
-      if(counter$countervalue <= 0){
+      if(counter$countervalue == 0){
         
         onedrive_url <- "https://crefaz-my.sharepoint.com/:x:/g/personal/gestaodedados4_crefaz_onmicrosoft_com/ESjlRAy5mzVJh3LRucNvoTYBa5x7ReX2691dJ-5uwaob4w?download=1"
         df <- read_url_csv(onedrive_url,enc = "latin1")
@@ -555,7 +555,7 @@ server <- function(input, output, session) {
                                "resposta_do_cliente","cpf","retrabalho_desafio","ID_users" , "COD_PR",  "Nomes.e.sobrenomes" ,   "Lojas" ,  "Regional" ,   "active"  ,"Origem do Cliente1",   "Data fechado" ,  "Data criado"
         )
         colnames(df) <- names_df
-        data = df1
+        data = df
       }
      
       
