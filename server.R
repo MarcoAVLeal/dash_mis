@@ -693,7 +693,7 @@ server <- function(input, output, session) {
       
       
       Total <- sum
-      dados <- data %>% dplyr::select(`Data criado`,`Data prospectar`, `Data fechado`, `Data analisar`, `Data negociar`,ID_LEADS) %>%
+      dados <- data %>% dplyr::select(`Data criado`,`Data prospectar`, `Data fechado`, `Data analisar`, `Data negociar`,ID) %>%
         reshape2::melt(id.vars = "ID",measure.vars = c("Data criado","Data prospectar","Data fechado", "Data analisar", "Data negociar")) %>%
         mutate("Atributo"      = ifelse(variable == "Data criado","Criou Lead",
                                         ifelse(variable == "Data prospectar","Moveu para prospectando",
