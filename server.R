@@ -306,7 +306,20 @@ server <- function(input, output, session) {
             
        }else{
             output$page1 <- renderUI({
+              if(counter$countervalue == 0){
                 
+                onedrive_url <- "https://crefaz-my.sharepoint.com/:x:/g/personal/gestaodedados4_crefaz_onmicrosoft_com/ESjlRAy5mzVJh3LRucNvoTYBa5x7ReX2691dJ-5uwaob4w?download=1"
+                df <- read_url_csv(onedrive_url,enc = "latin1")
+                
+                names_df          <- c("ID","Tipo","Pipeline", "Fase do negocio","Negocio Recorrente","Negocio Repetido","Contato Fonte","Modificado por ID","Criado por","Pessoa reponsavel ID",
+                                       "Data prevista de fechamento","Data de inicio","Valor do emprestimo","Origem do Cliente","Data exportacao","Contato","Grupo de fase" ,
+                                       "Base","Produto Crefaz", "Fase automacao",  "Data negociar","Data analisar", "Data prospectar","Modificado em","Desafio","Desafio retencao","primeira_resposta_do_cliente",
+                                       "resposta_do_cliente","cpf","retrabalho_desafio","ID_users" , "COD_PR",  "Nomes.e.sobrenomes" ,   "Lojas" ,  "Regional" ,   "active"  ,"Origem do Cliente1",   "Data fechado" ,  "Data criado"
+                )
+                colnames(df) <- names_df
+                
+              }
+              df1 <- df
                 path_pg1
                 #source(file = "source_server_pagina1.R",encoding = "utf-8")
                 
@@ -539,28 +552,14 @@ server <- function(input, output, session) {
     ######################################               ###########################################################
     ###################################### Informações Bitrix ###########################################################
     ######################################               ###########################################################
-    output$count <- renderText({
-      paste("Counter Value is ", counter$countervalue)   # print the latest value stored in the reactiveValues object
-    })
+   
     
     
     dataset <- reactive({
       
-      if(counter$countervalue == 0){
-        
-        onedrive_url <- "https://crefaz-my.sharepoint.com/:x:/g/personal/gestaodedados4_crefaz_onmicrosoft_com/ESjlRAy5mzVJh3LRucNvoTYBa5x7ReX2691dJ-5uwaob4w?download=1"
-        df <- read_url_csv(onedrive_url,enc = "latin1")
-        
-        names_df          <- c("ID","Tipo","Pipeline", "Fase do negocio","Negocio Recorrente","Negocio Repetido","Contato Fonte","Modificado por ID","Criado por","Pessoa reponsavel ID",
-                               "Data prevista de fechamento","Data de inicio","Valor do emprestimo","Origem do Cliente","Data exportacao","Contato","Grupo de fase" ,
-                               "Base","Produto Crefaz", "Fase automacao",  "Data negociar","Data analisar", "Data prospectar","Modificado em","Desafio","Desafio retencao","primeira_resposta_do_cliente",
-                               "resposta_do_cliente","cpf","retrabalho_desafio","ID_users" , "COD_PR",  "Nomes.e.sobrenomes" ,   "Lojas" ,  "Regional" ,   "active"  ,"Origem do Cliente1",   "Data fechado" ,  "Data criado"
-        )
-        colnames(df) <- names_df
-        data = df
-      }
+      
      
-     
+      data = df1
       
       counter$countervalue <- counter$countervalue + 1
       
