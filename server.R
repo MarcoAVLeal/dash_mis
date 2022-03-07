@@ -331,20 +331,7 @@ server <- function(input, output, session) {
               #x <- read_url_csv(onedrive_url)
               
               onedrive_url <- "https://crefaz-my.sharepoint.com/:x:/g/personal/gestaodedados4_crefaz_onmicrosoft_com/EZYuY8kORyJIoTYUo9RwWMABYEkZTA2OXtxrUXnrLef9pQ?download=1"
-              l <<- list(
-                title = list(text='<b> Legenda </b>'),
-                orientation = 'h',
-                xanchor = "center",
-                yanchor = "top",
-                x = 0.5,
-                y = 1.25,
-                font = list(
-                  family = "sans-serif",
-                  size = 12,
-                  color = "#000"),
-                bgcolor = "#E2E2E2",
-                bordercolor = "#FFFFFF",
-                borderwidth = 2)
+              
               
               
               x1 <<- read_url_csv(onedrive_url)
@@ -365,6 +352,21 @@ server <- function(input, output, session) {
     ######################################                            ###########################################################  
     
     df_msg_bitrix <- reactive({
+      
+      l <<- list(
+        title = list(text='<b> Legenda </b>'),
+        orientation = 'h',
+        xanchor = "center",
+        yanchor = "top",
+        x = 0.5,
+        y = 1.25,
+        font = list(
+          family = "sans-serif",
+          size = 12,
+          color = "#000"),
+        bgcolor = "#E2E2E2",
+        bordercolor = "#FFFFFF",
+        borderwidth = 2)
     onedrive_url <- "https://crefaz-my.sharepoint.com/:x:/g/personal/gestaodedados4_crefaz_onmicrosoft_com/Ea1IGOUCSa1Mjlev_QvrNLAB4I_qcKHjWy908-RxDbWPcQ?download=1"
 
     
