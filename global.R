@@ -58,14 +58,14 @@ names_df          <- c("ID","Tipo","Pipeline", "Fase do negocio","Negocio Recorr
                        "Base","Produto Crefaz", "Fase automacao",  "Data negociar","Data analisar", "Data prospectar","Modificado em","Desafio","Desafio retencao","primeira_resposta_do_cliente",
                        "resposta_do_cliente","cpf","retrabalho_desafio","ID_users" , "COD_PR",  "Nomes.e.sobrenomes" ,   "Lojas" ,  "Regional" ,   "active"  ,"Origem do Cliente1",   "Data fechado" ,  "Data criado"
 )
-
+colnames(df) <- names_df
 
 # library(janitor)
 # df  %>%
 #   clean_names()
 
 # 
-# colnames(df) <- names_df
+
 # df$`Fase do negocio` <- ifelse(df$`Fase do negocio` == "EM ANÃ\u0081LISE","EM ANÁLISE",df$`Fase do negocio`)
 # df$`Pessoa reponsavel ID`          <- as.character(df$`Pessoa reponsavel ID` )
 # 
