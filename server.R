@@ -558,7 +558,9 @@ server <- function(input, output, session) {
         data = df
       }
      
-      
+      output$count <- renderText({
+        paste("Counter Value is ", counter$countervalue)   # print the latest value stored in the reactiveValues object
+      })
       
       counter$countervalue <- counter$countervalue + 1
       

@@ -46,7 +46,7 @@ div(
      tabPanel(title = p("Indicadores Bitrix",style="color:#E4781C;text-align:center;font-weight:bold;font-size:14px"), 
                    HTML("<div style='color:#273658;text-align:center;font-weight:bold;'><h1 style='color:#273658;text-align:center;font-weight:bold;'>INDICADORES DO FLUXO DE VENDAS DO BITRIX</h1> </div>"),
                    HTML('<hr style="color: purple;">'),
-                   
+                    textOutput("count"),
                    fluidRow(column(width = 3,
                                    selectInput(inputId = "visao",label =  "VISAO:",
                                                c("Lojas" = "Nomes.e.sobrenomes",
