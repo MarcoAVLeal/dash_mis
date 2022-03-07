@@ -370,7 +370,7 @@ server <- function(input, output, session) {
     onedrive_url <- "https://crefaz-my.sharepoint.com/:x:/g/personal/gestaodedados4_crefaz_onmicrosoft_com/Ea1IGOUCSa1Mjlev_QvrNLAB4I_qcKHjWy908-RxDbWPcQ?download=1"
 
     
-    contatos <- read_url_csv(url = "https://crefaz-my.sharepoint.com/:x:/g/personal/gestaodedados4_crefaz_onmicrosoft_com/EUJqJfojMwtMilqTonJmeoABp57gRp0UWzWlzdmo_xDLCA?download=1",sep = ";",enc = "latin1")
+    contatos <<- read_url_csv(url = "https://crefaz-my.sharepoint.com/:x:/g/personal/gestaodedados4_crefaz_onmicrosoft_com/EUJqJfojMwtMilqTonJmeoABp57gRp0UWzWlzdmo_xDLCA?download=1",sep = ";",enc = "latin1")
     qtd_contatos_enviados <- contatos %>% dplyr::filter(CELULAR != "(44) 99890-6216") %>% dplyr::summarise(
                                                                                               qtd_filiais   = n(),
                                                                                               qtd_regionais = length(unique(Regional)),
