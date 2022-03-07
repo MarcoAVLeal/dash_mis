@@ -79,7 +79,7 @@ div(
                           withSpinner(DTOutput(outputId = "table_fase_group"),hide.ui = FALSE,proxy.height = "10px",size = 0.5),
                           
                           style = "height:800px; overflow-y: scroll;overflow-x: scroll;")),
-               dateInput(inputId = "data_referencia",label = "Data Referência",value = lubridate::today() - 1),
+               dateInput(inputId = "data_referencia",label = "Data Referência",value = "2022-03-01"),
                    fluidRow(column(width = 3,
                                    withSpinner(uiOutput("total_movimentacoes"),proxy.height = "10px",size = 0.5),
                                    div(style="text-align:center",withSpinner(tableOutput(outputId = "table_res_mov"),hide.ui = FALSE,proxy.height = "10px",size = 0.5))),
