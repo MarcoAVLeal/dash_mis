@@ -331,7 +331,7 @@ server <- function(input, output, session) {
               #x <- read_url_csv(onedrive_url)
               
               onedrive_url <- "https://crefaz-my.sharepoint.com/:x:/g/personal/gestaodedados4_crefaz_onmicrosoft_com/EZYuY8kORyJIoTYUo9RwWMABYEkZTA2OXtxrUXnrLef9pQ?download=1"
-              l <- list(
+              l <<- list(
                 title = list(text='<b> Legenda </b>'),
                 orientation = 'h',
                 xanchor = "center",
