@@ -157,7 +157,7 @@ espaco_html <- function(n=6){
 
 
 server <- function(input, output, session) {
-  counter <- reactiveValues(countervalue = 0)
+  #counter <- reactiveValues(countervalue = 0)
     # input$username <- "mleal"
     # input$password <- "mleal"
     ######################################               ###########################################################
@@ -725,7 +725,7 @@ server <- function(input, output, session) {
       
       
       completedados <- dados[complete.cases(dados),]
-      dados               <- left_join(completedados,df1,by = c("ID"))
+      dados               <- left_join(completedados,dados,by = c("ID"))
       dados   <- dados %>% dplyr::mutate("Atributo" = ifelse(Atributo == "Fechou lead(Desafio ou pago)",paste0("Moveu para ",`Fase do negocio`),Atributo))
       
       
