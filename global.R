@@ -39,16 +39,16 @@ read_url_xlsx <- function(url,sheet = "Calendario"){
 }
 
 
-library(readxl)
-url <- "https://crefaz-my.sharepoint.com/:x:/g/personal/gestaodedados4_crefaz_onmicrosoft_com/EbsSsZPj4ntMvyRUG-0QYa4BTEQUCw8VXlCqTriyMQcYiw?download=1"
-destfile <- "calendario.xlsx"
-curl::curl_download(url, destfile)
-calendario <- read_excel(destfile,sheet = "Calendario")
-calendario         = calendario[c("Dia","Class Não Útil","Dia Útil2")]
-colnames(calendario) <- c("Data","Dia_util","Dia_Util2")
-calendario$Class_Dia <- is.na(calendario$Dia_util)
-calendario$Data      <- as.Date(calendario$Data,format = "%d/%m/%Y")
-calendario$Class_Dia <- ifelse(calendario$`Dia_Util2` == "Sábado",TRUE,calendario$Class_Dia)
+# library(readxl)
+# url <- "https://crefaz-my.sharepoint.com/:x:/g/personal/gestaodedados4_crefaz_onmicrosoft_com/EbsSsZPj4ntMvyRUG-0QYa4BTEQUCw8VXlCqTriyMQcYiw?download=1"
+# destfile <- "calendario.xlsx"
+# curl::curl_download(url, destfile)
+# calendario <- read_excel(destfile,sheet = "Calendario")
+# calendario         = calendario[c("Dia","Class Não Útil","Dia Útil2")]
+# colnames(calendario) <- c("Data","Dia_util","Dia_Util2")
+# calendario$Class_Dia <- is.na(calendario$Dia_util)
+# calendario$Data      <- as.Date(calendario$Data,format = "%d/%m/%Y")
+# calendario$Class_Dia <- ifelse(calendario$`Dia_Util2` == "Sábado",TRUE,calendario$Class_Dia)
 
 onedrive_url <- "https://crefaz-my.sharepoint.com/:x:/g/personal/gestaodedados4_crefaz_onmicrosoft_com/ESjlRAy5mzVJh3LRucNvoTYBa5x7ReX2691dJ-5uwaob4w?download=1"
 df <- read_url_csv(onedrive_url,enc = "latin1")
