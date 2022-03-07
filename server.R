@@ -157,6 +157,7 @@ espaco_html <- function(n=6){
 
 
 server <- function(input, output, session) {
+  counter <- reactiveValues(countervalue = 0)
     # input$username <- "mleal"
     # input$password <- "mleal"
     ######################################               ###########################################################
@@ -540,7 +541,7 @@ server <- function(input, output, session) {
     ######################################               ###########################################################
     
     
-    counter <- reactiveValues(countervalue = 0)
+    
     dataset <- reactive({
       
       if(counter$countervalue <= 0){
