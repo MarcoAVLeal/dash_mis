@@ -563,7 +563,7 @@ server <- function(input, output, session) {
       
       data = df1
       
-      counter$countervalue <- counter$countervalue + 1
+      # counter$countervalue <- counter$countervalue + 1
       
       
       if (length(input$canal)){
