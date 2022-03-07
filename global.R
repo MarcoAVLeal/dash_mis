@@ -78,26 +78,25 @@ regionais <- read_excel(destfile,sheet = "Planilha1")
 
 df                <- left_join(x = df,y = users,by=c("Pessoa reponsavel ID"="ID"),keep=TRUE,suffix = c("_LEADS","_users"))
 #df                <- left_join(x = df,y = regionais,by=c("Departamento"="Departamento"),keep=TRUE,suffix = c("_LEADS","_reg"))
-
-
-
-df$Regional       <- str_replace(string = df$Regional,pattern = "Super. ES 2 Lojas CFZ",replacement = "SIMONE FREITAS")
-df$Regional       <- str_replace(string = df$Regional,pattern = "Super. RJ e ES Lojas CFZ",replacement = "MAYSA CARVALHO")
-df$Regional       <- str_replace(string = df$Regional,pattern = "Super. RS Lojas CFZ",replacement = "WAGNER RIBEIRO")
-df$Regional       <- str_replace(string = df$Regional,pattern = "Super. CE lojas CFZ",replacement = "GILBERTO FELICIO")
-df$Regional       <- str_replace(string = df$Regional,pattern = "Super. Lojas SC",replacement = "REGIONAL SC")
-df$Regional       <- str_replace(string = df$Regional,pattern = "Sup. Estadual Eliana",replacement = "ELIANA PORRINO")
-df$Regional       <- str_replace(string = df$Regional,pattern = "Regional Yrlon",replacement = "YRLON ALVES")
-df$Regional       <- str_replace(string = df$Regional,pattern = "Regional Mirele CFZ",replacement = "MIRELE DUARTE")
-df$Regional       <- str_replace(string = df$Regional,pattern = "Regional Helen",replacement = "HELEN CAROLINA")
-df$Regional       <- str_replace(string = df$Regional,pattern = "Regional Dejamile",replacement = "DEJAMILE SOUZA")
-df$Regional       <- str_replace(string = df$Regional,pattern = "Regional Helen",replacement = "HELEN CAROLINA")
-df$Regional       <- str_replace(string = df$Regional,pattern = "Regional Igor",replacement = "IGOR ASSIS")
-
 colnames(df)[colnames(df) == "Departamento"] <- "Lojas"
 
 
 df                <- df %>% filter(str_detect(string = Lojas,pattern = "Loja CFZ"))
+
+
+
+df$Regional       <- str_replace(string = df$Regional,pattern = "Super. ES 2 Lojas CFZ",replacement = "Supervisao ES Lojas CFZ")
+df$Regional       <- str_replace(string = df$Regional,pattern = "Super. RJ e ES Lojas CFZ",replacement = "MAYSA CARVALHO")
+df$Regional       <- str_replace(string = df$Regional,pattern = "Super. RS Lojas CFZ",replacement = "WAGNER RIBEIRO")
+df$Regional       <- str_replace(string = df$Regional,pattern = "Super. CE lojas CFZ",replacement = "GILBERTO FELICIO")
+df$Regional       <- str_replace(string = df$Regional,pattern = "Super. Lojas SC",replacement = "SC")
+df$Regional       <- str_replace(string = df$Regional,pattern = "Sup. Estadual Eliana",replacement = "ELIANA PORRINO")
+df$Regional       <- str_replace(string = df$Regional,pattern = "Regional Yrlon",replacement = "YRLON ALVES")
+df$Regional       <- str_replace(string = df$Regional,pattern = "Regional Mirele",replacement = "MIRELE DUARTE")
+df$Regional       <- str_replace(string = df$Regional,pattern = "Regional Helen",replacement = "HELEN CAROLINA")
+df$Regional       <- str_replace(string = df$Regional,pattern = "Regional Dejamile",replacement = "DEJAMILE SOUZA")
+df$Regional       <- str_replace(string = df$Regional,pattern = "Regional Igor",replacement = "IGOR ASSIS")
+
 
 
 df                <- df %>% mutate("Fase do negocio" = ifelse(`Fase do negocio` == "PAGO AO CLIENTE","PAGO",`Fase do negocio`))
