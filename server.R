@@ -1089,7 +1089,7 @@ server <- function(input, output, session) {
     
     output$box_prod2 <- renderValueBox({
       shinydashboard::valueBox(subtitle = tags$p("Qntd. Propostas", style = "font-size:100%;color:#E4781C;font-weight:bold;"),
-                               value =tags$p(format(prod_total[1,2],scientific =FALSE,big.mark =".")), style = "font-size:50%;color:#E4781C;font-weight:bold") ,
+                               value =tags$p(format(prod_total[1,2],scientific =FALSE,big.mark ="."), style = "font-size:50%;color:#E4781C;font-weight:bold") ,
                                width = 4 , color = "navy")
     })
     
