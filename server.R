@@ -460,13 +460,13 @@ server <- function(input, output, session) {
               
               
               df_prod <<- read_url_csv(onedrive_url)
-              df_prod$DATACADASTRO <- lubridate::as_date(df_prod$DATACADASTRO)
-              df_prod$DATA_PAGAMENTO <- lubridate::as_date(df_prod$DATA_PAGAMENTO)
+              df_prod$DATACADASTRO<<-lubridate::as_date(df_prod$DATACADASTRO)
+              df_prod$DATA_PAGAMENTO<<-lubridate::as_date(df_prod$DATA_PAGAMENTO)
               
-              df_prod$ANO_CADASTRO <- lubridate::year(df_prod$DATACADASTRO)
-              df_prod$ANO_PAGAMENTO <- lubridate::year(df_prod$DATA_PAGAMENTO)
-              df_prod$MES_CADASTRO <- lubridate::month(df_prod$DATACADASTRO)
-              df_prod$MES_PAGAMENTO <- lubridate::month(df_prod$DATA_PAGAMENTO)
+              df_prod$ANO_CADASTRO<<-lubridate::year(df_prod$DATACADASTRO)
+              df_prod$ANO_PAGAMENTO<<-lubridate::year(df_prod$DATA_PAGAMENTO)
+              df_prod$MES_CADASTRO<<-lubridate::month(df_prod$DATACADASTRO)
+              df_prod$MES_PAGAMENTO<<-lubridate::month(df_prod$DATA_PAGAMENTO)
               
               div(
                 HTML("<div style='color:#273658;text-align:center;font-weight:bold;'><h1 style='color:#273658;text-align:center;font-weight:bold;'>PRODUÇÃO</h1> </div>"),
@@ -1079,12 +1079,11 @@ server <- function(input, output, session) {
     ###################################### PRODUÇÃO ###########################################################
     ######################################          ###########################################################
     
-    
-    
     reactive({
       
       
       output$serie_prod <- renderPlot({
+        
         df_prod %>% dplyr::filter(STATUS_PRINCIPAL == "PAGO AO CLIENTE")  %>%  
           dplyr::group_by(DATA_PAGAMENTO,PRODUTO) %>% 
           dplyr::summarise(Producao = sum(VLR_PRODUCAO),
@@ -1101,5 +1100,7 @@ server <- function(input, output, session) {
       
       
     })
+    
+   
   
 }
