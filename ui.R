@@ -54,7 +54,7 @@ sidebar = dashboardSidebar(sidebarMenu(
     id = "tabs",
     menuItem(text = "Controle de Msg", tabName = "page1",icon = icon("users")),
     menuItem(text = "Indicadores Bitrix", tabName = "page2",icon = icon("home")),
-    menuItem(text = "Prdução", tabName = "page3",icon = icon("home"))
+    menuItem(text = "Produção", tabName = "page3",icon = icon("home"))
     )),
 body = dashboardBody(
     tabItems(
