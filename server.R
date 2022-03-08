@@ -1084,7 +1084,7 @@ server <- function(input, output, session) {
       
       output$serie_prod <- renderPlot({
         
-        df_prod %>% dplyr::filter(STATUS_PRINCIPAL == "PAGO AO CLIENTE")  %>%  
+       plot <- df_prod %>% dplyr::filter(STATUS_PRINCIPAL == "PAGO AO CLIENTE")  %>%  
           dplyr::group_by(DATA_PAGAMENTO,PRODUTO) %>% 
           dplyr::summarise(Producao = sum(VLR_PRODUCAO),
                            Qntd     =sum(Qntd_Propostas)) %>%
