@@ -1083,54 +1083,54 @@ server <- function(input, output, session) {
                                                Qntd     =sum(Qntd_Propostas))
     output$box_prod1 <- renderValueBox({
       shinydashboard::valueBox(subtitle = tags$p("Total", style = "font-size:100%;color:#E4781C;font-weight:bold;"),
-                               value =tags$p(prod_total[1,1], style = "font-size:50%;color:#E4781C;font-weight:bold") ,
+                               value =tags$p(paste0("R$ ",format(prod_total[1,1],scientific =FALSE,big.mark =".")), style = "font-size:50%;color:#E4781C;font-weight:bold") ,
                                width = 4, color = "navy")
     })
     
     output$box_prod2 <- renderValueBox({
       shinydashboard::valueBox(subtitle = tags$p("Qntd. Propostas", style = "font-size:100%;color:#E4781C;font-weight:bold;"),
-                               value =tags$p(prod_total[1,2], style = "font-size:50%;color:#E4781C;font-weight:bold") ,
+                               value =tags$p(format(prod_total[1,2],scientific =FALSE,big.mark =".")), style = "font-size:50%;color:#E4781C;font-weight:bold") ,
                                width = 4 , color = "navy")
     })
     
     output$box_prod3 <- renderValueBox({
       shinydashboard::valueBox(subtitle = tags$p("", style = "font-size:100%;color:#E4781C;font-weight:bold;"),
-                               value =tags$p(sum(x1[,"sent"]), style = "font-size:50%;color:#E4781C;font-weight:bold") ,
+                               value =tags$p("", style = "font-size:50%;color:#E4781C;font-weight:bold") ,
                                width = 4, color = "navy")
     })
     output$box_prod4 <- renderValueBox({
       shinydashboard::valueBox(subtitle = tags$p("TOTAL", style = "font-size:100%;color:#E4781C;font-weight:bold;"),
-                               value =tags$p(sum(x1[mes_atual,"total"]), style = "font-size:50%;color:#E4781C;font-weight:bold") ,
+                               value =tags$p("", style = "font-size:50%;color:#E4781C;font-weight:bold") ,
                                width = 4, color = "navy")
     })
     
     output$box_prod5 <- renderValueBox({
       shinydashboard::valueBox(subtitle = tags$p("PENDENTE", style = "font-size:100%;color:#E4781C;font-weight:bold;"),
-                               value =tags$p(sum(x1[mes_atual,"pending"]), style = "font-size:50%;color:#E4781C;font-weight:bold") ,
+                               value =tags$p("", style = "font-size:50%;color:#E4781C;font-weight:bold") ,
                                width = 4,icon = tags$i(class = "fas fa-phone", style="font-size: 12px"), color = "navy")
     })
     
     output$box_prod6 <- renderValueBox({
       shinydashboard::valueBox(subtitle = tags$p("ENVIADO", style = "font-size:100%;color:#E4781C;font-weight:bold;"),
-                               value =tags$p(sum(x1[mes_atual,"sent"]), style = "font-size:50%;color:#E4781C;font-weight:bold") ,
+                               value =tags$p(0, style = "font-size:50%;color:#E4781C;font-weight:bold") ,
                                width = 4, color = "navy")
     })
     
     output$box_prod7 <- renderValueBox({
       shinydashboard::valueBox(subtitle = tags$p("TOTAL", style = "font-size:100%;color:#E4781C;font-weight:bold;"),
-                               value =tags$p(sum(x1[hoje,"total"]), style = "font-size:50%;color:#E4781C;font-weight:bold") ,
+                               value =tags$p(0, style = "font-size:50%;color:#E4781C;font-weight:bold") ,
                                width = 4, color = "navy")
     })
     
     output$box_prod8 <- renderValueBox({
       shinydashboard::valueBox(subtitle =tags$p("PENDENTE", style = "font-size:100%;color:#E4781C;font-weight:bold;"),
-                               value =tags$p(sum(x1[hoje,"pending"]), style = "font-size:50%;color:#E4781C;font-weight:bold"),
+                               value =tags$p(0, style = "font-size:50%;color:#E4781C;font-weight:bold"),
                                width = 4, color = "navy")
     })
     
     output$box_prod9 <- renderValueBox({
       shinydashboard::valueBox(subtitle = tags$p("ENVIADO", style = "font-size:100%;color:#E4781C;font-weight:bold;"),
-                               value =tags$p(sum(x1[hoje,"sent"]), style = "font-size:50%;color:#E4781C;font-weight:bold") ,
+                               value =tags$p(0, style = "font-size:50%;color:#E4781C;font-weight:bold") ,
                                width = 4, color = "navy")
     })
       

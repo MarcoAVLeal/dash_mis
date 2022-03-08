@@ -10,6 +10,8 @@ df$MES_PAGAMENTO <- lubridate::month(df$DATA_PAGAMENTO)
 
 df_pago <- df %>% dplyr::filter(STATUS_PRINCIPAL == "PAGO AO CLIENTE")
 
+df_pago  %>% dplyr::summarise(Producao = sum(VLR_PRODUCAO),
+                                                                          Qntd     =sum(Qntd_Propostas))
 
 df_pago %>%  dplyr::group_by(DATA_PAGAMENTO,PRODUTO) %>% dplyr::summarise(Producao = sum(VLR_PRODUCAO),
                                                                                            Qntd     =sum(Qntd_Propostas)) %>%
