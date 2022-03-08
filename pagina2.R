@@ -40,7 +40,7 @@ div( tabsetPanel(
            )),
            fluidRow(
                     column(width = 12,
-                           withSpinner(DTOutput(outputId = "tb_msg_bitrix"),hide.ui = FALSE,proxy.height = "10px",size = 0.5)
+                           #withSpinner(DTOutput(outputId = "tb_msg_bitrix"),hide.ui = FALSE,proxy.height = "10px",size = 0.5)
                     )))
   
 ))

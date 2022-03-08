@@ -440,7 +440,34 @@ server <- function(input, output, session) {
             
            }
     
-})  
+}) 
+    
+    
+    
+    reactive({
+      
+      if(input$tabs == "page1"){
+        
+        output$config_ui <- renderUI({
+          
+          withSpinner(DTOutput(outputId = "tb_msg_bitrix"),hide.ui = FALSE,proxy.height = "10px",size = 0.5)
+          
+          
+        })
+        
+      }else if(input$tabs == "page2"){
+        output$config_ui <- renderUI({
+          
+          
+          
+          
+        })
+        
+      }
+      
+    })
+    
+    
 
     ######################################                            ###########################################################
     ###################################### Renderiznado Info Whatsapp ###########################################################
@@ -463,6 +490,9 @@ server <- function(input, output, session) {
       bgcolor = "#E2E2E2",
       bordercolor = "#FFFFFF",
       borderwidth = 2)
+    
+    
+    
     
     df_msg_bitrix <- reactive({
       

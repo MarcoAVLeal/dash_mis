@@ -62,7 +62,7 @@ body = dashboardBody(
 tabItem("page2",
         uiOutput(outputId = "page2")
 ))),
-controlbar = dashboardControlbar( uiOutput(outputId = "login_box")),
+controlbar = dashboardControlbar( uiOutput(outputId = "config_ui")),
 title = "MIS"
 )
 
