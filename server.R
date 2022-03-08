@@ -1086,6 +1086,12 @@ server <- function(input, output, session) {
     
     prod_2022 <- df_pago %>% dplyr::filter(DATA_PAGAMENTO >= "2022-01-01") %>% dplyr::summarise(Producao = sum(VLR_PRODUCAO),
                                                                                                 Qntd     =sum(Qntd_Propostas))
+    
+    mes_atual <- lubridate::month(lubridate::today())
+    ano_atual <- lubridate::year(lubridate::today())
+    
+    prod_mes_atual <- df_pago %>% dplyr::filter( (ANO_PAGAMENTO==ano_atual)  & (MES_PAGAMENTO==mes_atual))   %>% dplyr::summarise(Producao = sum(VLR_PRODUCAO),
+                                                                                                Qntd     =sum(Qntd_Propostas))
     output$box_prod1 <- renderValueBox({
       shinydashboard::valueBox(subtitle = tags$p("Total", style = "font-size:100%;color:#E4781C;font-weight:bold;"),
                                value =tags$p(paste0("R$ ",format(prod_total[1,1],scientific =FALSE,big.mark =".",nsmall = 2,decimal.mark = ",")), style = "font-size:50%;color:#E4781C;font-weight:bold") ,
@@ -1138,6 +1144,25 @@ server <- function(input, output, session) {
                                value =tags$p(0, style = "font-size:50%;color:#E4781C;font-weight:bold") ,
                                width = 4, color = "navy")
     })
+    
+    output$box_prod10 <- renderValueBox({
+      shinydashboard::valueBox(subtitle = tags$p("Total", style = "font-size:100%;color:#E4781C;font-weight:bold;"),
+                               value =tags$p(paste0("R$ ",format(prod_mes_atual[1,1],scientific =FALSE,big.mark =".",nsmall = 2,decimal.mark = ",")), style = "font-size:50%;color:#E4781C;font-weight:bold") ,
+                               width = 4, color = "navy")
+    })
+    
+    output$box_prod11 <- renderValueBox({
+      shinydashboard::valueBox(subtitle =tags$p("Qntd. Propostas", style = "font-size:100%;color:#E4781C;font-weight:bold;"),
+                               value =tags$p(format(prod_mes_atual[1,2],scientific =FALSE,big.mark ="."), style = "font-size:50%;color:#E4781C;font-weight:bold") ,
+                               width = 4, color = "navy")
+    })
+    
+    output$box_prod12 <- renderValueBox({
+      shinydashboard::valueBox(subtitle = tags$p("", style = "font-size:100%;color:#E4781C;font-weight:bold;"),
+                               value =tags$p(0, style = "font-size:50%;color:#E4781C;font-weight:bold") ,
+                               width = 4, color = "navy")
+    })
+    
       
       
       output$serie_prod <- renderPlot({
