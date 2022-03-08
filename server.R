@@ -328,16 +328,7 @@ server <- function(input, output, session) {
             
             output$page2 <- renderUI({
               
-              #x <- read_url_csv(onedrive_url)
-              
-              onedrive_url <- "https://crefaz-my.sharepoint.com/:x:/g/personal/gestaodedados4_crefaz_onmicrosoft_com/EZYuY8kORyJIoTYUo9RwWMABYEkZTA2OXtxrUXnrLef9pQ?download=1"
-              
-              
-              
-              x1 <<- read_url_csv(onedrive_url)
-              
-              x1$dia <<- lubridate::as_date(x1$dia)
-              x2     <<- x1  
+             
               
               path_pg2
                 
@@ -353,7 +344,19 @@ server <- function(input, output, session) {
     
     df_msg_bitrix <- reactive({
       
-      l <<- list(
+        x <- read_url_csv(onedrive_url)
+        
+        onedrive_url <- "https://crefaz-my.sharepoint.com/:x:/g/personal/gestaodedados4_crefaz_onmicrosoft_com/EZYuY8kORyJIoTYUo9RwWMABYEkZTA2OXtxrUXnrLef9pQ?download=1"
+        
+        
+        
+        x1 <- read_url_csv(onedrive_url)
+        
+        x1$dia <- lubridate::as_date(x1$dia)
+        x2     <- x1
+      
+      
+      l <- list(
         title = list(text='<b> Legenda </b>'),
         orientation = 'h',
         xanchor = "center",
@@ -562,9 +565,6 @@ server <- function(input, output, session) {
     dataset <- reactive({
       
       data = df1
-      
-      # counter$countervalue <- counter$countervalue + 1
-      
       
       if (length(input$canal)){
         f1 =  data$Lojas %in% input$canal
