@@ -19,7 +19,7 @@ div(
                           withSpinner(DTOutput(outputId = "table_fase_group"),hide.ui = FALSE,proxy.height = "10px",size = 0.5),
                           
                           style = "overflow-y: scroll;overflow-x: scroll;")),
-              
+              HTML('<hr style="color: #E4781C;">'),
                    fluidRow(column(width = 3,
                                    withSpinner(uiOutput("total_movimentacoes"),proxy.height = "10px",size = 0.5),
                                    div(style="text-align:center",withSpinner(tableOutput(outputId = "table_res_mov"),hide.ui = FALSE,proxy.height = "10px",size = 0.5))),
