@@ -459,6 +459,7 @@ server <- function(input, output, session) {
         output$config_ui <- renderUI({
           
           div(br(),br(),
+              HTML("<div style='color:#E4781C;text-align:center;font-weight:bold;'><h4 style='color:#E4781C;text-align:center;font-weight:bold;'>Filtros</h4> </div>"),
             fluidRow(column(width = 12,
                             selectInput(inputId = "visao",label =  "VISAO:",
                                         c("Lojas" = "Nomes.e.sobrenomes",
@@ -478,7 +479,9 @@ server <- function(input, output, session) {
             ),
             column(width = 12,
                    selectInput(inputId = "versao",label =  "Template:",
-                               c("V1","V2")))),)
+                               c("V1","V2")))),
+            HTML("<div style='color:#E4781C;text-align:center;font-weight:bold;'><h4 style='color:#E4781C;text-align:center;font-weight:bold;'>Filtros Movimentações</h4> </div>"),
+            dateInput(inputId = "data_referencia",label = "Data Referência",value = max(df1$`Modificado em`)),)
           
           
         })
