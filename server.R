@@ -476,7 +476,7 @@ server <- function(input, output, session) {
     qtd_contatos_enviados <- contatos %>% dplyr::filter(CELULAR != "(44) 99890-6216") %>% dplyr::summarise(
                                                                                               qtd_filiais   = n(),
                                                                                               qtd_regionais = length(unique(Regional)),
-                                                                                              qtd_dir       = qtd_regionais*3)
+                                                                                              qtd_dir       = 3)
     x1$`Qntd. Esperada` <- qtd_contatos_enviados %>% sum
     
     x1 <- x1 %>% dplyr::filter(dia >= input$data_consulta_msg[1] & dia <= input$data_consulta_msg[2])
