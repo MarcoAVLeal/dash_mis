@@ -1083,7 +1083,7 @@ server <- function(input, output, session) {
                                                Qntd     =sum(Qntd_Propostas))
     output$box_prod1 <- renderValueBox({
       shinydashboard::valueBox(subtitle = tags$p("Total", style = "font-size:100%;color:#E4781C;font-weight:bold;"),
-                               value =tags$p(paste0("R$ ",format(prod_total[1,1],scientific =FALSE,big.mark =".")), style = "font-size:50%;color:#E4781C;font-weight:bold") ,
+                               value =tags$p(paste0("R$ ",format(prod_total[1,1],scientific =FALSE,big.mark =".",nsmall = 2,decimal.mark = ",")), style = "font-size:50%;color:#E4781C;font-weight:bold") ,
                                width = 4, color = "navy")
     })
     
