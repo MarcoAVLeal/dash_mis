@@ -450,7 +450,7 @@ server <- function(input, output, session) {
         
         output$config_ui <- renderUI({
           
-          withSpinner(DTOutput(outputId = "tb_msg_bitrix"),hide.ui = FALSE,proxy.height = "10px",size = 0.5)
+          dateRangeInput(inputId = "data_consulta_msg",label = "Data", language = "pt-BR",start = lubridate::as_date("2022-01-01"), end = lubridate::today())
           
           
         })
