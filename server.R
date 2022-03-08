@@ -450,7 +450,7 @@ server <- function(input, output, session) {
         
         output$config_ui <- renderUI({
           
-          dateRangeInput(inputId = "data_consulta_msg",label = "Data", language = "pt-BR",start = lubridate::as_date("2022-01-01"), end = lubridate::today())
+          div(br(),br(),dateRangeInput(inputId = "data_consulta_msg",label = "Data", language = "pt-BR",start = lubridate::as_date("2022-01-01"), end = lubridate::today()))
           
           
         })
