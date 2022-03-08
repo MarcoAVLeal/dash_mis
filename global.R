@@ -95,7 +95,7 @@ df                <- df %>% filter(str_detect(string = Lojas,pattern = "Loja CFZ
 
 
 df$Regional       <- str_replace(string = df$Regional,pattern = "Super. ES 2 Lojas CFZ",replacement = "Supervisao ES Lojas CFZ")
-df$Regional       <- str_replace(string = df$Regional,pattern = "Super. RJ e ES Lojas CFZ",replacement = "MAYSA CARVALHO")
+df$Regional       <- str_replace(string = df$Regional,pattern = "Super. RJ Lojas CFZ",replacement = "Supervisao RJ Lojas CFZ")
 df$Regional       <- str_replace(string = df$Regional,pattern = "Super. RS Lojas CFZ",replacement = "WAGNER RIBEIRO")
 df$Regional       <- str_replace(string = df$Regional,pattern = "Super. CE lojas CFZ",replacement = "GILBERTO FELICIO")
 df$Regional       <- str_replace(string = df$Regional,pattern = "Super. Lojas SC",replacement = "SC")
