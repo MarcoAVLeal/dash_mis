@@ -1148,8 +1148,8 @@ server <- function(input, output, session) {
                            Qntd     =sum(Qntd_Propostas)) %>%
           
           ggplot(aes(x = DATA_PAGAMENTO,y=Producao)) +
-          geom_point(size = 1.2, alpha = 0.75) +
           geom_line(size = 1.2, alpha = 0.75) +
+         geom_point(size = 1.2, alpha = 0.75) +
           axis.theme(title_size = 12,textsize = 12,pos_leg = "bottom",x.angle = 45,vjust = 1,hjust=1)
         plot  
         
