@@ -3,6 +3,7 @@ div( tabsetPanel(
   # type = "hidden",
   tabPanel(title = p("Envios Msg Bitrix",style="color:#E4781C;text-align:center;font-weight:bold;font-size:14px"),
            HTML("<div style='color:#E4781C;text-align:center;font-weight:bold;'><h2 style='color:#E4781C;text-align:center;font-weight:bold;'>ENVIO DE MENSAGENS POR WHATSSAPP</h2> </div>"),
+           dateRangeInput(inputId = "data_consulta_msg",label = "Data", language = "pt-BR",start = lubridate::as_date("2022-01-01"), end = lubridate::today()),
            fluidRow(column(width = 9,
                            fluidRow(column(width = 4,
                                            box(title = tags$p("TOTAL",style = "font-size:100%;color:#E4781C;font-weight:bold;"),
@@ -36,11 +37,10 @@ div( tabsetPanel(
                                     column(width=6, plotlyOutput(outputId = "plot_envio_acumulado",height = 480))),
                            fluidRow(column(width=6, plotlyOutput(outputId = "plot_envio_acumulado_mes",height = 480)),
                                     column(width=6 ))
-           ),
-           column(width = 3,
-                  dateRangeInput(inputId = "data_consulta_msg",label = "Data", language = "pt-BR",start = lubridate::as_date("2022-01-01"), end = lubridate::today()),
-                  withSpinner(DTOutput(outputId = "tb_msg_bitrix"),hide.ui = FALSE,proxy.height = "10px",size = 0.5)
-           )
-           ))
+           )),
+           fluidRow(
+                    column(width = 12,
+                           withSpinner(DTOutput(outputId = "tb_msg_bitrix"),hide.ui = FALSE,proxy.height = "10px",size = 0.5)
+                    )))
   
 ))
