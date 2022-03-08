@@ -1143,7 +1143,7 @@ server <- function(input, output, session) {
       output$serie_prod <- renderPlot({
         
        plot <- df_pago  %>%  
-          dplyr::group_by(DATA_PAGAMENTO,PRODUTO) %>% 
+          dplyr::group_by(DATA_PAGAMENTO) %>% 
           dplyr::summarise(Producao = sum(VLR_PRODUCAO),
                            Qntd     =sum(Qntd_Propostas)) %>%
           
