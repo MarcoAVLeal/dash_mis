@@ -305,7 +305,7 @@ server <- function(input, output, session) {
             
             
        }else{
-            output$page1 <- renderUI({
+            output$page2 <- renderUI({
            
               url <- "https://crefaz-my.sharepoint.com/:x:/g/personal/gestaodedados4_crefaz_onmicrosoft_com/EbsSsZPj4ntMvyRUG-0QYa4BTEQUCw8VXlCqTriyMQcYiw?download=1"
               destfile <- "calendario.xlsx"
@@ -423,7 +423,7 @@ server <- function(input, output, session) {
             })
             
             
-            output$page2 <- renderUI({
+            output$page1 <- renderUI({
               
               onedrive_url <- "https://crefaz-my.sharepoint.com/:x:/g/personal/gestaodedados4_crefaz_onmicrosoft_com/EZYuY8kORyJIoTYUo9RwWMABYEkZTA2OXtxrUXnrLef9pQ?download=1"
               
