@@ -456,7 +456,10 @@ server <- function(input, output, session) {
             
             output$page5 <- renderUI({
               
-              div(HTML("<h3 style='color:#273658;text-align:center;font-weight:bold;'>PRODUÇÃO</h1> "),
+              div(
+                HTML("<div style='color:#273658;text-align:center;font-weight:bold;'><h1 style='color:#273658;text-align:center;font-weight:bold;'>PRODUÇÃO</h1> </div>"),
+                
+                
                   path_pg5)
               
             })
