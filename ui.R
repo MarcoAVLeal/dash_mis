@@ -20,7 +20,9 @@ library(shinyWidgets)
 library(shinycssloaders)
 library(DT)
 library(reshape2)
-Sys.setlocale("LC_TIME", "pt_BR.UTF-8")
+library(plyr)
+library(tidyverse)
+
 if( stringr::str_detect(string = getwd(),pattern = "marco")){source(file = "https://raw.githubusercontent.com/MarcoAVLeal/dash_mis/main/librarys.R")
 }else{source(file = "https://raw.githubusercontent.com/MarcoAVLeal/dash_mis/main/librarys.R",encoding = "utf-8")}
 
@@ -37,7 +39,7 @@ red = "#4CC48F"
 adminlte_sidebar(
 dark_bg = "#273658",
 dark_hover_bg = "#81A1C1",
-dark_color = "#2E3440"
+dark_color = "#E4781C"
 ),
 adminlte_global(
 content_bg = "#FFF",
@@ -46,23 +48,33 @@ info_box_bg = "#D8DEE9"
 )
 ),
 #tags$a(href='https://site.crefaz.com.br/',tags$img(src='logo2.png',width = 80 ),"MIS")
-#options = list(sidebarExpandOnHover = TRUE),
+options = list(sidebarExpandOnHover = TRUE),
 header = dashboardHeader(title = strong("MIS"),userOutput("user"),leftUi = tagList(logo= tags$a(href='https://site.crefaz.com.br/',tags$img(src='https://site.crefaz.com.br/public/site/images/logo.png',width = 80 )))),
 sidebar = dashboardSidebar(sidebarMenu(
     id = "tabs",
-    menuItem(text = "Página1", tabName = "page1",icon = icon("home")),
-    menuItem(text = "Página2", tabName = "page2",icon = icon("home"))
+    menuItem(text = "Controle de Msg", tabName = "page1",icon = icon("users")),
+    menuItem(text = "Indicadores Bitrix", tabName = "page2",icon = icon("home")),
+    menuItem(text = "Acompanhamento de Status", tabName = "page3",icon = icon("home")),
+    menuItem(text = "Entrada de Propostas", tabName = "page4",icon = icon("home")),
+    menuItem(text = "Produção", tabName = "page5",icon = icon("home")),
+    menuItem(text = "Inadiplência", tabName = "page6",icon = icon("home"))
     )),
 body = dashboardBody(
     tabItems(
         tabItem("page1",
-                uiOutput(outputId = "page1")
-                ),
-tabItem("page2",
-        uiOutput(outputId = "page2")
-))),
-controlbar = dashboardControlbar( uiOutput(outputId = "login_box")
-),
+                uiOutput(outputId = "page1")),
+    tabItem("page2",
+        uiOutput(outputId = "page2")),
+    tabItem("page3",
+            uiOutput(outputId = "page3")),
+    tabItem("page4",
+            uiOutput(outputId = "page4")),
+    tabItem("page5",
+            uiOutput(outputId = "page5")),
+    tabItem("page6",
+            uiOutput(outputId = "page6"))
+)),
+controlbar = dashboardControlbar( uiOutput(outputId = "config_ui")),
 title = "MIS"
 )
 
