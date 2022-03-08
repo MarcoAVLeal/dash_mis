@@ -39,7 +39,7 @@ red = "#4CC48F"
 adminlte_sidebar(
 dark_bg = "#273658",
 dark_hover_bg = "#81A1C1",
-dark_color = "#2E3440"
+dark_color = "#E4781C"
 ),
 adminlte_global(
 content_bg = "#FFF",
