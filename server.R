@@ -717,8 +717,8 @@ server <- function(input, output, session) {
       
       
       Total <- sum
-      dados <- data %>% dplyr::select(`Data criado`,`Data prospectar`, `Data fechado`, `Data analisar`, `Data negociar`,ID_users) %>%
-        reshape2::melt(id.vars = "ID_users",measure.vars = c("Data criado","Data prospectar","Data fechado", "Data analisar", "Data negociar")) %>%
+      dados <- data %>% dplyr::select(`Data criado`,`Data prospectar`, `Data fechado`, `Data analisar`, `Data negociar`,ID_LEADS) %>%
+        reshape2::melt(id.vars = "ID_LEADS",measure.vars = c("Data criado","Data prospectar","Data fechado", "Data analisar", "Data negociar")) %>%
         mutate("Atributo"      = ifelse(variable == "Data criado","Criou Lead",
                                         ifelse(variable == "Data prospectar","Moveu para prospectando",
                                                ifelse(variable == "Data negociar","Moveu para negociando",
@@ -727,7 +727,7 @@ server <- function(input, output, session) {
       
       
       completedados <- dados[complete.cases(dados),]
-      dados               <- left_join(completedados,df1,by = c("ID_users"))
+      dados               <- left_join(completedados,df1,by = c("ID_LEADS"))
       dados   <- dados %>% dplyr::mutate("Atributo" = ifelse(Atributo == "Fechou lead(Desafio ou pago)",paste0("Moveu para ",`Fase do negocio`),Atributo))
       
       
