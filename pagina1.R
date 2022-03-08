@@ -18,7 +18,7 @@ div(
                           HTML("<h3 style='color:#273658;text-align:center;font-weight:bold;'>CONTATOS EM CADAS FASE</h1> "),
                           withSpinner(DTOutput(outputId = "table_fase_group"),hide.ui = FALSE,proxy.height = "10px",size = 0.5),
                           
-                          style = "height:800px; overflow-y: scroll;overflow-x: scroll;")),
+                          style = "overflow-y: scroll;overflow-x: scroll;")),
               
                    fluidRow(column(width = 3,
                                    withSpinner(uiOutput("total_movimentacoes"),proxy.height = "10px",size = 0.5),
