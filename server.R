@@ -49,13 +49,13 @@ axis.theme <- function(x.angle = 0,vjust=0,hjust=0.5,pos_leg="top",textsize = 10
 if( stringr::str_detect(string = getwd(),pattern = "marco")){
   path_pg1 <-  source(file = "https://raw.githubusercontent.com/MarcoAVLeal/dash_mis/main/pagina1.R",encoding = "UTF-8",local = F)
   path_pg2 <-  source(file = "https://raw.githubusercontent.com/MarcoAVLeal/dash_mis/main/pagina2.R",encoding = "UTF-8",local = F)
-  path_pg5 <-  source(file = "https://raw.githubusercontent.com/MarcoAVLeal/dash_mis/main/pagina2.R",encoding = "UTF-8",local = F)
+  path_pg5 <-  source(file = "https://raw.githubusercontent.com/MarcoAVLeal/dash_mis/main/pagina5.R",encoding = "UTF-8",local = F)
   
   
 }else{
   path_pg1 <-  source(file = "https://raw.githubusercontent.com/MarcoAVLeal/dash_mis/main/pagina1.R",encoding = "UTF-8",local = F)
   path_pg2 <-  source(file = "https://raw.githubusercontent.com/MarcoAVLeal/dash_mis/main/pagina2.R",encoding = "UTF-8",local = F)
-  path_pg5 <-  source(file = "https://raw.githubusercontent.com/MarcoAVLeal/dash_mis/main/pagina2.R",encoding = "UTF-8",local = F)
+  path_pg5 <-  source(file = "https://raw.githubusercontent.com/MarcoAVLeal/dash_mis/main/pagina5.R",encoding = "UTF-8",local = F)
   }
 
 
