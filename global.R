@@ -56,8 +56,10 @@ df <- read_url_csv(onedrive_url,enc = "latin1")
 names_df          <- c("ID","Tipo","Pipeline", "Fase do negocio","Negocio Recorrente","Negocio Repetido","Contato Fonte","Modificado por ID","Criado por","Pessoa reponsavel ID",
                        "Data prevista de fechamento","Data de inicio","Valor do emprestimo","Origem do Cliente","Data exportacao","Contato","Grupo de fase" ,
                        "Base","Produto Crefaz", "Fase automacao",  "Data negociar","Data analisar", "Data prospectar","Modificado em","Desafio","Desafio retencao","primeira_resposta_do_cliente",
-                       "resposta_do_cliente","cpf","retrabalho_desafio","ID_users" , "COD_PR",  "Nomes.e.sobrenomes" ,   "Lojas" ,  "Regional" ,   "active"  ,"Origem do Cliente1",   "Data fechado" ,  "Data criado"
+                       "resposta_do_cliente","cpf","retrabalho_desafio"
+                       
 )
+#,"ID_users" , "COD_PR",  "Nomes.e.sobrenomes" ,   "Lojas" ,  "Regional" ,   "active"  ,"Origem do Cliente1",   "Data fechado" ,  "Data criado"
 colnames(df) <- names_df
 
 # library(janitor)
