@@ -534,13 +534,13 @@ server <- function(input, output, session) {
       }else if(input$tabs == "page3"){
         output$config_ui <- renderUI({
           
-         
+         div("NULL")
           
         })
         
       }else if(input$tabs == "page4"){
         output$config_ui <- renderUI({
-          
+          div("NULL")
           
           
         })
@@ -548,14 +548,14 @@ server <- function(input, output, session) {
       }else if(input$tabs == "page5"){
         output$config_ui <- renderUI({
           
-          
+          div("NULL")
           
         })
         
       }else if(input$tabs == "page6"){
         output$config_ui <- renderUI({
           
-          
+          div("NULL")
           
         })
         
