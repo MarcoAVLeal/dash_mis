@@ -54,15 +54,26 @@ sidebar = dashboardSidebar(sidebarMenu(
     id = "tabs",
     menuItem(text = "Controle de Msg", tabName = "page1",icon = icon("users")),
     menuItem(text = "Indicadores Bitrix", tabName = "page2",icon = icon("home")),
-    menuItem(text = "Produção", tabName = "page3",icon = icon("home"))
+    menuItem(text = "Acompanhamento de Status", tabName = "page3",icon = icon("home")),
+    menuItem(text = "Entrada de Propostas", tabName = "page4",icon = icon("home")),
+    menuItem(text = "Produção", tabName = "page5",icon = icon("home")),
+    menuItem(text = "Inadiplência", tabName = "page6",icon = icon("home"))
     )),
 body = dashboardBody(
     tabItems(
         tabItem("page1",
                 uiOutput(outputId = "page1")),
-tabItem("page2",
-        uiOutput(outputId = "page2")
-))),
+    tabItem("page2",
+        uiOutput(outputId = "page2")),
+    tabItem("page3",
+            uiOutput(outputId = "page3")),
+    tabItem("page4",
+            uiOutput(outputId = "page4")),
+    tabItem("page5",
+            uiOutput(outputId = "page5")),
+    tabItem("page6",
+            uiOutput(outputId = "page6"))
+)),
 controlbar = dashboardControlbar( uiOutput(outputId = "config_ui")),
 title = "MIS"
 )

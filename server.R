@@ -438,6 +438,33 @@ server <- function(input, output, session) {
                 
             })
             
+            
+            
+            output$page3 <- renderUI({
+              
+              HTML("<h3 style='color:#273658;text-align:center;font-weight:bold;'>ACOMPANHAMENTO DE STATUS</h1> ")
+              
+            })
+            
+            output$page4 <- renderUI({
+              
+              HTML("<h3 style='color:#273658;text-align:center;font-weight:bold;'>ENTRADA DE PROPOSTAS</h1> ")
+              
+            })
+            
+            output$page5 <- renderUI({
+              
+              HTML("<h3 style='color:#273658;text-align:center;font-weight:bold;'>PRODUÇÃO</h1> ")
+              
+            })
+            
+            output$page6 <- renderUI({
+              
+              HTML("<h3 style='color:#273658;text-align:center;font-weight:bold;'>INADIMPLÊNCIA</h1> ")
+              
+            })
+            
+            
            }
     
 }) 
@@ -482,6 +509,34 @@ server <- function(input, output, session) {
                                c("V1","V2")))),
             HTML("<div style='color:#E4781C;text-align:center;font-weight:bold;'><h4 style='color:#E4781C;text-align:center;font-weight:bold;'>Filtros Movimentações</h4> </div>"),
             dateInput(inputId = "data_referencia",label = "Data Referência",value = max(df1$`Modificado em`)),)
+          
+          
+        })
+        
+      }else if(input$tabs == "page3"){
+        output$config_ui <- renderUI({
+          
+         
+          
+        })
+        
+      }else if(input$tabs == "page4"){
+        output$config_ui <- renderUI({
+          
+          
+          
+        })
+        
+      }else if(input$tabs == "page5"){
+        output$config_ui <- renderUI({
+          
+          
+          
+        })
+        
+      }else if(input$tabs == "page6"){
+        output$config_ui <- renderUI({
+          
           
           
         })
