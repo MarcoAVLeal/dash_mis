@@ -444,7 +444,7 @@ server <- function(input, output, session) {
     
     
     
-    reactive({
+    observeEvent(input$tabs, {
       
       if(input$tabs == "page1"){
         
