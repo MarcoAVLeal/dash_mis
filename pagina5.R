@@ -21,18 +21,18 @@ div(
                                  width = 12,
                                  collapsible = TRUE,
                                  solidHeader = TRUE,
-                                 valueBoxOutput("box_prod1"),
-                                 valueBoxOutput("box_prod2"),
-                                 valueBoxOutput("box_prod3"))),
+                                 valueBoxOutput("box_prod4"),
+                                 valueBoxOutput("box_prod5"),
+                                 valueBoxOutput("box_prod6"))),
                       column(width = 4,
                              box(title = tags$p("TOTAL",style = "font-size:100%;color:#E4781C;font-weight:bold;"),
                                  headerBorder = TRUE,
                                  width = 12,
                                  collapsible = TRUE,
                                  solidHeader = TRUE,
-                                 valueBoxOutput("box_prod1"),
-                                 valueBoxOutput("box_prod2"),
-                                 valueBoxOutput("box_prod3")))
+                                 valueBoxOutput("box_prod7"),
+                                 valueBoxOutput("box_prod8"),
+                                 valueBoxOutput("box_prod9")))
              ),
              fluidRow(plotOutput(outputId = "serie_prod",height = 480))
     )
