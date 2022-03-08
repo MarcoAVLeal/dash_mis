@@ -8,26 +8,6 @@ div(
                    HTML('<hr style="color: purple;">'),
                    
                    fluidRow(column(width = 3,
-                                   selectInput(inputId = "visao",label =  "VISAO:",
-                                               c("Lojas" = "Nomes.e.sobrenomes",
-                                                 "Regional" = "Lojas")),
-                                   textOutput("count")
-                   ),
-                   column(width = 3, selectInput(inputId = "canal",label =  "CANAL:",
-                                                 choices = c(sort(unique(df[,"Lojas"]))),
-                                                 #choices = NULL,
-                                                 multiple = TRUE)
-                   ),
-                   column(width = 3,
-                          selectInput(inputId = "regional",label =  "REGIONAL:",
-                                      choices = c(sort(unique(df[,"Regional"]))),
-                                      #choices = NULL,
-                                      multiple = TRUE)
-                   ),
-                   column(width = 3,
-                          selectInput(inputId = "versao",label =  "Template:",
-                                      c("V1","V2")))),
-                   fluidRow(column(width = 3,
                                    withSpinner(valueBoxOutput("total_bitrix_vbox"),proxy.height = "10px",size = 0.5),
                                    HTML("<h3 style='color:#273658;text-align:center;font-weight:bold;'>PROPORÇÃO DE LEADS POR FASE</h1> "),
                                    div(style="text-align:center",withSpinner(tableOutput(outputId = "proporcao_leads_fase"),hide.ui = FALSE,proxy.height = "10px",size = 0.5)),

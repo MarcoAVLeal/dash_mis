@@ -458,7 +458,27 @@ server <- function(input, output, session) {
       }else if(input$tabs == "page2"){
         output$config_ui <- renderUI({
           
-          
+          div(br(),br(),
+            fluidRow(column(width = 3,
+                            selectInput(inputId = "visao",label =  "VISAO:",
+                                        c("Lojas" = "Nomes.e.sobrenomes",
+                                          "Regional" = "Lojas")),
+                            textOutput("count")
+            ),
+            column(width = 3, selectInput(inputId = "canal",label =  "CANAL:",
+                                          choices = c(sort(unique(df[,"Lojas"]))),
+                                          #choices = NULL,
+                                          multiple = TRUE)
+            ),
+            column(width = 3,
+                   selectInput(inputId = "regional",label =  "REGIONAL:",
+                               choices = c(sort(unique(df[,"Regional"]))),
+                               #choices = NULL,
+                               multiple = TRUE)
+            ),
+            column(width = 3,
+                   selectInput(inputId = "versao",label =  "Template:",
+                               c("V1","V2")))),)
           
           
         })
