@@ -1113,6 +1113,15 @@ observeEvent(input$tabs,{
     
     
     HTML(paste0('
+    <style>
+table, th, td {
+  border: 1px solid black;
+  padding: 5px;
+}
+table {
+  border-spacing: 15px;
+}
+</style>
   <center>
 <table>
  <tr >
