@@ -23,18 +23,27 @@ library(reshape2)
 library(plyr)
 library(tidyverse)
 
-axis.theme <- function(x.angle = 0,vjust=0,hjust=0.5,pos_leg="top",textsize = 10,lengend_title_size = 10,lengend_text_size = 8,title_size = 16){
+axis.theme <- function(x.angle = 0,
+                       vjust=0,
+                       hjust=0.5,
+                       pos_leg="top",
+                       tick.size = 12,
+                       axis.title.size.x = 12,
+                       axis.title.size.y = 12,
+                       lengend_title_size = 10,
+                       lengend_text_size = 8,
+                       title_size = 16){
   
   
   theme_bw()  +
     theme(
-      axis.text.x = element_text(angle = x.angle,face = "bold",size = textsize,hjust=hjust, vjust=vjust),
-      axis.text.y = element_text(angle = 0,face = "bold",size = textsize),
+      axis.text.x = element_text(angle = x.angle,face = "bold",size = tick.size,hjust=hjust, vjust=vjust),
+      axis.text.y = element_text(angle = 0,face = "bold",size = tick.size),
       legend.background = element_rect(fill = "transparent", colour = NA,size = 2),
       panel.background = element_rect(fill = "transparent", colour = NA),
       plot.background = element_rect(fill = "white", colour = NA),
-      axis.title.x = element_text(colour = "black",size = textsize,face = "bold"),
-      axis.title.y = element_text(colour = "black",size = textsize,face = "bold"),
+      axis.title.x = element_text(colour = "black",size = axis.title.size.x,face = "bold"),
+      axis.title.y = element_text(colour = "black",size = axis.title.size.y,face = "bold"),
       legend.title = element_text(colour = "black",size = lengend_title_size),
       legend.position = pos_leg,
       legend.text = element_text(colour = "black",size = lengend_text_size,face = "bold"),
