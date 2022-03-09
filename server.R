@@ -1107,6 +1107,62 @@ observeEvent(input$tabs,{
   
 
     
+  
+  output$box_uiprod1 <- renderUI({
+    
+    
+    
+    HTML('
+<table>
+ <tr style="width:1360px;">
+  <td valign="top" style="width: 340px;">
+  
+  
+<hr style="width:100%;text-align:center;margin-left:0;height:4px;color:#652B91;border-width: 1px;">
+           <div style = "background-color:#273658;">
+           <h1 style="color:#E4781C;text-align:center;font-weight:bold;font-size:34px">   </h1> 
+           <h3 style="color:#E4781C;text-align:center;font-weight:bold;font-size:32px">  Orçado  </h3>  
+           </div>
+           <hr style="width:100%;text-align:center;margin-left:0;height:4px;color:#652B91;border-width: 2px;">
+           
+           </td>
+           <td valign="top" style="width: 340px;">
+           <hr style="width:100%;text-align:center;margin-left:0;height:4px;color:#652B91;border-width: 1px;">
+           <div style = "background-color:#273658;">
+           <h1 style="color:#E4781C;text-align:center;font-weight:bold;font-size:34px">  `r paste0("R$ ",format(sum(df$Realizado), scientific = FALSE, nsmall = 2, big.mark = "."))`  </h1> 
+           <h3 style="color:#E4781C;text-align:center;font-weight:bold;font-size:32px">  Realizado  </h3>  
+           </div>
+           <hr style="width:100%;text-align:center;margin-left:0;height:4px;color:#652B91;border-width: 2px;">
+           
+           </td>
+           <td valign="top"  style="width: 340px;">
+           <hr style="width:100%;text-align:center;margin-left:0;height:4px;color:#652B91;border-width: 1px;">
+           <div style = "background-color:#273658;">
+           <h1 style="color:#E4781C;text-align:center;font-weight:bold;font-size:34px">  `r paste0("R$ ",format(sum(df[,"Projetado 10 dias"]), scientific = FALSE, nsmall = 2, big.mark = "."))`  </h1> 
+           <h3 style="color:#E4781C;text-align:center;font-weight:bold;font-size:32px">  Projetado 10 dias  </h3>  
+           </div>
+           <hr style="width:100%;text-align:center;margin-left:0;height:4px;color:#652B91;border-width: 2px;">
+           
+           </td>
+           
+           
+           <td valign="top"  style="width: 340px;">
+           <hr style="width:100%;text-align:center;margin-left:0;height:4px;color:#652B91;border-width: 1px;">
+           <div style = "background-color:#273658;">
+           <h1 style="color:#E4781C;text-align:center;font-weight:bold;font-size:36px">  `r paste0(format(round( (sum(df[,"Projetado 10 dias"]) / sum(df[,"Orçado"]))*100,2), scientific = FALSE, nsmall = 2, big.mark = ".")," %")`  </h1> 
+           <h3 style="color:#E4781C;text-align:center;font-weight:bold;font-size:32px">  Atingimento(Proj/Orç)  </h3>  
+           </div>
+           <hr style="width:100%;text-align:center;margin-left:0;height:4px;color:#652B91;border-width: 2px;">
+           
+           </td>
+           
+           
+           </tr>
+         </table>')
+    
+    
+    
+  })
    
     output$box_prod1 <- renderValueBox({
       shinydashboard::valueBox(subtitle = tags$p("Total", style = "font-size:100%;color:#E4781C;font-weight:bold;"),
