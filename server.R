@@ -1136,7 +1136,7 @@ table {
   <td valign="top">
            <div style = "background-color:#273658;">
            <h1 style="color:#E4781C;text-align:center;font-weight:bold;font-size:14px">',paste0(format(prod_total[1,2],scientific =FALSE,big.mark =".",nsmall = 2,decimal.mark = ",")),'</h1> 
-           <h3 style="color:#E4781C;text-align:center;font-weight:bold;font-size:14px">  Qntd. Propostas  </h3>  
+           <h3 style="color:#E4781C;text-align:center;font-weight:bold;font-size:14px">  Qntd. <br> Propostas  </h3>  
            </div>
            </td>
            
