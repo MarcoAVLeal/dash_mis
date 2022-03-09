@@ -20,21 +20,21 @@ div(
                                  width = 12,
                                  collapsible = TRUE,
                                  solidHeader = TRUE,
-                                 uiOutput("box_uiprod2")),
+                                 uiOutput("box_uiprod2"))),
                       column(width = 3,
                              box(title = tags$p("Produção 2022",style = "font-size:100%;color:#E4781C;font-weight:bold;"),
                                  headerBorder = TRUE,
                                  width = 12,
                                  collapsible = TRUE,
                                  solidHeader = TRUE,
-                                 uiOutput("box_uiprod3")),
+                                 uiOutput("box_uiprod3"))),
                       column(width = 3,
                              box(title = tags$p("Mês Atual",style = "font-size:100%;color:#E4781C;font-weight:bold;"),
                                  headerBorder = TRUE,
                                  width = 12,
                                  collapsible = TRUE,
                                  solidHeader = TRUE,
-                                 uiOutput("box_uiprod4"))
+                                 uiOutput("box_uiprod4")))
              ),
              fluidRow(plotOutput(outputId = "serie_prod",height = 480))
     )
