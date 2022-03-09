@@ -21,7 +21,9 @@ library(shinyWidgets)
 library(shinycssloaders)
 library(DT)
 library(tidyverse)
-
+library(zoo)
+library(forecast)
+library(GGally)
 credentials <-  list(
   mleal=list(username="mleal",pass="mleal",name="Marco Aurelio Valles Leal",cargo = "Analista de Dados",departamento = "Inteligência de Negócios",img="https://media-exp1.licdn.com/dms/image/C4D03AQExh92rzasW7g/profile-displayphoto-shrink_800_800/0/1565999978646?e=1650499200&v=beta&t=OSrhN0GvN1-fLl-_cJwzBfRH_tLdLBqrDlAdspw6QxI"),
   dctgranzotto=list(username="dctgranzotto",pass="covid19dctgranzotto",name="Daniele Cristina Tita Granzotto "),

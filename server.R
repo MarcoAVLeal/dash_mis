@@ -22,6 +22,9 @@ library(DT)
 library(reshape2)
 library(plyr)
 library(tidyverse)
+library(zoo)
+library(forecast)
+library(GGally)
 textsize <- 10
 axis.theme <- function(x.angle = 0,
                        vjust=0,

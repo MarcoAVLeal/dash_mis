@@ -3,7 +3,7 @@ library(tidyverse)
 library(knitr)
 library(kableExtra)
 library(caret)
-library(GGally)
+
 library(ggplot2)
 library(MLmetrics)
 library(klaR)
@@ -11,6 +11,7 @@ library(plotROC)
 library(RColorBrewer)
 library(zoo)
 library(forecast)
+library(GGally)
 cores <- c(RColorBrewer::brewer.pal(9,name = "Set1"),RColorBrewer::brewer.pal(8,name = "Dark2"))
 cores <- cores[-c(4,1)]
 knitr::opts_chunk$set(echo = TRUE,warning= FALSE, message= FALSE,
