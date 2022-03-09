@@ -1119,7 +1119,7 @@ table, th, td {
   padding: 5px;
 }
 table {
-  border-spacing: 30px;
+  border-spacing: 50px;
 }
 </style>
   <center>
