@@ -39,7 +39,7 @@ div(
                           headerBorder = TRUE,
                           width = 12,
                           collapsible = TRUE,
-                          collapsed = TRUE,
+                          collapsed = FALSE,
                           solidHeader = TRUE,
                           plotOutput(outputId = "serie_prod",height = 560)
              )),
