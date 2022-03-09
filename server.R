@@ -1402,7 +1402,12 @@ table {
         
         
         library(lubridate)
-        p1 <- df_pago %>% mutate(Mes = as.factor(month(DATA_PAGAMENTO))) %>%
+        p1 <- df_pago  %>%
+          dplyr::group_by(DATA_PAGAMENTO) %>%
+          dplyr::summarise(Producao = sum(VLR_PRODUCAO),
+                           Qntd     =sum(Qntd_Propostas)) %>% 
+          dplyr::select(DATA_PAGAMENTO,Producao) %>%  
+          mutate(Mes = as.factor(month(DATA_PAGAMENTO))) %>%
           ggplot() +
           labs(x = "Meses", y = "Preço") +
           scale_x_discrete(breaks = 1:12,labels = month.abb) +

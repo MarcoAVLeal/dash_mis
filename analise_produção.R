@@ -106,7 +106,7 @@ cowplot::plot_grid(parcial1,parcial2, ncol=1,nrow=2,align = "v")
 
 
 
-
+producao   <- zoo(producao_df$Producao  ,producao_df$DATA_PAGAMENTO)
 
 library(lubridate)
 p1 <- producao_df %>% mutate(Mes = as.factor(month(DATA_PAGAMENTO))) %>%
