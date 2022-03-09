@@ -52,12 +52,12 @@ options = list(sidebarExpandOnHover = TRUE),
 header = dashboardHeader(title = strong("MIS"),userOutput("user"),leftUi = tagList(logo= tags$a(href='https://site.crefaz.com.br/',tags$img(src='https://site.crefaz.com.br/public/site/images/logo.png',width = 80 )))),
 sidebar = dashboardSidebar(sidebarMenu(
     id = "tabs",
-    menuItem(text = "Controle de Msg", tabName = "page1",icon = icon("users")),
-    menuItem(text = "Indicadores Bitrix", tabName = "page2",icon = icon("home")),
-    menuItem(text = "Acompanhamento de Status", tabName = "page3",icon = icon("home")),
-    menuItem(text = "Entrada de Propostas", tabName = "page4",icon = icon("home")),
-    menuItem(text = "Produção", tabName = "page5",icon = icon("home")),
-    menuItem(text = "Inadimplência", tabName = "page6",icon = icon("home"))
+    menuItem(text = strong("Controle de Msg"), tabName = "page1",icon = icon("users")),
+    menuItem(text = strong("Indicadores Bitrix"), tabName = "page2",icon = icon("home")),
+    menuItem(text = strong("Acompanhamento de Status"), tabName = "page3",icon = icon("home")),
+    menuItem(text = strong("Entrada de Propostas"), tabName = "page4",icon = icon("home")),
+    menuItem(text = strong("Produção"), tabName = "page5",icon = icon("home")),
+    menuItem(text = strong("Inadimplência"), tabName = "page6",icon = icon("home"))
     )),
 body = dashboardBody(
     tabItems(
