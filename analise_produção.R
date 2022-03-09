@@ -77,7 +77,7 @@ cowplot::plot_grid(p1, p2,ncol=1,nrow=2,labels = LETTERS[1:2],align = "v")
 #   geom_line() +
 #   geom_smooth(method = "gam",se = TRUE)
 
-producao   <- zoo(producao_df$Producao  ,producao_df$DATA_PAGAMENTO)
+producao   <- zoo(log(producao_df$Producao)  ,producao_df$DATA_PAGAMENTO)
 p3 <- autoplot.zoo(diff(producao)) + 
   geom_line(size = 0.25,alpha=1,color="black")+
   #geom_point(size = .3,alpha = 0.25,color="black") +
@@ -143,3 +143,111 @@ cowplot::plot_grid(p1, ncol=1,nrow=1,labels = LETTERS[1],align = "v")
 
 
 
+library(aTSA)
+library(fpp2) 
+Diesel_st   <- ts(data = producao_df$Producao, start=2017,frequency = 1)
+# Gasolina_st <-  ts(data = dados$A1, start=1995,frequency = 1)
+producao           <- zoo(log(producao_df$Producao)  ,producao_df$DATA_PAGAMENTO)
+Producao_Holt      = holt(Diesel_st,level = .95)
+Producao_SES       = ses(Diesel_st,level = .95)
+length(producao)
+
+producao_df <- producao_df %>% mutate(`Ajuste Holt(Producao)`     = Producao_Holt$fitted,
+                    `Ajuste SES(Producao)`      = Producao_SES$fitted)
+
+df_diesel <- producao_df %>% dplyr::select(DATA_PAGAMENTO,Producao,`Ajuste Holt(Producao)`,`Ajuste SES(Producao)`) %>% melt("DATA_PAGAMENTO") %>% dplyr::rename( Producao = value,Legenda = variable)
+
+#df_gasolina <- df %>% select(Data,Gasolina,`Ajuste Holt(Gasolina)`,`Ajuste SES(Gasolina)`) %>% melt("Data") %>% dplyr::rename( Preços = value,Legenda = variable)
+
+p1 <- ggplot(data = df_diesel, aes(x = DATA_PAGAMENTO, y = Producao, linetype = Legenda,color = Legenda)) + 
+  geom_line(alpha=1,size = 1.2)+
+  #geom_line(data = df,aes(x = Data, y = `Ajuste Holt(Diesel)`),color = "red", lty = "dashed") +
+  #geom_point(size = .3,alpha = 0.25,color="black") +
+  labs(x = "Data", y = "Preço") +
+  scale_color_manual(values = c("black","red","darkgreen")) +
+  scale_x_date(date_breaks = "12 months",date_labels = "%Y")+
+  axis.theme(x.angle = 45,vjust = 1,hjust = 1,axis.title.size.x = 12,axis.title.size.y = 12,tick.size = 8,lengend_title_size = 10,lengend_text_size = 8,pos_leg = "right")
+
+# p2 <- ggplot(data = df_gasolina, aes(x = Data, y = Preços, linetype = Legenda,color = Legenda)) + 
+#   geom_line(alpha=0.85,size = 0.75)+
+#   #geom_line(data = df,aes(x = Data, y = `Ajuste Holt(Diesel)`),color = "red", lty = "dashed") +
+#   #geom_point(size = .3,alpha = 0.25,color="black") +
+#   labs(x = "Data", y = "Preço") +
+#  # scale_color_manual(values = color_pal) +
+#     scale_x_date(date_breaks = "12 months",date_labels = "%Y")+
+#   axis.theme(x.angle = 45,vjust = 1,hjust = 1,axis.title.size.x = 12,axis.title.size.y = 12,tick.size = 8,lengend_title_size = 10,lengend_text_size = 8,pos_leg = "right")
+
+cowplot::plot_grid( p1, ncol=1,nrow=1,labels = LETTERS[1],align = "v")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+lambda <- BoxCox.lambda(producao)
+fit    <- BoxCox(producao, lambda)
+
+p3 <- autoplot.zoo(diff(fit)) + 
+  geom_line(size = 0.25,alpha=1,color="black")+
+  #geom_point(size = .3,alpha = 0.25,color="black") +
+  labs(x = "Data", y = " Log do Preço") +
+  #scale_color_manual(values = color_pal) +
+  scale_x_date(date_breaks = "12 months",date_labels = "%Y")+
+  axis.theme(x.angle = 45,vjust = 1,hjust = 1,axis.title.size.x = 12,axis.title.size.y = 12,tick.size = 10,lengend_title_size = 10,lengend_text_size = 8,pos_leg = "none")
+
+pA1 <- ggAcf(as.zoo(diff(fit)),type = "correlation")+
+  labs(x = "Lag", y = "FAC",title=NULL) +
+  axis.theme(axis.title.size.x = 12,axis.title.size.y = 12,tick.size = 10)
+
+pB1 <- ggAcf(as.zoo(diff(fit)),type = "partial")+
+  labs(x = "Lag", y = "FACP",title=NULL) +
+  axis.theme(axis.title.size.x = 12,axis.title.size.y = 12,tick.size = 10)
+
+parcial1 <- cowplot::plot_grid(p3,cowplot::plot_grid(pA1, pB1,ncol=2,nrow=1,labels = LETTERS[2:3],align = "v"),labels = LETTERS[1],ncol=1,nrow=2)
+
+
+parcial1
+
+fit011  = arima(log(producao),order = c(0,1,1),)
+fit111  = arima(log(producao),order = c(1,1,1))
+fitauto = auto.arima(log(producao))
+
+metrics_names = c("$\\phi_1$","Log-Lik","AIC")
+data_res <- data.frame(Estimativas = c(fit011$coef,
+                                       fit011$loglik,
+                                       fit011$aic),
+                       `S.E` = c(round(sqrt(fit011$var.coef),5),"","")
+                       ,
+                       row.names = metrics_names)
+
+
+metrics_names = c("$\\phi_1$","Log-Lik","AIC")
+data_res1 <- data.frame(Estimativas = c(fitauto$coef,
+                                       fitauto$loglik,
+                                       fitauto$aic),
+                       `S.E` = c(round(sqrt(fitauto$var.coef),5),"","")
+                       ,
+                       row.names = metrics_names)
+
+
+metrics_names = c("$\\phi_1$","$\\phi_2$","Log-Lik","AIC")
+data_res3 <- data.frame(Estimativas = c(round(fit111$coef[1],4),
+                                       round(fit111$coef[2],4),
+                                       round(fit111$loglik,4),
+                                       round(fit111$aic,4)),
+                       `S.E`      = c(round(sqrt(diag(fit111$var.coef)[1]),5),
+                                      round(sqrt(diag(fit111$var.coef)[2]),5),"",""),
+                       row.names = metrics_names)
+
+
+plot(fit011)
