@@ -101,3 +101,28 @@ pB2 <- ggAcf(as.zoo(diff(diff(producao))),type = "partial")+
 parcial2 <- cowplot::plot_grid(p4,cowplot::plot_grid(pA2, pB2,ncol=1,nrow=2,labels = LETTERS[4:5],align = "v"),labels = LETTERS[3])
 
 cowplot::plot_grid(parcial1,parcial2, ncol=1,nrow=2,align = "v")
+
+
+
+
+
+
+library(lubridate)
+p1 <- producao_df %>% mutate(Mes = as.factor(month(DATA_PAGAMENTO))) %>%
+  ggplot() +
+  labs(x = "Meses", y = "Preço") +
+  scale_x_discrete(breaks = 1:12,labels = month.abb) +
+  geom_boxplot(aes(x = Mes,y = Producao)) + 
+  axis.theme(x.angle = 45,vjust = 1,hjust = 1,axis.title.size.x = 12,axis.title.size.y = 12,tick.size = 10)
+
+p2 <- producao_df %>% mutate(Mes = as.factor(month(DATA_PAGAMENTO))) %>%
+  ggplot() +
+  labs(x = "Meses", y = "Preço") +
+  scale_x_discrete(breaks = 1:12,labels = month.abb) +
+  geom_boxplot(aes(x = Mes,y = Producao)) + 
+  axis.theme(x.angle = 45,vjust = 1,hjust = 1,axis.title.size.x = 12,axis.title.size.y = 12,tick.size = 10)
+
+
+
+
+cowplot::plot_grid(p1, ncol=1,nrow=1,labels = LETTERS[1],align = "v")
