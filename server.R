@@ -496,7 +496,10 @@ server <- function(input, output, session) {
               prod_mes_atual <<- df_pago %>% dplyr::filter( (ANO_PAGAMENTO==ano_atual)  & (MES_PAGAMENTO==mes_atual))   %>% dplyr::summarise(Producao = sum(VLR_PRODUCAO),
                                                                                                                                             Qntd     =sum(Qntd_Propostas))
               
+              f_data <- as.Date(as.yearmon(as.Date(max(df_pago$DATA_PAGAMENTO,na.rm = TRUE))) -.6, frac = 1)
               
+              reservados   <<- df_pago %>% dplyr::filter(DATA_PAGAMENTO > f_data)
+              df_pago      <<- df_pago %>% dplyr::filter(DATA_PAGAMENTO <= f_data)
               
               div(
                 HTML("<div style='color:#273658;text-align:center;font-weight:bold;'><h1 style='color:#273658;text-align:center;font-weight:bold;'>PRODUÇÃO</h1> </div>"),

@@ -31,6 +31,18 @@ df$MES_PAGAMENTO <- lubridate::month(df$DATA_PAGAMENTO)
 
 df_pago <- df %>% dplyr::filter(STATUS_PRINCIPAL == "PAGO AO CLIENTE")
 
+
+n = nrow(df_pago)
+
+
+library(zoo)
+f_data <- as.Date(as.yearmon(as.Date(max(df_pago$DATA_PAGAMENTO,na.rm = TRUE))) -.6, frac = 1)
+
+reservados   <- df_pago %>% dplyr::filter(DATA_PAGAMENTO > f_data)
+df_pago      <- df_pago %>% dplyr::filter(DATA_PAGAMENTO <= f_data)
+
+
+
 df_pago  %>% dplyr::summarise(Producao = sum(VLR_PRODUCAO),Qntd     =sum(Qntd_Propostas))
 
 producao_df <- df_pago %>%  dplyr::group_by(DATA_PAGAMENTO) %>% dplyr::summarise(Producao = sum(VLR_PRODUCAO),
@@ -127,3 +139,7 @@ p2 <- producao_df %>% mutate(Mes = as.factor(month(DATA_PAGAMENTO))) %>%
 
 
 cowplot::plot_grid(p1, ncol=1,nrow=1,labels = LETTERS[1],align = "v")
+
+
+
+
