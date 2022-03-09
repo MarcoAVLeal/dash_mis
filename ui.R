@@ -57,7 +57,7 @@ sidebar = dashboardSidebar(sidebarMenu(
     menuItem(text = "Acompanhamento de Status", tabName = "page3",icon = icon("home")),
     menuItem(text = "Entrada de Propostas", tabName = "page4",icon = icon("home")),
     menuItem(text = "Produção", tabName = "page5",icon = icon("home")),
-    menuItem(text = "Inadiplência", tabName = "page6",icon = icon("home"))
+    menuItem(text = "Inadimplência", tabName = "page6",icon = icon("home"))
     )),
 body = dashboardBody(
     tabItems(
