@@ -1324,7 +1324,7 @@ table {
           labs(x = "Data", y = "Produção") +
           # scale_color_manual(values = color_pal) +
           scale_x_date(date_breaks = "12 months",date_labels = "%Y")+
-          axis.theme(x.angle = 45,vjust = 1,hjust = 1,axis.title.size.x = 16,axis.title.size.y = 16,tick.size = 16)+
+          axis.theme(x.angle = 45,vjust = 1,hjust = 1,axis.title.size.x = 16,axis.title.size.y = 16,tick.size = 16)
         
         producao   <- df_pago  %>%
           dplyr::group_by(DATA_PAGAMENTO) %>%
@@ -1340,7 +1340,7 @@ table {
           labs(x = "Data", y = "Produção") +
           # scale_color_manual(values = color_pal) +
           scale_x_date(date_breaks = "12 months",date_labels = "%Y")+
-          axis.theme(x.angle = 45,vjust = 1,hjust = 1,axis.title.size.x = 16,axis.title.size.y = 16,tick.size = 16)+
+          axis.theme(x.angle = 45,vjust = 1,hjust = 1,axis.title.size.x = 16,axis.title.size.y = 16,tick.size = 16)
         cowplot::plot_grid(p1, p2,ncol=1,nrow=2,labels = LETTERS[1:2],align = "v")
         
         
