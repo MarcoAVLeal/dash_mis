@@ -1349,7 +1349,7 @@ table {
       
       
       
-      ouput$serie_diff_correlogram <- renderPlot({
+      output$serie_diff_correlogram <- renderPlot({
         
         
         p3 <- autoplot.zoo(diff(producao)) + 
