@@ -22,7 +22,7 @@ library(DT)
 library(reshape2)
 library(plyr)
 library(tidyverse)
-
+textsize <- 10
 axis.theme <- function(x.angle = 0,
                        vjust=0,
                        hjust=0.5,
