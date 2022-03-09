@@ -718,7 +718,7 @@ server <- function(input, output, session) {
         scale_color_manual(values = c("darkgreen", "red","darkblue")) +
          scale_x_continuous(breaks = seq(min(x1$dia),max(x1$dia),by = paste(length(unique(lubridate::month(x1$dia))),"days") ) )+
         # scale_y_continuous(breaks = seq(0,1,0.1))+
-        axis.theme(title_size = 10,textsize = 10,pos_leg = "bottom",x.angle = 45,vjust = 1,hjust=1) +
+        axis.theme(x.angle = 45,vjust = 1,hjust = 1,axis.title.size.x = 16,axis.title.size.y = 16,tick.size = 16)+
         geom_vline(xintercept = max(df_melt$dia),
                    linetype = "dashed", colour = "red", alpha = 1,size = 0.8) +
         geom_hline(yintercept = sum(qtd_contatos_enviados),
@@ -751,7 +751,7 @@ server <- function(input, output, session) {
                    linetype = "dashed", colour = "red", alpha = 1,size = 0.8) +
       scale_x_continuous(breaks = seq(min(x1$dia),max(x1$dia),by = paste(length(unique(lubridate::month(x1$dia))),"days") ) )+
         # scale_y_continuous(breaks = seq(0,1,0.1))+
-        axis.theme(title_size = 12,textsize = 12,pos_leg = "bottom",x.angle = 45,vjust = 1,hjust=1)
+        axis.theme(x.angle = 45,vjust = 1,hjust = 1,axis.title.size.x = 16,axis.title.size.y = 16,tick.size = 16)+
       plot <- ggplotly(p1) %>% layout(hovermode = "y", spikedistance =  -1,margin = c(0,0,0,10),legend = l,
                                       xaxis = list(title = "<b>Dias</b>", showspikes = TRUE, titlefont = list(size = 16),
                                                    spikemode  = 'across', #toaxis, across, marker
@@ -788,7 +788,7 @@ server <- function(input, output, session) {
                    linetype = "dashed", colour = "red", alpha = 1,size = 0.8) +
         scale_x_continuous(breaks = seq(min(x1$dia),max(x1$dia),by = paste(length(unique(lubridate::month(x1$dia))),"days") ) )+
         # scale_y_continuous(breaks = seq(0,1,0.1))+
-        axis.theme(title_size = 12,textsize = 12,pos_leg = "bottom",x.angle = 45,vjust = 1,hjust=1)
+        axis.theme(x.angle = 45,vjust = 1,hjust = 1,axis.title.size.x = 16,axis.title.size.y = 16,tick.size = 16)+
       plot <- ggplotly(p1) %>% layout(hovermode = "y", spikedistance =  -1,margin = c(0,0,0,10),legend = l,
                                       xaxis = list(title = "<b>Dias</b>", showspikes = TRUE, titlefont = list(size = 16),
                                                    spikemode  = 'across', #toaxis, across, marker
@@ -1305,7 +1305,7 @@ table {
           ggplot(aes(x = DATA_PAGAMENTO,y=Producao)) +
           geom_line(size = 1.2, alpha = 0.75) +
          geom_point(size = 1.2, alpha = 0.75) +
-          axis.theme(title_size = 12,textsize = 12,pos_leg = "bottom",x.angle = 45,vjust = 1,hjust=1)
+         axis.theme(x.angle = 45,vjust = 1,hjust = 1,axis.title.size.x = 16,axis.title.size.y = 16,tick.size = 16)
         plot
 
         
@@ -1324,7 +1324,7 @@ table {
           labs(x = "Data", y = "Produção") +
           # scale_color_manual(values = color_pal) +
           scale_x_date(date_breaks = "12 months",date_labels = "%Y")+
-          axis.theme(x.angle = 45,vjust = 1,hjust = 1,axis.title.size.x = 16,axis.title.size.y = 16,tick.size = 16)
+          axis.theme(x.angle = 45,vjust = 1,hjust = 1,axis.title.size.x = 16,axis.title.size.y = 16,tick.size = 16)+
         
         producao   <- df_pago  %>%
           dplyr::group_by(DATA_PAGAMENTO) %>%
@@ -1340,7 +1340,7 @@ table {
           labs(x = "Data", y = "Produção") +
           # scale_color_manual(values = color_pal) +
           scale_x_date(date_breaks = "12 months",date_labels = "%Y")+
-          axis.theme(x.angle = 45,vjust = 1,hjust = 1,axis.title.size.x = 16,axis.title.size.y = 16,tick.size = 16)
+          axis.theme(x.angle = 45,vjust = 1,hjust = 1,axis.title.size.x = 16,axis.title.size.y = 16,tick.size = 16)+
         cowplot::plot_grid(p1, p2,ncol=1,nrow=2,labels = LETTERS[1:2],align = "v")
         
         
