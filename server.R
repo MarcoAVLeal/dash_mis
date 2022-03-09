@@ -1078,6 +1078,13 @@ server <- function(input, output, session) {
     ######################################          ###########################################################
     ###################################### PRODUÇÃO ###########################################################
     ######################################          ###########################################################
+    
+observeEvent(input$tabs,{
+  
+  
+  
+
+    
     df_pago <<- df_prod %>% dplyr::filter(STATUS_PRINCIPAL == "PAGO AO CLIENTE")
     prod_total <- df_pago %>% dplyr::summarise(Producao = sum(VLR_PRODUCAO),
                                                Qntd     =sum(Qntd_Propostas))
@@ -1181,7 +1188,7 @@ server <- function(input, output, session) {
       })
       
       
-      
+}) 
  
     
    
