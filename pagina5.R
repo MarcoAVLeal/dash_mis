@@ -36,7 +36,14 @@ div(
                                  uiOutput("box_uiprod4")))
              ),
              fluidRow(plotOutput(outputId = "serie_prod",height = 560)),
-             fluidRow(plotOutput(outputId = "serie_diff_correlogram",height = 960))
+             fluidRow(
+               box(title = tags$p("Correlograma e Deferenciação",style = "font-size:100%;color:#E4781C;font-weight:bold;"),
+                   headerBorder = TRUE,
+                   width = 12,
+                   collapsible = TRUE,collapsed = TRUE,
+                   solidHeader = TRUE,
+                   plotOutput(outputId = "serie_diff_correlogram",height = 960)
+                   )
              
     )
     
