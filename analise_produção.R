@@ -70,14 +70,14 @@ p2 <- autoplot.zoo(producao) +
   axis.theme(x.angle = 45,vjust = 1,hjust = 1,axis.title.size.x = 16,axis.title.size.y = 16,tick.size = 16)
 cowplot::plot_grid(p1, p2,ncol=1,nrow=2,labels = LETTERS[1:2],align = "v")
 
-df_pago %>%  dplyr::group_by(DATA_PAGAMENTO) %>% dplyr::summarise(Producao = sum(VLR_PRODUCAO),
-                                                                          Qntd     =sum(Qntd_Propostas)) %>%
-  ggplot(aes(x = DATA_PAGAMENTO,y=Producao)) +
-  geom_point() +
-  geom_line() +
-  geom_smooth(method = "gam",se = TRUE)
+# df_pago %>%  dplyr::group_by(DATA_PAGAMENTO) %>% dplyr::summarise(Producao = sum(VLR_PRODUCAO),
+#                                                                           Qntd     =sum(Qntd_Propostas)) %>%
+#   ggplot(aes(x = DATA_PAGAMENTO,y=Producao)) +
+#   geom_point() +
+#   geom_line() +
+#   geom_smooth(method = "gam",se = TRUE)
 
-
+producao   <- zoo(producao_df$Producao  ,producao_df$DATA_PAGAMENTO)
 p3 <- autoplot.zoo(diff(producao)) + 
   geom_line(size = 0.25,alpha=1,color="black")+
   #geom_point(size = .3,alpha = 0.25,color="black") +
