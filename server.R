@@ -1348,6 +1348,53 @@ table {
       })
       
       
+      
+      ouput$serie_diff_correlogram <- renderPlot({
+        
+        
+        p3 <- autoplot.zoo(diff(producao)) + 
+          geom_line(size = 0.25,alpha=1,color="black")+
+          #geom_point(size = .3,alpha = 0.25,color="black") +
+          labs(x = "Data", y = "Preço") +
+          #scale_color_manual(values = color_pal) +
+          scale_x_date(date_breaks = "12 months",date_labels = "%Y")+
+          axis.theme(x.angle = 45,vjust = 1,hjust = 1,axis.title.size.x = 16,axis.title.size.y = 16,tick.size = 10)
+        
+        pA1 <- ggAcf(as.zoo(diff(producao)),type = "correlation")+
+          labs(x = "Lag", y = "FAC",title=NULL) +
+          axis.theme(axis.title.size.x = 16,axis.title.size.y = 16,tick.size = 16)
+        
+        pB1 <- ggAcf(as.zoo(diff(producao)),type = "partial")+
+          labs(x = "Lag", y = "FACP",title=NULL) +
+          axis.theme(axis.title.size.x = 16,axis.title.size.y = 16,tick.size = 16)
+        
+        parcial1 <- cowplot::plot_grid(p3,cowplot::plot_grid(pA1, pB1,ncol=1,nrow=2,labels = LETTERS[2:3],align = "v"),labels = LETTERS[1])
+        p4 <- autoplot.zoo(diff(diff(producao))) + 
+          geom_line(size = 0.25,alpha=1,color="black")+
+          #geom_point(size = .3,alpha = 0.25,color="black") +
+          labs(x = "Data", y = "Preço") +
+          #scale_color_manual(values = color_pal[2]) +
+          scale_x_date(date_breaks = "12 months",date_labels = "%Y")+
+          axis.theme(x.angle = 45,vjust = 1,hjust = 1,axis.title.size.x = 16,axis.title.size.y = 16,tick.size = 10)
+        
+        pA2 <- ggAcf(as.zoo(diff(diff(producao))),type = "correlation")+
+          labs(x = "Lag", y = "FAC",title = NULL) +
+          axis.theme(axis.title.size.x = 16,axis.title.size.y = 16,tick.size = 16)
+        
+        pB2 <- ggAcf(as.zoo(diff(diff(producao))),type = "partial")+
+          labs(x = "Lag", y = "FACP",title = NULL) +
+          axis.theme(axis.title.size.x = 16,axis.title.size.y = 16,tick.size = 16)
+        
+        parcial2 <- cowplot::plot_grid(p4,cowplot::plot_grid(pA2, pB2,ncol=1,nrow=2,labels = LETTERS[4:5],align = "v"),labels = LETTERS[3])
+        
+        cowplot::plot_grid(parcial1,parcial2, ncol=1,nrow=2,align = "v")
+        
+        
+        
+        
+      })
+      
+      
 }) 
  
     

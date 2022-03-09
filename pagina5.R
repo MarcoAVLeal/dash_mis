@@ -35,7 +35,9 @@ div(
                                  solidHeader = TRUE,
                                  uiOutput("box_uiprod4")))
              ),
-             fluidRow(plotOutput(outputId = "serie_prod",height = 480))
+             fluidRow(plotOutput(outputId = "serie_prod",height = 480)),
+             fluidRow(plotOutput(outputId = "serie_diff_correlogram",height = 480))
+             
     )
     
   ))
