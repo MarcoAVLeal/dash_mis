@@ -455,6 +455,7 @@ server <- function(input, output, session) {
             })
             
             output$page5 <- renderUI({
+              
               onedrive_url <- "https://crefaz-my.sharepoint.com/:x:/g/personal/gestaodedados4_crefaz_onmicrosoft_com/ET_WfaYB2k1IouEbVGeMcPYBFp_36rF5CLDjQgZi3iTrbw?download=1"
               
               
@@ -1081,15 +1082,13 @@ server <- function(input, output, session) {
     
 observeEvent(input$tabs,{
   
-  
-  
-
+  if(input$tabs == "page5"){
     
     df_pago <<- df_prod %>% dplyr::filter(STATUS_PRINCIPAL == "PAGO AO CLIENTE")
     prod_total <- df_pago %>% dplyr::summarise(Producao = sum(VLR_PRODUCAO),
                                                Qntd     =sum(Qntd_Propostas))
     prod_2021 <- df_pago %>% dplyr::filter(DATA_PAGAMENTO >= "2021-01-01") %>% dplyr::summarise(Producao = sum(VLR_PRODUCAO),
-                                               Qntd     =sum(Qntd_Propostas))
+                                                                                                Qntd     =sum(Qntd_Propostas))
     
     prod_2022 <- df_pago %>% dplyr::filter(DATA_PAGAMENTO >= "2022-01-01") %>% dplyr::summarise(Producao = sum(VLR_PRODUCAO),
                                                                                                 Qntd     =sum(Qntd_Propostas))
@@ -1098,7 +1097,13 @@ observeEvent(input$tabs,{
     ano_atual <- lubridate::year(lubridate::today())
     
     prod_mes_atual <- df_pago %>% dplyr::filter( (ANO_PAGAMENTO==ano_atual)  & (MES_PAGAMENTO==mes_atual))   %>% dplyr::summarise(Producao = sum(VLR_PRODUCAO),
-                                                                                                Qntd     =sum(Qntd_Propostas))
+                                                                                                                                  Qntd     =sum(Qntd_Propostas))
+    
+  }
+  
+
+    
+   
     output$box_prod1 <- renderValueBox({
       shinydashboard::valueBox(subtitle = tags$p("Total", style = "font-size:100%;color:#E4781C;font-weight:bold;"),
                                value =tags$p(paste0("R$ ",format(prod_total[1,1],scientific =FALSE,big.mark =".",nsmall = 2,decimal.mark = ",")), style = "font-size:50%;color:#E4781C;font-weight:bold") ,
