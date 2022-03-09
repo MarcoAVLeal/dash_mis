@@ -1113,6 +1113,7 @@ observeEvent(input$tabs,{
     
     
     HTML('
+  <center>
 <table>
  <tr >
   <td valign="top">
@@ -1140,7 +1141,8 @@ observeEvent(input$tabs,{
            <hr style="width:100%;text-align:center;margin-left:0;height:4px;color:#652B91;border-width: 2px;">
            </td>
            </tr>
-    </table>')
+    </table>
+           </center>')
     
     
     
