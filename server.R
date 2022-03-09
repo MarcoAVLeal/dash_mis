@@ -308,7 +308,7 @@ server <- function(input, output, session) {
             
        }else{
             output$page2 <- renderUI({
-           
+           library(dplyr)
               url <- "https://crefaz-my.sharepoint.com/:x:/g/personal/gestaodedados4_crefaz_onmicrosoft_com/EbsSsZPj4ntMvyRUG-0QYa4BTEQUCw8VXlCqTriyMQcYiw?download=1"
               destfile <- "calendario.xlsx"
               curl::curl_download(url, destfile)
@@ -808,7 +808,7 @@ server <- function(input, output, session) {
       else {
         data
       }
-      data
+      #data
       
       
       
@@ -954,7 +954,7 @@ server <- function(input, output, session) {
       dados   <- dados %>% dplyr::mutate("Atributo" = ifelse(Atributo == "Fechou lead(Desafio ou pago)",paste0("Moveu para ",`Fase do negocio`),Atributo))
       
       
-      dados               <- dados %>% filter(value == input$data_referencia)
+      dados               <- dados %>% filter(value == "2022-03-08")
       total_movimentacoes <- dados %>%  nrow
       
       
