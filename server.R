@@ -1117,48 +1117,30 @@ observeEvent(input$tabs,{
  <tr >
   <td valign="top">
   
-  
-<hr style="width:100%;text-align:center;margin-left:0;height:4px;color:#652B91;border-width: 1px;">
            <div style = "background-color:#273658;">
            <h1 style="color:#E4781C;text-align:center;font-weight:bold;font-size:12px">   </h1> 
            <h3 style="color:#E4781C;text-align:center;font-weight:bold;font-size:12px">  Orçado  </h3>  
            </div>
            <hr style="width:100%;text-align:center;margin-left:0;height:4px;color:#652B91;border-width: 2px;">
-           
            </td>
-           <td valign="top">
-           <hr style="width:100%;text-align:center;margin-left:0;height:4px;color:#652B91;border-width: 1px;">
+           
+  <td valign="top">
            <div style = "background-color:#273658;">
            <h1 style="color:#E4781C;text-align:center;font-weight:bold;font-size:12px">    </h1> 
            <h3 style="color:#E4781C;text-align:center;font-weight:bold;font-size:12px">  Realizado  </h3>  
            </div>
            <hr style="width:100%;text-align:center;margin-left:0;height:4px;color:#652B91;border-width: 2px;">
-           
            </td>
-           <td valign="top">
-           <hr style="width:100%;text-align:center;margin-left:0;height:4px;color:#652B91;border-width: 1px;">
+           
+  <td valign="top">
            <div style = "background-color:#273658;">
            <h1 style="color:#E4781C;text-align:center;font-weight:bold;font-size:12px">   </h1> 
            <h3 style="color:#E4781C;text-align:center;font-weight:bold;font-size:12px">  Projetado 10 dias  </h3>  
            </div>
            <hr style="width:100%;text-align:center;margin-left:0;height:4px;color:#652B91;border-width: 2px;">
-           
            </td>
-           
-           
-           <td valign="top">
-           <hr style="width:100%;text-align:center;margin-left:0;height:4px;color:#652B91;border-width: 1px;">
-           <div style = "background-color:#273658;">
-           <h1 style="color:#E4781C;text-align:center;font-weight:bold;font-size:36px">    </h1> 
-           <h3 style="color:#E4781C;text-align:center;font-weight:bold;font-size:32px">  Atingimento(Proj/Orç)  </h3>  
-           </div>
-           <hr style="width:100%;text-align:center;margin-left:0;height:4px;color:#652B91;border-width: 2px;">
-           
-           </td>
-           
-           
            </tr>
-         </table>')
+    </table>')
     
     
     
