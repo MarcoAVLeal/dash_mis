@@ -51,7 +51,7 @@ axis.theme <- function(x.angle = 0,
       panel.grid.major = element_line(colour = "gray"),
       title =element_text(size=title_size, face='bold',hjust = 0.5),
       plot.title = element_text(hjust = 0.5),
-      axis.title = element_text(color="#000000", face="bold", size=textsize,lineheight = 2))
+      axis.title = element_text(color="#000000", face="bold", size=title_size,lineheight = 2))
   
 }
 
