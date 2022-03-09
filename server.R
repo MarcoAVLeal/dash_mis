@@ -1317,12 +1317,13 @@ table {
 
         
         
-        producao   <- df_pago  %>%
+        producao1   <- df_pago  %>%
           dplyr::group_by(DATA_PAGAMENTO) %>%
           dplyr::summarise(Producao = sum(VLR_PRODUCAO),
                            Qntd     =sum(Qntd_Propostas)) %>% 
           dplyr::select(DATA_PAGAMENTO,Producao)
-        producao   <- zoo(producao$Producao  ,producao$DATA_PAGAMENTO)
+        
+        producao_normal   <<- zoo(producao1$Producao  ,producao1$DATA_PAGAMENTO)
         
         p1 <- autoplot.zoo(producao) + 
           geom_line(size = 0.35,alpha=1,color="black")+
@@ -1333,12 +1334,12 @@ table {
           scale_x_date(date_breaks = "12 months",date_labels = "%Y")+
           axis.theme(x.angle = 45,vjust = 1,hjust = 1,axis.title.size.x = 16,axis.title.size.y = 16,tick.size = 16)
         
-        producao   <- df_pago  %>%
-          dplyr::group_by(DATA_PAGAMENTO) %>%
-          dplyr::summarise(Producao = sum(VLR_PRODUCAO),
-                           Qntd     =sum(Qntd_Propostas)) %>% 
-          dplyr::select(DATA_PAGAMENTO,Producao)
-        producao   <-zoo(log(producao$Producao)  ,producao$DATA_PAGAMENTO)
+        # producao   <- df_pago  %>%
+        #   dplyr::group_by(DATA_PAGAMENTO) %>%
+        #   dplyr::summarise(Producao = sum(VLR_PRODUCAO),
+        #                    Qntd     =sum(Qntd_Propostas)) %>% 
+        #   dplyr::select(DATA_PAGAMENTO,Producao)
+        producao_log   <<- zoo(log(producao1$Producao)  ,producao1$DATA_PAGAMENTO)
         
         p2 <- autoplot.zoo(producao) + 
           geom_line(size = 0.35,alpha=1,color="black")+
@@ -1358,7 +1359,7 @@ table {
       output$serie_diff_correlogram <- renderPlot({
         
         
-        p3 <- autoplot.zoo(diff(producao)) + 
+        p3 <- autoplot.zoo(diff(producao_normal)) + 
           geom_line(size = 0.25,alpha=1,color="black")+
           #geom_point(size = .3,alpha = 0.25,color="black") +
           labs(x = "Data", y = "Preço") +
@@ -1366,16 +1367,16 @@ table {
           scale_x_date(date_breaks = "12 months",date_labels = "%Y")+
           axis.theme(x.angle = 45,vjust = 1,hjust = 1,axis.title.size.x = 16,axis.title.size.y = 16,tick.size = 10)
         
-        pA1 <- ggAcf(as.zoo(diff(producao)),type = "correlation")+
+        pA1 <- ggAcf(as.zoo(diff(producao_normal)),type = "correlation")+
           labs(x = "Lag", y = "FAC",title=NULL) +
           axis.theme(axis.title.size.x = 16,axis.title.size.y = 16,tick.size = 16)
         
-        pB1 <- ggAcf(as.zoo(diff(producao)),type = "partial")+
+        pB1 <- ggAcf(as.zoo(diff(producao_normal)),type = "partial")+
           labs(x = "Lag", y = "FACP",title=NULL) +
           axis.theme(axis.title.size.x = 16,axis.title.size.y = 16,tick.size = 16)
         
         parcial1 <- cowplot::plot_grid(p3,cowplot::plot_grid(pA1, pB1,ncol=1,nrow=2,labels = LETTERS[2:3],align = "v"),labels = LETTERS[1])
-        p4 <- autoplot.zoo(diff(diff(producao))) + 
+        p4 <- autoplot.zoo(diff(diff(producao_normal))) + 
           geom_line(size = 0.25,alpha=1,color="black")+
           #geom_point(size = .3,alpha = 0.25,color="black") +
           labs(x = "Data", y = "Preço") +
@@ -1383,11 +1384,11 @@ table {
           scale_x_date(date_breaks = "12 months",date_labels = "%Y")+
           axis.theme(x.angle = 45,vjust = 1,hjust = 1,axis.title.size.x = 16,axis.title.size.y = 16,tick.size = 10)
         
-        pA2 <- ggAcf(as.zoo(diff(diff(producao))),type = "correlation")+
+        pA2 <- ggAcf(as.zoo(diff(diff(producao_normal))),type = "correlation")+
           labs(x = "Lag", y = "FAC",title = NULL) +
           axis.theme(axis.title.size.x = 16,axis.title.size.y = 16,tick.size = 16)
         
-        pB2 <- ggAcf(as.zoo(diff(diff(producao))),type = "partial")+
+        pB2 <- ggAcf(as.zoo(diff(diff(producao_normal))),type = "partial")+
           labs(x = "Lag", y = "FACP",title = NULL) +
           axis.theme(axis.title.size.x = 16,axis.title.size.y = 16,tick.size = 16)
         
