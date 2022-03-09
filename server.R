@@ -469,6 +469,23 @@ server <- function(input, output, session) {
               df_prod$MES_CADASTRO<<-lubridate::month(df_prod$DATACADASTRO)
               df_prod$MES_PAGAMENTO<<-lubridate::month(df_prod$DATA_PAGAMENTO)
               
+              df_pago <<- df_prod %>% dplyr::filter(STATUS_PRINCIPAL == "PAGO AO CLIENTE")
+              prod_total <<- df_pago %>% dplyr::summarise(Producao = sum(VLR_PRODUCAO),
+                                                         Qntd     =sum(Qntd_Propostas))
+              prod_2021 <<- df_pago %>% dplyr::filter(DATA_PAGAMENTO >= "2021-01-01") %>% dplyr::summarise(Producao = sum(VLR_PRODUCAO),
+                                                                                                          Qntd     =sum(Qntd_Propostas))
+              
+              prod_2022 <<- df_pago %>% dplyr::filter(DATA_PAGAMENTO >= "2022-01-01") %>% dplyr::summarise(Producao = sum(VLR_PRODUCAO),
+                                                                                                          Qntd     =sum(Qntd_Propostas))
+              
+              mes_atual <<- lubridate::month(lubridate::today())
+              ano_atual <<- lubridate::year(lubridate::today())
+              
+              prod_mes_atual <<- df_pago %>% dplyr::filter( (ANO_PAGAMENTO==ano_atual)  & (MES_PAGAMENTO==mes_atual))   %>% dplyr::summarise(Producao = sum(VLR_PRODUCAO),
+                                                                                                                                            Qntd     =sum(Qntd_Propostas))
+              
+              
+              
               div(
                 HTML("<div style='color:#273658;text-align:center;font-weight:bold;'><h1 style='color:#273658;text-align:center;font-weight:bold;'>PRODUÇÃO</h1> </div>"),
                 
@@ -1084,20 +1101,7 @@ observeEvent(input$tabs,{
   
   if(input$tabs == "page5"){
     
-    df_pago <<- df_prod %>% dplyr::filter(STATUS_PRINCIPAL == "PAGO AO CLIENTE")
-    prod_total <- df_pago %>% dplyr::summarise(Producao = sum(VLR_PRODUCAO),
-                                               Qntd     =sum(Qntd_Propostas))
-    prod_2021 <- df_pago %>% dplyr::filter(DATA_PAGAMENTO >= "2021-01-01") %>% dplyr::summarise(Producao = sum(VLR_PRODUCAO),
-                                                                                                Qntd     =sum(Qntd_Propostas))
     
-    prod_2022 <- df_pago %>% dplyr::filter(DATA_PAGAMENTO >= "2022-01-01") %>% dplyr::summarise(Producao = sum(VLR_PRODUCAO),
-                                                                                                Qntd     =sum(Qntd_Propostas))
-    
-    mes_atual <- lubridate::month(lubridate::today())
-    ano_atual <- lubridate::year(lubridate::today())
-    
-    prod_mes_atual <- df_pago %>% dplyr::filter( (ANO_PAGAMENTO==ano_atual)  & (MES_PAGAMENTO==mes_atual))   %>% dplyr::summarise(Producao = sum(VLR_PRODUCAO),
-                                                                                                                                  Qntd     =sum(Qntd_Propostas))
     
   }
   
