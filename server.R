@@ -1284,24 +1284,6 @@ table {
   })
   
     
-    output$box_prod10 <- renderValueBox({
-      shinydashboard::valueBox(subtitle = tags$p("Total", style = "font-size:100%;color:#E4781C;font-weight:bold;"),
-                               value =tags$p(paste0("R$ ",format(prod_mes_atual[1,1],scientific =FALSE,big.mark =".",nsmall = 2,decimal.mark = ",")), style = "font-size:40%;color:#E4781C;font-weight:bold") ,
-                               width = 4, color = "navy")
-    })
-    
-    output$box_prod11 <- renderValueBox({
-      shinydashboard::valueBox(subtitle =tags$p("Qntd. Propostas", style = "font-size:100%;color:#E4781C;font-weight:bold;"),
-                               value =tags$p(format(prod_mes_atual[1,2],scientific =FALSE,big.mark ="."), style = "font-size:40%;color:#E4781C;font-weight:bold") ,
-                               width = 4, color = "navy")
-    })
-    
-    output$box_prod12 <- renderValueBox({
-      shinydashboard::valueBox(subtitle = tags$p("", style = "font-size:100%;color:#E4781C;font-weight:bold;"),
-                               value =tags$p(0, style = "font-size:40%;color:#E4781C;font-weight:bold") ,
-                               width = 4, color = "navy")
-    })
-    
       
       
       output$serie_prod <- renderPlot({

@@ -12,8 +12,7 @@ div(
                                  width = 12,
                                  collapsible = TRUE,
                                  solidHeader = TRUE,
-                                 uiOutput("box_uiprod1")
-                                 )),
+                                 uiOutput("box_uiprod1"))),
                       column(width = 3,
                              box(title = tags$p("Desde 2021",style = "font-size:100%;color:#E4781C;font-weight:bold;"),
                                  headerBorder = TRUE,
