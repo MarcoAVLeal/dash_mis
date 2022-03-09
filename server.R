@@ -1120,7 +1120,7 @@ observeEvent(input$tabs,{
   
            <div style = "background-color:#273658;">
            <h1 style="color:#E4781C;text-align:center;font-weight:bold;font-size:12px">   </h1> 
-           <h3 style="color:#E4781C;text-align:center;font-weight:bold;font-size:12px">  Orçado  </h3>  
+           <h3 style="color:#E4781C;text-align:center;font-weight:bold;font-size:12px">  Total  </h3>  
            </div>
            <hr style="width:100%;text-align:center;margin-left:0;height:4px;color:#652B91;border-width: 2px;">
            </td>
@@ -1128,7 +1128,7 @@ observeEvent(input$tabs,{
   <td valign="top">
            <div style = "background-color:#273658;">
            <h1 style="color:#E4781C;text-align:center;font-weight:bold;font-size:12px">    </h1> 
-           <h3 style="color:#E4781C;text-align:center;font-weight:bold;font-size:12px">  Realizado  </h3>  
+           <h3 style="color:#E4781C;text-align:center;font-weight:bold;font-size:12px">  Qntd. Propostas  </h3>  
            </div>
            <hr style="width:100%;text-align:center;margin-left:0;height:4px;color:#652B91;border-width: 2px;">
            </td>
