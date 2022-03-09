@@ -1110,72 +1110,72 @@ observeEvent(input$tabs,{
    
     output$box_prod1 <- renderValueBox({
       shinydashboard::valueBox(subtitle = tags$p("Total", style = "font-size:100%;color:#E4781C;font-weight:bold;"),
-                               value =tags$p(paste0("R$ ",format(prod_total[1,1],scientific =FALSE,big.mark =".",nsmall = 2,decimal.mark = ",")), style = "font-size:50%;color:#E4781C;font-weight:bold") ,
+                               value =tags$p(paste0("R$ ",format(prod_total[1,1],scientific =FALSE,big.mark =".",nsmall = 2,decimal.mark = ",")), style = "font-size:40%;color:#E4781C;font-weight:bold") ,
                                width = 4, color = "navy")
     })
     
     output$box_prod2 <- renderValueBox({
       shinydashboard::valueBox(subtitle = tags$p("Qntd. Propostas", style = "font-size:100%;color:#E4781C;font-weight:bold;"),
-                               value =tags$p(format(prod_total[1,2],scientific =FALSE,big.mark ="."), style = "font-size:50%;color:#E4781C;font-weight:bold") ,
+                               value =tags$p(format(prod_total[1,2],scientific =FALSE,big.mark ="."), style = "font-size:40%;color:#E4781C;font-weight:bold") ,
                                width = 4 , color = "navy")
     })
     
     output$box_prod3 <- renderValueBox({
       shinydashboard::valueBox(subtitle = tags$p("", style = "font-size:100%;color:#E4781C;font-weight:bold;"),
-                               value =tags$p("", style = "font-size:50%;color:#E4781C;font-weight:bold") ,
+                               value =tags$p("", style = "font-size:40%;color:#E4781C;font-weight:bold") ,
                                width = 4, color = "navy")
     })
     output$box_prod4 <- renderValueBox({
       shinydashboard::valueBox(subtitle = tags$p("Total", style = "font-size:100%;color:#E4781C;font-weight:bold;"),
-                               value =tags$p(paste0("R$ ",format(prod_2021[1,1],scientific =FALSE,big.mark =".",nsmall = 2,decimal.mark = ",")), style = "font-size:50%;color:#E4781C;font-weight:bold") ,
+                               value =tags$p(paste0("R$ ",format(prod_2021[1,1],scientific =FALSE,big.mark =".",nsmall = 2,decimal.mark = ",")), style = "font-size:40%;color:#E4781C;font-weight:bold") ,
                                width = 4, color = "navy")
     })
     
     output$box_prod5 <- renderValueBox({
       shinydashboard::valueBox(subtitle = tags$p("Qntd. Propostas", style = "font-size:100%;color:#E4781C;font-weight:bold;"),
-                               value =tags$p(format(prod_2021[1,2],scientific =FALSE,big.mark ="."), style = "font-size:50%;color:#E4781C;font-weight:bold") ,
+                               value =tags$p(format(prod_2021[1,2],scientific =FALSE,big.mark ="."), style = "font-size:40%;color:#E4781C;font-weight:bold") ,
                                width = 4,icon = tags$i(class = "fas fa-phone", style="font-size: 12px"), color = "navy")
     })
     
     output$box_prod6 <- renderValueBox({
       shinydashboard::valueBox(subtitle = tags$p("", style = "font-size:100%;color:#E4781C;font-weight:bold;"),
-                               value =tags$p(0, style = "font-size:50%;color:#E4781C;font-weight:bold") ,
+                               value =tags$p(0, style = "font-size:40%;color:#E4781C;font-weight:bold") ,
                                width = 4, color = "navy")
     })
     
     output$box_prod7 <- renderValueBox({
       shinydashboard::valueBox(subtitle = tags$p("Total", style = "font-size:100%;color:#E4781C;font-weight:bold;"),
-                               value =tags$p(paste0("R$ ",format(prod_2022[1,1],scientific =FALSE,big.mark =".",nsmall = 2,decimal.mark = ",")), style = "font-size:50%;color:#E4781C;font-weight:bold") ,
+                               value =tags$p(paste0("R$ ",format(prod_2022[1,1],scientific =FALSE,big.mark =".",nsmall = 2,decimal.mark = ",")), style = "font-size:40%;color:#E4781C;font-weight:bold") ,
                                width = 4, color = "navy")
     })
     
     output$box_prod8 <- renderValueBox({
       shinydashboard::valueBox(subtitle =tags$p("Qntd. Propostas", style = "font-size:100%;color:#E4781C;font-weight:bold;"),
-                               value =tags$p(format(prod_2022[1,2],scientific =FALSE,big.mark ="."), style = "font-size:50%;color:#E4781C;font-weight:bold") ,
+                               value =tags$p(format(prod_2022[1,2],scientific =FALSE,big.mark ="."), style = "font-size:40%;color:#E4781C;font-weight:bold") ,
                                width = 4, color = "navy")
     })
     
     output$box_prod9 <- renderValueBox({
       shinydashboard::valueBox(subtitle = tags$p("", style = "font-size:100%;color:#E4781C;font-weight:bold;"),
-                               value =tags$p(0, style = "font-size:50%;color:#E4781C;font-weight:bold") ,
+                               value =tags$p(0, style = "font-size:40%;color:#E4781C;font-weight:bold") ,
                                width = 4, color = "navy")
     })
     
     output$box_prod10 <- renderValueBox({
       shinydashboard::valueBox(subtitle = tags$p("Total", style = "font-size:100%;color:#E4781C;font-weight:bold;"),
-                               value =tags$p(paste0("R$ ",format(prod_mes_atual[1,1],scientific =FALSE,big.mark =".",nsmall = 2,decimal.mark = ",")), style = "font-size:50%;color:#E4781C;font-weight:bold") ,
+                               value =tags$p(paste0("R$ ",format(prod_mes_atual[1,1],scientific =FALSE,big.mark =".",nsmall = 2,decimal.mark = ",")), style = "font-size:40%;color:#E4781C;font-weight:bold") ,
                                width = 4, color = "navy")
     })
     
     output$box_prod11 <- renderValueBox({
       shinydashboard::valueBox(subtitle =tags$p("Qntd. Propostas", style = "font-size:100%;color:#E4781C;font-weight:bold;"),
-                               value =tags$p(format(prod_mes_atual[1,2],scientific =FALSE,big.mark ="."), style = "font-size:50%;color:#E4781C;font-weight:bold") ,
+                               value =tags$p(format(prod_mes_atual[1,2],scientific =FALSE,big.mark ="."), style = "font-size:40%;color:#E4781C;font-weight:bold") ,
                                width = 4, color = "navy")
     })
     
     output$box_prod12 <- renderValueBox({
       shinydashboard::valueBox(subtitle = tags$p("", style = "font-size:100%;color:#E4781C;font-weight:bold;"),
-                               value =tags$p(0, style = "font-size:50%;color:#E4781C;font-weight:bold") ,
+                               value =tags$p(0, style = "font-size:40%;color:#E4781C;font-weight:bold") ,
                                width = 4, color = "navy")
     })
     
