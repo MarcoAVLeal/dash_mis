@@ -1127,7 +1127,7 @@ observeEvent(input$tabs,{
            
   <td valign="top">
            <div style = "background-color:#273658;">
-           <h1 style="color:#E4781C;text-align:center;font-weight:bold;font-size:14px">',paste0("R$ ",format(prod_total[1,2],scientific =FALSE,big.mark =".",nsmall = 2,decimal.mark = ",")),'</h1> 
+           <h1 style="color:#E4781C;text-align:center;font-weight:bold;font-size:14px">',paste0(format(prod_total[1,2],scientific =FALSE,big.mark =".",nsmall = 2,decimal.mark = ",")),'</h1> 
            <h3 style="color:#E4781C;text-align:center;font-weight:bold;font-size:14px">  Qntd. Propostas  </h3>  
            </div>
            <hr style="width:100%;text-align:center;margin-left:0;height:4px;color:#652B91;border-width: 2px;">
@@ -1135,7 +1135,7 @@ observeEvent(input$tabs,{
            
   <td valign="top">
            <div style = "background-color:#273658;">
-           <h1 style="color:#E4781C;text-align:center;font-weight:bold;font-size:14px">   </h1> 
+           <h1 style="color:#E4781C;text-align:center;font-weight:bold;font-size:14px"> ',paste0(format(prod_total[1,2],scientific =FALSE,big.mark =".",nsmall = 2,decimal.mark = ",")),'  </h1> 
            <h3 style="color:#E4781C;text-align:center;font-weight:bold;font-size:14px">  Projetado </h3>  
            </div>
            <hr style="width:100%;text-align:center;margin-left:0;height:4px;color:#652B91;border-width: 2px;">
