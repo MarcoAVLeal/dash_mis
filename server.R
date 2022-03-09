@@ -1332,7 +1332,7 @@ table {
           dplyr::summarise(Producao = sum(VLR_PRODUCAO),
                            Qntd     =sum(Qntd_Propostas)) %>% 
           dplyr::select(DATA_PAGAMENTO,Producao)
-        producao   <-zoo(log(df_pago$Producao)  ,df_pago$DATA_PAGAMENTO)
+        producao   <-zoo(log(producao$Producao)  ,producao$DATA_PAGAMENTO)
         
         p2 <- autoplot.zoo(producao) + 
           geom_line(size = 0.35,alpha=1,color="black")+
