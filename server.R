@@ -1109,9 +1109,6 @@ observeEvent(input$tabs,{
     
   
   output$box_uiprod1 <- renderUI({
-    
-    
-    
     HTML(paste0('
     <style>
 table, th, td {
@@ -1119,7 +1116,7 @@ table, th, td {
   padding: 5px;
 }
 table {
-  border-spacing: 50px;
+  border-spacing: 15px;
 }
 </style>
   <center>
@@ -1128,22 +1125,22 @@ table {
   <td valign="top">
   
            <div style = "background-color:#273658;">
-           <h1 style="color:#E4781C;text-align:center;font-weight:bold;font-size:14px"> ',paste0("R$ ",format(prod_total[1,1],scientific =FALSE,big.mark =".",nsmall = 2,decimal.mark = ",")),'  </h1> 
-           <h3 style="color:#E4781C;text-align:center;font-weight:bold;font-size:14px">  Total  </h3>  
+           <h1 style="color:#E4781C;text-align:center;font-weight:bold;font-size:16px"> ',paste0("R$ ",format(prod_total[1,1],scientific =FALSE,big.mark =".",nsmall = 2,decimal.mark = ",")),'  </h1> 
+           <h3 style="color:#E4781C;text-align:center;font-weight:bold;font-size:16px">  Total  </h3>  
            </div>
            </td>
            
   <td valign="top">
            <div style = "background-color:#273658;">
-           <h1 style="color:#E4781C;text-align:center;font-weight:bold;font-size:14px">',paste0(format(prod_total[1,2],scientific =FALSE,big.mark =".",nsmall = 2,decimal.mark = ",")),'</h1> 
-           <h3 style="color:#E4781C;text-align:center;font-weight:bold;font-size:14px">  Qntd. <br> Propostas  </h3>  
+           <h1 style="color:#E4781C;text-align:center;font-weight:bold;font-size:16px">',paste0(format(prod_total[1,2],scientific =FALSE,big.mark =".",nsmall = 2,decimal.mark = ",")),'</h1> 
+           <h3 style="color:#E4781C;text-align:center;font-weight:bold;font-size:16px">  Qntd. <br> Propostas  </h3>  
            </div>
            </td>
            
   <td valign="top">
            <div style = "background-color:#273658;">
-           <h1 style="color:#E4781C;text-align:center;font-weight:bold;font-size:14px"> ',paste0(format(prod_total[1,2],scientific =FALSE,big.mark =".",nsmall = 2,decimal.mark = ",")),'  </h1> 
-           <h3 style="color:#E4781C;text-align:center;font-weight:bold;font-size:14px">  Projetado </h3>  
+           <h1 style="color:#E4781C;text-align:center;font-weight:bold;font-size:16px"> ',paste0(format(prod_total[1,2],scientific =FALSE,big.mark =".",nsmall = 2,decimal.mark = ",")),'  </h1> 
+           <h3 style="color:#E4781C;text-align:center;font-weight:bold;font-size:16px">  Projetado </h3>  
            </div>
            </td>
            </tr>
@@ -1154,58 +1151,138 @@ table {
     
   })
    
-    output$box_prod1 <- renderValueBox({
-      shinydashboard::valueBox(subtitle = tags$p("Total", style = "font-size:100%;color:#E4781C;font-weight:bold;"),
-                               value =tags$p(paste0("R$ ",format(prod_total[1,1],scientific =FALSE,big.mark =".",nsmall = 2,decimal.mark = ",")), style = "font-size:40%;color:#E4781C;font-weight:bold") ,
-                               width = 4, color = "navy")
-    })
+   
+  output$box_uiprod2 <- renderUI({
+    HTML(paste0('
+    <style>
+table, th, td {
+  border: 2px solid black;
+  padding: 5px;
+}
+table {
+  border-spacing: 15px;
+}
+</style>
+  <center>
+<table>
+ <tr >
+  <td valign="top">
+  
+           <div style = "background-color:#273658;">
+           <h1 style="color:#E4781C;text-align:center;font-weight:bold;font-size:16px"> ',paste0("R$ ",format(prod_2021[1,1],scientific =FALSE,big.mark =".",nsmall = 2,decimal.mark = ",")),'  </h1> 
+           <h3 style="color:#E4781C;text-align:center;font-weight:bold;font-size:16px">  Total  </h3>  
+           </div>
+           </td>
+           
+  <td valign="top">
+           <div style = "background-color:#273658;">
+           <h1 style="color:#E4781C;text-align:center;font-weight:bold;font-size:16px">',paste0(format(prod_2021[1,2],scientific =FALSE,big.mark =".",nsmall = 2,decimal.mark = ",")),'</h1> 
+           <h3 style="color:#E4781C;text-align:center;font-weight:bold;font-size:16px">  Qntd. <br> Propostas  </h3>  
+           </div>
+           </td>
+           
+  <td valign="top">
+           <div style = "background-color:#273658;">
+           <h1 style="color:#E4781C;text-align:center;font-weight:bold;font-size:16px"> ',paste0(format(prod_2021[1,2],scientific =FALSE,big.mark =".",nsmall = 2,decimal.mark = ",")),'  </h1> 
+           <h3 style="color:#E4781C;text-align:center;font-weight:bold;font-size:16px">  Projetado </h3>  
+           </div>
+           </td>
+           </tr>
+    </table>
+           </center>'))
     
-    output$box_prod2 <- renderValueBox({
-      shinydashboard::valueBox(subtitle = tags$p("Qntd. Propostas", style = "font-size:100%;color:#E4781C;font-weight:bold;"),
-                               value =tags$p(format(prod_total[1,2],scientific =FALSE,big.mark ="."), style = "font-size:40%;color:#E4781C;font-weight:bold") ,
-                               width = 4 , color = "navy")
-    })
     
-    output$box_prod3 <- renderValueBox({
-      shinydashboard::valueBox(subtitle = tags$p("", style = "font-size:100%;color:#E4781C;font-weight:bold;"),
-                               value =tags$p("", style = "font-size:40%;color:#E4781C;font-weight:bold") ,
-                               width = 4, color = "navy")
-    })
-    output$box_prod4 <- renderValueBox({
-      shinydashboard::valueBox(subtitle = tags$p("Total", style = "font-size:100%;color:#E4781C;font-weight:bold;"),
-                               value =tags$p(paste0("R$ ",format(prod_2021[1,1],scientific =FALSE,big.mark =".",nsmall = 2,decimal.mark = ",")), style = "font-size:40%;color:#E4781C;font-weight:bold") ,
-                               width = 4, color = "navy")
-    })
     
-    output$box_prod5 <- renderValueBox({
-      shinydashboard::valueBox(subtitle = tags$p("Qntd. Propostas", style = "font-size:100%;color:#E4781C;font-weight:bold;"),
-                               value =tags$p(format(prod_2021[1,2],scientific =FALSE,big.mark ="."), style = "font-size:40%;color:#E4781C;font-weight:bold") ,
-                               width = 4,icon = tags$i(class = "fas fa-phone", style="font-size: 12px"), color = "navy")
-    })
+  })
+  
+  
+  output$box_uiprod3 <- renderUI({
+    HTML(paste0('
+    <style>
+table, th, td {
+  border: 2px solid black;
+  padding: 5px;
+}
+table {
+  border-spacing: 15px;
+}
+</style>
+  <center>
+<table>
+ <tr >
+  <td valign="top">
+  
+           <div style = "background-color:#273658;">
+           <h1 style="color:#E4781C;text-align:center;font-weight:bold;font-size:16px"> ',paste0("R$ ",format(prod_2022[1,1],scientific =FALSE,big.mark =".",nsmall = 2,decimal.mark = ",")),'  </h1> 
+           <h3 style="color:#E4781C;text-align:center;font-weight:bold;font-size:16px">  Total  </h3>  
+           </div>
+           </td>
+           
+  <td valign="top">
+           <div style = "background-color:#273658;">
+           <h1 style="color:#E4781C;text-align:center;font-weight:bold;font-size:16px">',paste0(format(prod_2022[1,2],scientific =FALSE,big.mark =".",nsmall = 2,decimal.mark = ",")),'</h1> 
+           <h3 style="color:#E4781C;text-align:center;font-weight:bold;font-size:16px">  Qntd. <br> Propostas  </h3>  
+           </div>
+           </td>
+           
+  <td valign="top">
+           <div style = "background-color:#273658;">
+           <h1 style="color:#E4781C;text-align:center;font-weight:bold;font-size:16px"> ',paste0(format(prod_2022[1,2],scientific =FALSE,big.mark =".",nsmall = 2,decimal.mark = ",")),'  </h1> 
+           <h3 style="color:#E4781C;text-align:center;font-weight:bold;font-size:16px">  Projetado </h3>  
+           </div>
+           </td>
+           </tr>
+    </table>
+           </center>'))
     
-    output$box_prod6 <- renderValueBox({
-      shinydashboard::valueBox(subtitle = tags$p("", style = "font-size:100%;color:#E4781C;font-weight:bold;"),
-                               value =tags$p(0, style = "font-size:40%;color:#E4781C;font-weight:bold") ,
-                               width = 4, color = "navy")
-    })
     
-    output$box_prod7 <- renderValueBox({
-      shinydashboard::valueBox(subtitle = tags$p("Total", style = "font-size:100%;color:#E4781C;font-weight:bold;"),
-                               value =tags$p(paste0("R$ ",format(prod_2022[1,1],scientific =FALSE,big.mark =".",nsmall = 2,decimal.mark = ",")), style = "font-size:40%;color:#E4781C;font-weight:bold") ,
-                               width = 4, color = "navy")
-    })
     
-    output$box_prod8 <- renderValueBox({
-      shinydashboard::valueBox(subtitle =tags$p("Qntd. Propostas", style = "font-size:100%;color:#E4781C;font-weight:bold;"),
-                               value =tags$p(format(prod_2022[1,2],scientific =FALSE,big.mark ="."), style = "font-size:40%;color:#E4781C;font-weight:bold") ,
-                               width = 4, color = "navy")
-    })
+  })
+   
     
-    output$box_prod9 <- renderValueBox({
-      shinydashboard::valueBox(subtitle = tags$p("", style = "font-size:100%;color:#E4781C;font-weight:bold;"),
-                               value =tags$p(0, style = "font-size:40%;color:#E4781C;font-weight:bold") ,
-                               width = 4, color = "navy")
-    })
+  output$box_uiprod4 <- renderUI({
+    HTML(paste0('
+    <style>
+table, th, td {
+  border: 2px solid black;
+  padding: 5px;
+}
+table {
+  border-spacing: 15px;
+}
+</style>
+  <center>
+<table>
+ <tr >
+  <td valign="top">
+  
+           <div style = "background-color:#273658;">
+           <h1 style="color:#E4781C;text-align:center;font-weight:bold;font-size:16px"> ',paste0("R$ ",format(prod_mes_atual[1,1],scientific =FALSE,big.mark =".",nsmall = 2,decimal.mark = ",")),'  </h1> 
+           <h3 style="color:#E4781C;text-align:center;font-weight:bold;font-size:16px">  Total  </h3>  
+           </div>
+           </td>
+           
+  <td valign="top">
+           <div style = "background-color:#273658;">
+           <h1 style="color:#E4781C;text-align:center;font-weight:bold;font-size:16px">',paste0(format(prod_mes_atual[1,2],scientific =FALSE,big.mark =".",nsmall = 2,decimal.mark = ",")),'</h1> 
+           <h3 style="color:#E4781C;text-align:center;font-weight:bold;font-size:16px">  Qntd. <br> Propostas  </h3>  
+           </div>
+           </td>
+           
+  <td valign="top">
+           <div style = "background-color:#273658;">
+           <h1 style="color:#E4781C;text-align:center;font-weight:bold;font-size:16px"> ',paste0(format(prod_mes_atual[1,2],scientific =FALSE,big.mark =".",nsmall = 2,decimal.mark = ",")),'  </h1> 
+           <h3 style="color:#E4781C;text-align:center;font-weight:bold;font-size:16px">  Projetado </h3>  
+           </div>
+           </td>
+           </tr>
+    </table>
+           </center>'))
+    
+    
+    
+  })
+  
     
     output$box_prod10 <- renderValueBox({
       shinydashboard::valueBox(subtitle = tags$p("Total", style = "font-size:100%;color:#E4781C;font-weight:bold;"),
