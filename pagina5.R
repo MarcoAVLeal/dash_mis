@@ -59,7 +59,7 @@ div(
                    collapsible = TRUE,
                    collapsed = TRUE,
                    solidHeader = TRUE,
-                   plotOutput(outputId = "boxplot_season",height = 960)
+                   plotOutput(outputId = "boxplot_season",height = 480)
                ))
              
     )

@@ -1409,7 +1409,7 @@ table {
           dplyr::select(DATA_PAGAMENTO,Producao) %>%  
           mutate(Mes = as.factor(month(DATA_PAGAMENTO))) %>%
           ggplot() +
-          labs(x = "Meses", y = "Preço") +
+          labs(x = "Meses", y = "Produção") +
           scale_x_discrete(breaks = 1:12,labels = month.abb) +
           geom_boxplot(aes(x = Mes,y = Producao)) + 
           axis.theme(x.angle = 45,vjust = 1,hjust = 1,axis.title.size.x = 12,axis.title.size.y = 12,tick.size = 10)
