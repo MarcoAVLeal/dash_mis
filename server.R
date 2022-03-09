@@ -751,7 +751,7 @@ server <- function(input, output, session) {
                    linetype = "dashed", colour = "red", alpha = 1,size = 0.8) +
       scale_x_continuous(breaks = seq(min(x1$dia),max(x1$dia),by = paste(length(unique(lubridate::month(x1$dia))),"days") ) )+
         # scale_y_continuous(breaks = seq(0,1,0.1))+
-        axis.theme(x.angle = 45,vjust = 1,hjust = 1,axis.title.size.x = 16,axis.title.size.y = 16,tick.size = 16)+
+        axis.theme(x.angle = 45,vjust = 1,hjust = 1,axis.title.size.x = 16,axis.title.size.y = 16,tick.size = 16)
       plot <- ggplotly(p1) %>% layout(hovermode = "y", spikedistance =  -1,margin = c(0,0,0,10),legend = l,
                                       xaxis = list(title = "<b>Dias</b>", showspikes = TRUE, titlefont = list(size = 16),
                                                    spikemode  = 'across', #toaxis, across, marker
