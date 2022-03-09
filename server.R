@@ -1288,16 +1288,41 @@ table {
       
       output$serie_prod <- renderPlot({
         
-       plot <- df_pago  %>%  
-          dplyr::group_by(DATA_PAGAMENTO) %>% 
-          dplyr::summarise(Producao = sum(VLR_PRODUCAO),
-                           Qntd     =sum(Qntd_Propostas)) %>%
-          
-          ggplot(aes(x = DATA_PAGAMENTO,y=Producao)) +
-          geom_line(size = 1.2, alpha = 0.75) +
-         geom_point(size = 1.2, alpha = 0.75) +
-          axis.theme(title_size = 12,textsize = 12,pos_leg = "bottom",x.angle = 45,vjust = 1,hjust=1)
-        plot  
+       # plot <- df_pago  %>%  
+       #    dplyr::group_by(DATA_PAGAMENTO) %>% 
+       #    dplyr::summarise(Producao = sum(VLR_PRODUCAO),
+       #                     Qntd     =sum(Qntd_Propostas)) %>%
+       #    
+       #    ggplot(aes(x = DATA_PAGAMENTO,y=Producao)) +
+       #    geom_line(size = 1.2, alpha = 0.75) +
+       #   geom_point(size = 1.2, alpha = 0.75) +
+       #    axis.theme(title_size = 12,textsize = 12,pos_leg = "bottom",x.angle = 45,vjust = 1,hjust=1)
+       #  plot  
+       #  
+        
+        
+        producao   <- zoo(df_pago$Producao  ,df_pago$DATA_PAGAMENTO)
+        
+        p1 <- autoplot.zoo(producao) + 
+          geom_line(size = 0.35,alpha=1,color="black")+
+          #geom_point() +
+          #geom_point(size = .3,alpha = 0.25,color="black") +
+          labs(x = "Data", y = "Produção") +
+          # scale_color_manual(values = color_pal) +
+          scale_x_date(date_breaks = "12 months",date_labels = "%Y")+
+          axis.theme(x.angle = 45,vjust = 1,hjust = 1,axis.title.size.x = 16,axis.title.size.y = 16,tick.size = 16)
+        
+        producao   <- zoo(log(df_pago$Producao)  ,df_pago$DATA_PAGAMENTO)
+        p2 <- autoplot.zoo(producao) + 
+          geom_line(size = 0.35,alpha=1,color="black")+
+          #geom_point() +
+          #geom_point(size = .3,alpha = 0.25,color="black") +
+          labs(x = "Data", y = "Produção") +
+          # scale_color_manual(values = color_pal) +
+          scale_x_date(date_breaks = "12 months",date_labels = "%Y")+
+          axis.theme(x.angle = 45,vjust = 1,hjust = 1,axis.title.size.x = 16,axis.title.size.y = 16,tick.size = 16)
+        cowplot::plot_grid(p1, p2,ncol=1,nrow=2,labels = LETTERS[1:2],align = "v")
+        
         
       })
       
