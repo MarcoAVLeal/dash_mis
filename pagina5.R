@@ -45,7 +45,7 @@ div(
              )),
              fluidRow(
                tabsetPanel(
-                 id = "hidden_tabs",
+                 id = "tabset_series",
                  # type = "hidden",
                  
                  tabPanel(title = p("Correlograma e Diferencição",style="color:#E4781C;text-align:center;font-weight:bold;font-size:14px"), 
