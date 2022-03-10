@@ -55,7 +55,8 @@ div(
                                    collapsible = TRUE,
                                    collapsed = FALSE,
                                    solidHeader = TRUE,
-                                   plotlyOutput(outputId = "serie_prod2",height = 480)
+                                   plotlyOutput(outputId = "serie_prod2",height = 480),
+                                   plotlyOutput(outputId = "serie_prod3",height = 480)
                       )))),
              tabsetPanel(
                  id = "tabset_series2",
