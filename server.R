@@ -1406,7 +1406,7 @@ table {
         
         producao2 <<- data.frame(
             Producao = producao1$Producao,
-            Producao = producao1$DATA_PAGAMENTO,
+            DATA_PAGAMENTO = producao1$DATA_PAGAMENTO,
             `Ajuste Holt(Producao)`     = Producao_Holt$fitted,
             `Ajuste SES(Producao)`      = Producao_SES$fitted)
         
