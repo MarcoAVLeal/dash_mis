@@ -1319,7 +1319,7 @@ table {
 
         
         
-        producao1   <- df_pago  %>%
+        producao1   <<- df_pago  %>%
           dplyr::group_by(DATA_PAGAMENTO) %>%
           dplyr::summarise(Producao = sum(VLR_PRODUCAO),
                            Qntd     =sum(Qntd_Propostas)) %>% 
