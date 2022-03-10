@@ -1358,6 +1358,43 @@ table {
       
       
       
+      output$serie_prod <- renderPlot({
+        
+        producao_st   <- ts(data = producao1$Producao, start=2017,frequency = 1)
+        # Gasolina_st <-  ts(data = dados$A1, start=1995,frequency = 1)
+        
+        
+        
+        #producao           <- zoo(log(producao_df$Producao)  ,producao_df$DATA_PAGAMENTO)
+        Producao_Holt      = holt(producao_st,level = .95,h = 90)
+        Producao_SES       = ses(producao_st,level = .95,h = 90)
+        
+        producao_df <- producao_df %>% mutate(`Ajuste Holt(Producao)`     = Producao_Holt$fitted,
+                                              `Ajuste SES(Producao)`      = Producao_SES$fitted)
+        
+        df_producao <- producao1 %>% dplyr::select(DATA_PAGAMENTO,Producao,`Ajuste Holt(Producao)`,`Ajuste SES(Producao)`) %>% melt("DATA_PAGAMENTO") %>% dplyr::rename( Producao = value,Legenda = variable)
+        
+        #df_gasolina <- df %>% select(Data,Gasolina,`Ajuste Holt(Gasolina)`,`Ajuste SES(Gasolina)`) %>% melt("Data") %>% dplyr::rename( Preços = value,Legenda = variable)
+        
+        p1 <- ggplot(data = df_producao, aes(x = DATA_PAGAMENTO, y = Producao, linetype = Legenda,color = Legenda)) + 
+          geom_line(alpha=1,size = 0.85)+
+          #geom_line(data = df,aes(x = Data, y = `Ajuste Holt(Diesel)`),color = "red", lty = "dashed") +
+          #geom_point(size = .3,alpha = 0.25,color="black") +
+          labs(x = "Data", y = "Preço") +
+          scale_color_manual(values = c("black","red","darkgreen")) +
+          scale_x_date(date_breaks = "12 months",date_labels = "%Y")+
+          axis.theme(x.angle = 45,vjust = 1,hjust = 1,axis.title.size.x = 12,axis.title.size.y = 12,tick.size = 8,lengend_title_size = 10,lengend_text_size = 8,pos_leg = "right")
+        
+        ggplotly(p1) %>%
+          layout(showlegend = F, title='Time Series with Rangeslider',
+                 xaxis = list(rangeslider = list(visible = T)))
+        
+        
+        
+      })
+      
+      
+      
       output$serie_diff_correlogram <- renderPlot({
         
         

@@ -35,17 +35,31 @@ div(
                                  solidHeader = TRUE,
                                  uiOutput("box_uiprod4")))
              ),
+             tabsetPanel(
+               id = "tabset_series1",
+               # type = "hidden",
+               
+               tabPanel(title = p("Série Produção",style="color:#E4781C;text-align:center;font-weight:bold;font-size:14px"), 
              fluidRow(box(title = tags$p("Histórico diário de produção",style = "font-size:100%;color:#E4781C;font-weight:bold;"),
                           headerBorder = TRUE,
                           width = 12,
                           collapsible = TRUE,
                           collapsed = FALSE,
                           solidHeader = TRUE,
-                          plotOutput(outputId = "serie_prod",height = 560)
-             )),
+                          plotOutput(outputId = "serie_prod",height = 760)
+             ))),
+             tabPanel(title = p("Ajuste Produção",style="color:#E4781C;text-align:center;font-weight:bold;font-size:14px"), 
+                      fluidRow(box(title = tags$p("Ajuste",style = "font-size:100%;color:#E4781C;font-weight:bold;"),
+                                   headerBorder = TRUE,
+                                   width = 12,
+                                   collapsible = TRUE,
+                                   collapsed = FALSE,
+                                   solidHeader = TRUE,
+                                   plotlyOutput(outputId = "serie_prod2",height = 480)
+                      )))),
              fluidRow(
                tabsetPanel(
-                 id = "tabset_series",
+                 id = "tabset_series2",
                  # type = "hidden",
                  
                  tabPanel(title = p("Correlograma e Diferencição",style="color:#E4781C;text-align:center;font-weight:bold;font-size:14px"), 
@@ -79,6 +93,8 @@ div(
                  
                )
               )
+             
+    )
              
     )
     
