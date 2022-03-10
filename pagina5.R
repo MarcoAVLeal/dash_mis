@@ -57,8 +57,7 @@ div(
                                    solidHeader = TRUE,
                                    plotlyOutput(outputId = "serie_prod2",height = 480)
                       )))),
-             fluidRow(
-               tabsetPanel(
+             tabsetPanel(
                  id = "tabset_series2",
                  # type = "hidden",
                  
@@ -92,10 +91,10 @@ div(
                             )))
                  
                )
-              )
+           
              
     )
              
     )
     
-  ))
+  )
