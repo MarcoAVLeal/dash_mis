@@ -29,24 +29,36 @@ df$ANO_PAGAMENTO <- lubridate::year(df$DATA_PAGAMENTO)
 df$MES_CADASTRO <- lubridate::month(df$DATACADASTRO)
 df$MES_PAGAMENTO <- lubridate::month(df$DATA_PAGAMENTO)
 
-df_pago <- df %>% dplyr::filter(STATUS_PRINCIPAL == "PAGO AO CLIENTE")
+df_pago <- df %>% dplyr::filter(STATUS_PRINCIPAL == "PAGO AO CLIENTE")  %>% dplyr::filter(DATA_PAGAMENTO > "2018-01-01")
 
 
 n = nrow(df_pago)
 
+pos_na <- is.na(df_pago$DATA_PAGAMENTO ) %>% which
+df_pago[pos_na,"DATA_PAGAMENTO"] <- df_pago[pos_na,"DATACADASTRO"]
 
+
+df_pago$DATA_PAGAMENTO %>% range
+as.Date(max(df_pago$DATA_PAGAMENTO,na.rm = TRUE)) - 180
 library(zoo)
-f_data <- as.Date(as.yearmon(as.Date(max(df_pago$DATA_PAGAMENTO,na.rm = TRUE))) -.6, frac = 1)
-
-reservados   <- df_pago %>% dplyr::filter(DATA_PAGAMENTO > f_data)
-df_pago      <- df_pago %>% dplyr::filter(DATA_PAGAMENTO <= f_data)
+f_data <- as.Date(max(df_pago$DATA_PAGAMENTO,na.rm = TRUE)) - 180
+f_data <- as.Date(paste(format(f_data,"%Y-%m"),"-01",sep=""))
 
 
+
+
+
+reservados   <- df_pago %>% dplyr::filter(DATA_PAGAMENTO >= f_data)
+df_pago      <- df_pago %>% dplyr::filter(DATA_PAGAMENTO < f_data)
+
+df_pago$DATA_PAGAMENTO %>% range
+reservados$DATA_PAGAMENTO %>% range
 
 df_pago  %>% dplyr::summarise(Producao = sum(VLR_PRODUCAO),Qntd     =sum(Qntd_Propostas))
 
 producao_df <- df_pago %>%  dplyr::group_by(DATA_PAGAMENTO) %>% dplyr::summarise(Producao = sum(VLR_PRODUCAO),
-                                                                                           Qntd     =sum(Qntd_Propostas)) %>% dplyr::select(DATA_PAGAMENTO,Producao)
+                                                                                 Qntd     =sum(Qntd_Propostas)) %>% dplyr::select(DATA_PAGAMENTO,Producao)
+
   
   producao   <- zoo(producao_df$Producao  ,producao_df$DATA_PAGAMENTO)
   
@@ -77,7 +89,7 @@ cowplot::plot_grid(p1, p2,ncol=1,nrow=2,labels = LETTERS[1:2],align = "v")
 #   geom_line() +
 #   geom_smooth(method = "gam",se = TRUE)
 
-producao   <- zoo(log(producao_df$Producao)  ,producao_df$DATA_PAGAMENTO)
+producao   <- zoo(producao_df$Producao  ,producao_df$DATA_PAGAMENTO)
 p3 <- autoplot.zoo(diff(producao)) + 
   geom_line(size = 0.25,alpha=1,color="black")+
   #geom_point(size = .3,alpha = 0.25,color="black") +
@@ -146,24 +158,68 @@ producao
 library(aTSA)
 library(fpp2) 
 
-producao_df$DATA_PAGAMENTO %>% range
-producao_st   <- ts(data = log(producao_df$Producao), start=2017,frequency = 1)
-# Gasolina_st <-  ts(data = dados$A1, start=1995,frequency = 1)
+df_1 <- df_pago %>%  dplyr::group_by(ANO_PAGAMENTO,MES_PAGAMENTO) %>% 
+  dplyr::summarise(Producao = sum(VLR_PRODUCAO),Qntd     =sum(Qntd_Propostas)) %>% 
+  dplyr::select(ANO_PAGAMENTO,MES_PAGAMENTO,Producao) %>% dplyr::mutate(ANOMES = paste0(ANO_PAGAMENTO,"-",MES_PAGAMENTO)) %>% as.data.frame
+df_1$ANOMES <- as.Date(paste(df_1$ANOMES,"-01",sep=""))
+df_1      <- df_1 %>% dplyr::select(c("Producao","ANOMES"))  %>% tidyr::complete(ANOMES)
+
+
+df_res <- reservados %>%  dplyr::group_by(ANO_PAGAMENTO,MES_PAGAMENTO) %>% 
+  dplyr::summarise(Producao = sum(VLR_PRODUCAO),Qntd     =sum(Qntd_Propostas)) %>% 
+  dplyr::select(ANO_PAGAMENTO,MES_PAGAMENTO,Producao) %>% dplyr::mutate(ANOMES = paste0(ANO_PAGAMENTO,"-",MES_PAGAMENTO)) %>% as.data.frame
+df_res$ANOMES <- as.Date(paste(df_res$ANOMES,"-01",sep=""))
+df_res      <- df_res %>% dplyr::select(c("Producao","ANOMES"))
+
+
+producao_st   <- ts(data = df_1$Producao,frequency = 12,start = c(2018))
+
 
 
 
 #producao           <- zoo(log(producao_df$Producao)  ,producao_df$DATA_PAGAMENTO)
-Producao_Holt      = holt(producao_st,level = .95,h = 90)
-Producao_SES       = ses(producao_st,level = .95,h = 90)
+Producao_Holt      = holt(producao_st,level = .95,h = 7)
+Producao_SES       = ses(producao_st,level = .95,h = 7)
+auto           = Arima(producao_st,order = c(0,1,0))
 
-producao_df <- producao_df %>% mutate(`Ajuste Holt(Producao)`     = exp(Producao_Holt$fitted),
-                    `Ajuste SES(Producao)`      = exp(Producao_SES$fitted))
+forecast(auto)
 
-df_producao <- producao_df %>% dplyr::select(DATA_PAGAMENTO,Producao,`Ajuste Holt(Producao)`,`Ajuste SES(Producao)`) %>% melt("DATA_PAGAMENTO") %>% dplyr::rename( Producao = value,Legenda = variable)
+metrics_names = c("$\\hat{x}_{t}(1)$","$\\hat{x}_{t}(2)$","$\\hat{x}_{t}(3)$","$\\hat{x}_{t}(4)$","$\\hat{x}_{t}(5)$","$\\hat{x}_{t}(6)$")
+
+rnames <- c("SE Simples", "SE de Holt" , "Auto","Original")
+
+data_res <- as.data.frame(t(cbind(
+  X1 = as.vector(Producao_SES$mean),
+  X2 = as.vector(Producao_Holt$mean),
+  X3 = as.vector(predict(auto,n.ahead = 7)$pred),
+  Original = df_res$Producao
+)),row.names = rnames)
+
+library(aTSA)
+library(fpp2)
+df_pago$DATA_PAGAMENTO %>% range
+
+producao_df <- df_1 %>% mutate(`Ajuste Holt(Producao)`     = Producao_Holt$fitted,
+                    `Ajuste SES(Producao)`      = Producao_SES$fitted) 
+
+
+df1 <- data.frame(Data = c(df_1$ANOMES,df_res$ANOMES),
+                  Producao = c(df_1$Producao,df_res$Producao),
+                  `Ajuste Holt(Producao)`     = c(Producao_Holt$fitted,Producao_Holt$mean),
+                  `Ajuste SES(Producao)`      = c(Producao_SES$fitted,Producao_SES$mean),
+                  `Auto Arima`                = c(fit.auto$fitted,predict(fit.auto,n.ahead = 7)$pred)) %>% 
+  dplyr::rename(`Ajuste Holt(Diesel)` = Ajuste.Holt.Producao.,
+                `Ajuste SES(Diesel)` = Ajuste.SES.Producao.,
+                `Auto Arima`   =  `Auto.Arima`)
+
+
+
+
+df_producao <- producao_df %>% dplyr::select(ANOMES,Producao,`Ajuste Holt(Producao)`,`Ajuste SES(Producao)`) %>% melt("ANOMES") %>% dplyr::rename( Producao = value,Legenda = variable)
 #df_producao$Producao <- log(df_producao$Producao)
 #df_gasolina <- df %>% select(Data,Gasolina,`Ajuste Holt(Gasolina)`,`Ajuste SES(Gasolina)`) %>% melt("Data") %>% dplyr::rename( Preços = value,Legenda = variable)
 
-p1 <- ggplot(data = df_producao, aes(x = DATA_PAGAMENTO, y = Producao, linetype = Legenda,color = Legenda)) + 
+p1 <- ggplot(data = df_producao, aes(x = ANOMES, y = Producao, linetype = Legenda,color = Legenda)) + 
   geom_line(alpha=1,size = 0.85)+
   #geom_line(data = df,aes(x = Data, y = `Ajuste Holt(Diesel)`),color = "red", lty = "dashed") +
   #geom_point(size = .3,alpha = 0.25,color="black") +
