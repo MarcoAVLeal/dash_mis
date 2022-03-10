@@ -147,7 +147,7 @@ library(aTSA)
 library(fpp2) 
 
 producao_df$DATA_PAGAMENTO %>% range
-producao_st   <- ts(data = producao_df$Producao, start=2017,frequency = 1)
+producao_st   <- ts(data = log(producao_df$Producao), start=2017,frequency = 1)
 # Gasolina_st <-  ts(data = dados$A1, start=1995,frequency = 1)
 
 
@@ -156,11 +156,11 @@ producao_st   <- ts(data = producao_df$Producao, start=2017,frequency = 1)
 Producao_Holt      = holt(producao_st,level = .95,h = 90)
 Producao_SES       = ses(producao_st,level = .95,h = 90)
 
-producao_df <- producao_df %>% mutate(`Ajuste Holt(Producao)`     = Producao_Holt$fitted,
-                    `Ajuste SES(Producao)`      = Producao_SES$fitted)
+producao_df <- producao_df %>% mutate(`Ajuste Holt(Producao)`     = exp(Producao_Holt$fitted),
+                    `Ajuste SES(Producao)`      = exp(Producao_SES$fitted))
 
 df_producao <- producao_df %>% dplyr::select(DATA_PAGAMENTO,Producao,`Ajuste Holt(Producao)`,`Ajuste SES(Producao)`) %>% melt("DATA_PAGAMENTO") %>% dplyr::rename( Producao = value,Legenda = variable)
-
+#df_producao$Producao <- log(df_producao$Producao)
 #df_gasolina <- df %>% select(Data,Gasolina,`Ajuste Holt(Gasolina)`,`Ajuste SES(Gasolina)`) %>% melt("Data") %>% dplyr::rename( Preços = value,Legenda = variable)
 
 p1 <- ggplot(data = df_producao, aes(x = DATA_PAGAMENTO, y = Producao, linetype = Legenda,color = Legenda)) + 
