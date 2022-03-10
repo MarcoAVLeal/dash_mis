@@ -1409,6 +1409,7 @@ table {
             DATA_PAGAMENTO = producao1$DATA_PAGAMENTO,
             `Ajuste Holt(Producao)`     = exp(Producao_Holt$fitted),
             `Ajuste SES(Producao)`      = exp(Producao_SES$fitted))
+        colnames(producao2) <- c("Producao","DATA_PAGAMENTO","Ajuste Holt(Producao)","Ajuste SES(Producao)")
         
         df_producao <- producao2 %>% dplyr::select(DATA_PAGAMENTO,Producao,`Ajuste Holt(Producao)`,`Ajuste SES(Producao)`) %>% melt("DATA_PAGAMENTO") %>% dplyr::rename( Producao = value,Legenda = variable)
         
