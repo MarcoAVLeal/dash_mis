@@ -251,3 +251,9 @@ data_res3 <- data.frame(Estimativas = c(round(fit111$coef[1],4),
 
 
 plot(fit011)
+
+
+
+
+
+

@@ -44,23 +44,33 @@ div(
                           plotOutput(outputId = "serie_prod",height = 560)
              )),
              fluidRow(
-               box(title = tags$p("Correlograma e Diferenciação",style = "font-size:100%;color:#E4781C;font-weight:bold;"),
-                   headerBorder = TRUE,
-                   width = 12,
-                   collapsible = TRUE,
-                   collapsed = TRUE,
-                   solidHeader = TRUE,
-                   plotOutput(outputId = "serie_diff_correlogram",height = 960)
-                   )),
-             fluidRow(
-               box(title = tags$p("Box-plot",style = "font-size:100%;color:#E4781C;font-weight:bold;"),
-                   headerBorder = TRUE,
-                   width = 12,
-                   collapsible = TRUE,
-                   collapsed = TRUE,
-                   solidHeader = TRUE,
-                   plotOutput(outputId = "boxplot_season",height = 480)
-               ))
+               tabsetPanel(
+                 id = "hidden_tabs",
+                 # type = "hidden",
+                 
+                 tabPanel(title = p("Correlograma e Diferencição",style="color:#E4781C;text-align:center;font-weight:bold;font-size:14px"), 
+                          box(title = tags$p("Correlograma e Diferenciação",style = "font-size:100%;color:#E4781C;font-weight:bold;"),
+                              headerBorder = TRUE,
+                              width = 12,
+                              collapsible = TRUE,
+                              collapsed = TRUE,
+                              solidHeader = TRUE,
+                              plotOutput(outputId = "serie_diff_correlogram",height = 960)
+                          )
+                 ),
+                 tabPanel(title = p("Box-Plot",style="color:#E4781C;text-align:center;font-weight:bold;font-size:14px"), 
+                          fluidRow(
+                            box(title = tags$p("Box-plot",style = "font-size:100%;color:#E4781C;font-weight:bold;"),
+                                headerBorder = TRUE,
+                                width = 12,
+                                collapsible = TRUE,
+                                collapsed = TRUE,
+                                solidHeader = TRUE,
+                                plotOutput(outputId = "boxplot_season",height = 480)
+                            )))
+                 
+               )
+              )
              
     )
     
