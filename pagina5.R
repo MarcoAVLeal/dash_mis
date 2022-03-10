@@ -55,7 +55,7 @@ div(
                               collapsible = TRUE,
                               collapsed = TRUE,
                               solidHeader = TRUE,
-                              plotOutput(outputId = "serie_diff_correlogram",height = 960)
+                              plotOutput(outputId = "serie_diff_correlogram",height = 760)
                           ),
                           box(title = tags$p("Série Log Produção",style = "font-size:100%;color:#E4781C;font-weight:bold;"),
                               headerBorder = TRUE,
@@ -63,7 +63,7 @@ div(
                               collapsible = TRUE,
                               collapsed = TRUE,
                               solidHeader = TRUE,
-                              plotOutput(outputId = "serie_log_diff_correlogram",height = 960)
+                              plotOutput(outputId = "serie_log_diff_correlogram",height = 760)
                           )
                  ),
                  tabPanel(title = p("Box-Plot",style="color:#E4781C;text-align:center;font-weight:bold;font-size:14px"), 
