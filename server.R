@@ -1306,16 +1306,16 @@ table {
       
       output$serie_prod <- renderPlot({
         
-       plot <- df_pago  %>%
-          dplyr::group_by(DATA_PAGAMENTO) %>%
-          dplyr::summarise(Producao = sum(VLR_PRODUCAO),
-                           Qntd     =sum(Qntd_Propostas)) %>%
-
-          ggplot(aes(x = DATA_PAGAMENTO,y=Producao)) +
-          geom_line(size = 1.2, alpha = 0.75) +
-         geom_point(size = 1.2, alpha = 0.75) +
-         axis.theme(x.angle = 45,vjust = 1,hjust = 1,axis.title.size.x = 16,axis.title.size.y = 16,tick.size = 16)
-        plot
+       # plot <- df_pago  %>%
+       #    dplyr::group_by(DATA_PAGAMENTO) %>%
+       #    dplyr::summarise(Producao = sum(VLR_PRODUCAO),
+       #                     Qntd     =sum(Qntd_Propostas)) %>%
+       # 
+       #    ggplot(aes(x = DATA_PAGAMENTO,y=Producao)) +
+       #    geom_line(size = 1.2, alpha = 0.75) +
+       #   geom_point(size = 1.2, alpha = 0.75) +
+       #   axis.theme(x.angle = 45,vjust = 1,hjust = 1,axis.title.size.x = 16,axis.title.size.y = 16,tick.size = 16)
+       #  plot
 
         
         
@@ -1327,7 +1327,7 @@ table {
         
         producao_normal   <<- zoo(producao1$Producao  ,producao1$DATA_PAGAMENTO)
         
-        p1 <- autoplot.zoo(producao) + 
+        p1 <- autoplot.zoo(producao_normal) + 
           geom_line(size = 0.35,alpha=1,color="black")+
           #geom_point() +
           #geom_point(size = .3,alpha = 0.25,color="black") +
@@ -1343,7 +1343,7 @@ table {
         #   dplyr::select(DATA_PAGAMENTO,Producao)
         producao_log   <<- zoo(log(producao1$Producao)  ,producao1$DATA_PAGAMENTO)
         
-        p2 <- autoplot.zoo(producao) + 
+        p2 <- autoplot.zoo(producao_log) + 
           geom_line(size = 0.35,alpha=1,color="black")+
           #geom_point() +
           #geom_point(size = .3,alpha = 0.25,color="black") +
