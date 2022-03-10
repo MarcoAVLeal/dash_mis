@@ -1358,7 +1358,7 @@ table {
       
       
       
-      output$serie_prod <- renderPlot({
+      output$serie_prod2 <- renderPlotly({
         
         producao_st   <- ts(data = producao1$Producao, start=2017,frequency = 1)
         # Gasolina_st <-  ts(data = dados$A1, start=1995,frequency = 1)
