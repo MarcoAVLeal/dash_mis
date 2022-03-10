@@ -1369,7 +1369,7 @@ table {
         Producao_Holt      = holt(producao_st,level = .95,h = 90)
         Producao_SES       = ses(producao_st,level = .95,h = 90)
         
-        producao_df <- producao_df %>% mutate(`Ajuste Holt(Producao)`     = Producao_Holt$fitted,
+        producao1 <<- producao1 %>% mutate(`Ajuste Holt(Producao)`     = Producao_Holt$fitted,
                                               `Ajuste SES(Producao)`      = Producao_SES$fitted)
         
         df_producao <- producao1 %>% dplyr::select(DATA_PAGAMENTO,Producao,`Ajuste Holt(Producao)`,`Ajuste SES(Producao)`) %>% melt("DATA_PAGAMENTO") %>% dplyr::rename( Producao = value,Legenda = variable)
