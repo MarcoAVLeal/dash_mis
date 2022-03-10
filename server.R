@@ -1385,11 +1385,11 @@ table {
           scale_x_date(date_breaks = "12 months",date_labels = "%Y")+
           axis.theme(x.angle = 45,vjust = 1,hjust = 1,axis.title.size.x = 12,axis.title.size.y = 12,tick.size = 8,lengend_title_size = 10,lengend_text_size = 8,pos_leg = "right")
         
-        ggplotly(p1) %>%
+        plot <- ggplotly(p1) %>%
           layout(showlegend = F, title='Time Series with Rangeslider',
                  xaxis = list(rangeslider = list(visible = T)))
         
-        
+        plot
         
       })
       
