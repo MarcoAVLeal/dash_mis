@@ -1404,10 +1404,13 @@ table {
         Producao_Holt      = holt(producao_st,level = .95,h = 90)
         Producao_SES       = ses(producao_st,level = .95,h = 90)
         
-        producao1 <<- producao1 %>% mutate(`Ajuste Holt(Producao)`     = Producao_Holt$fitted,
-                                           `Ajuste SES(Producao)`      = Producao_SES$fitted)
+        producao2 <<- data.frame(
+            Producao = producao1$Producao,
+            Producao = producao1$DATA_PAGAMENTO,
+            `Ajuste Holt(Producao)`     = Producao_Holt$fitted,
+            `Ajuste SES(Producao)`      = Producao_SES$fitted)
         
-        df_producao <- producao1 %>% dplyr::select(DATA_PAGAMENTO,Producao,`Ajuste Holt(Producao)`,`Ajuste SES(Producao)`) %>% melt("DATA_PAGAMENTO") %>% dplyr::rename( Producao = value,Legenda = variable)
+        df_producao <- producao2 %>% dplyr::select(DATA_PAGAMENTO,Producao,`Ajuste Holt(Producao)`,`Ajuste SES(Producao)`) %>% melt("DATA_PAGAMENTO") %>% dplyr::rename( Producao = value,Legenda = variable)
         
         #df_gasolina <- df %>% select(Data,Gasolina,`Ajuste Holt(Gasolina)`,`Ajuste SES(Gasolina)`) %>% melt("Data") %>% dplyr::rename( Preços = value,Legenda = variable)
         
