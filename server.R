@@ -990,7 +990,7 @@ server <- function(input, output, session) {
       dados   <- dados %>% dplyr::mutate("Atributo" = ifelse(Atributo == "Fechou lead(Desafio ou pago)",paste0("Moveu para ",`Fase do negocio`),Atributo))
       
       
-      dados               <- dados %>% filter(value == "2022-03-08")
+      dados               <- dados %>% filter(value == input$data_referencia)
       total_movimentacoes <- dados %>%  nrow
       
       
