@@ -973,7 +973,7 @@ server <- function(input, output, session) {
         data
       }
       data
-      
+      library(dplyr)
       
       Total <- sum
       dados <- data %>% dplyr::select(`Data criado`,`Data prospectar`, `Data fechado`, `Data analisar`, `Data negociar`,ID_LEADS) %>%

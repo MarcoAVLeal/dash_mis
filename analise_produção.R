@@ -1,9 +1,13 @@
+rm(list=ls())
 source(file = "funcoes.R",encoding = "UTF-8")
 library(tidyverse)
 library(knitr)
 library(kableExtra)
 library(caret)
 
+library(aTSA)
+library(fpp2) 
+library(zoo)
 library(ggplot2)
 library(MLmetrics)
 library(klaR)
@@ -39,9 +43,9 @@ df_pago[pos_na,"DATA_PAGAMENTO"] <- df_pago[pos_na,"DATACADASTRO"]
 
 
 df_pago$DATA_PAGAMENTO %>% range
-as.Date(max(df_pago$DATA_PAGAMENTO,na.rm = TRUE)) - 180
+as.Date(max(df_pago$DATA_PAGAMENTO,na.rm = TRUE)) - 120
 library(zoo)
-f_data <- as.Date(max(df_pago$DATA_PAGAMENTO,na.rm = TRUE)) - 180
+f_data <- as.Date(max(df_pago$DATA_PAGAMENTO,na.rm = TRUE)) - 120
 f_data <- as.Date(paste(format(f_data,"%Y-%m"),"-01",sep=""))
 
 
@@ -155,9 +159,6 @@ cowplot::plot_grid(p1, ncol=1,nrow=1,labels = LETTERS[1],align = "v")
 
 producao
 
-library(aTSA)
-library(fpp2) 
-
 df_1 <- df_pago %>%  dplyr::group_by(ANO_PAGAMENTO,MES_PAGAMENTO) %>% 
   dplyr::summarise(Producao = sum(VLR_PRODUCAO),Qntd     =sum(Qntd_Propostas)) %>% 
   dplyr::select(ANO_PAGAMENTO,MES_PAGAMENTO,Producao) %>% dplyr::mutate(ANOMES = paste0(ANO_PAGAMENTO,"-",MES_PAGAMENTO)) %>% as.data.frame
@@ -172,7 +173,85 @@ df_res$ANOMES <- as.Date(paste(df_res$ANOMES,"-01",sep=""))
 df_res      <- df_res %>% dplyr::select(c("Producao","ANOMES"))
 
 
-producao_st   <- ts(data = df_1$Producao,frequency = 12,start = c(2018))
+########################### CORRELOGRAMA ###############################
+producao   <- zoo(df_1$Producao  ,df_1$ANOMES)
+
+p1 <- autoplot.zoo(producao) + 
+  geom_line(size = 0.35,alpha=1,color="black")+
+  #geom_point() +
+  #geom_point(size = .3,alpha = 0.25,color="black") +
+  labs(x = "Data", y = "Produção") +
+  # scale_color_manual(values = color_pal) +
+  scale_x_date(date_breaks = "12 months",date_labels = "%Y")+
+  axis.theme(x.angle = 45,vjust = 1,hjust = 1,axis.title.size.x = 16,axis.title.size.y = 16,tick.size = 16)
+
+producao   <- zoo(log(df_1$Producao)  ,df_1$ANOMES)
+p2 <- autoplot.zoo(producao) + 
+  geom_line(size = 0.35,alpha=1,color="black")+
+  #geom_point() +
+  #geom_point(size = .3,alpha = 0.25,color="black") +
+  labs(x = "Data", y = "Produção") +
+  # scale_color_manual(values = color_pal) +
+  scale_x_date(date_breaks = "12 months",date_labels = "%Y")+
+  axis.theme(x.angle = 45,vjust = 1,hjust = 1,axis.title.size.x = 16,axis.title.size.y = 16,tick.size = 16)
+cowplot::plot_grid(p1, p2,ncol=1,nrow=2,labels = LETTERS[1:2],align = "v")
+
+
+
+producao_df   <- zoo(log(df_1$Producao)  ,df_1$ANOMES)
+
+
+p3 <- autoplot.zoo(diff(producao_df)) + 
+  geom_line(size = 0.25,alpha=1,color="black")+
+  #geom_point(size = .3,alpha = 0.25,color="black") +
+  labs(x = "Data", y = "Produção") +
+  #scale_color_manual(values = color_pal) +
+  scale_x_date(date_breaks = "12 months",date_labels = "%Y")+
+  axis.theme(x.angle = 45,vjust = 1,hjust = 1,axis.title.size.x = 16,axis.title.size.y = 16,tick.size = 10)
+
+as.zoo(producao_df)
+
+
+pA1 <- ggAcf(as.data.frame(as.zoo(diff(producao_df)))$`as.zoo(diff(producao_df))`,type = "correlation",lag.max = 60)+
+  labs(x = "Lag", y = "FAC",title=NULL) +
+  axis.theme(axis.title.size.x = 16,axis.title.size.y = 16,tick.size = 16)
+
+pB1 <- ggAcf(as.data.frame(as.zoo(diff(producao_df)))$`as.zoo(diff(producao_df))`,type = "partial",lag.max = 60)+
+  labs(x = "Lag", y = "FAC",title=NULL) +
+  axis.theme(axis.title.size.x = 16,axis.title.size.y = 16,tick.size = 16)
+
+parcial1 <- cowplot::plot_grid(p3,cowplot::plot_grid(pA1, pB1,ncol=1,nrow=2,labels = LETTERS[2:3],align = "v"),labels = LETTERS[1])
+
+
+
+
+p4 <- autoplot.zoo(diff(diff(producao_df))) + 
+  geom_line(size = 0.25,alpha=1,color="black")+
+  #geom_point(size = .3,alpha = 0.25,color="black") +
+  labs(x = "Data", y = "Produção") +
+  #scale_color_manual(values = color_pal) +
+  scale_x_date(date_breaks = "12 months",date_labels = "%Y")+
+  axis.theme(x.angle = 45,vjust = 1,hjust = 1,axis.title.size.x = 16,axis.title.size.y = 16,tick.size = 10)
+
+as.zoo(producao_df)
+
+
+pA2 <- ggAcf(as.data.frame(as.zoo(diff(diff(producao_df))))$`as.zoo(diff(diff(producao_df)))`,type = "correlation")+
+  labs(x = "Lag", y = "FAC",title=NULL) +
+  axis.theme(axis.title.size.x = 16,axis.title.size.y = 16,tick.size = 16)
+
+pB2 <- ggAcf(as.data.frame(as.zoo(diff(diff(producao_df))))$`as.zoo(diff(diff(producao_df)))`,type = "partial")+
+  labs(x = "Lag", y = "FAC",title=NULL) +
+  axis.theme(axis.title.size.x = 16,axis.title.size.y = 16,tick.size = 16)
+
+parcial2 <- cowplot::plot_grid(p4,cowplot::plot_grid(pA2, pB2,ncol=1,nrow=2,labels = LETTERS[4:5],align = "v"),labels = LETTERS[3])
+
+cowplot::plot_grid(parcial1,parcial2, ncol=1,nrow=2,align = "v")
+
+
+
+
+producao_st   <- ts(data = log(df_1$Producao),frequency = 12,start = c(2018))
 
 
 
@@ -182,6 +261,8 @@ Producao_Holt      = holt(producao_st,level = .95,h = 7)
 Producao_SES       = ses(producao_st,level = .95,h = 7)
 auto           = Arima(producao_st,order = c(0,1,0))
 
+auto.arima(producao_st)
+
 forecast(auto)
 
 metrics_names = c("$\\hat{x}_{t}(1)$","$\\hat{x}_{t}(2)$","$\\hat{x}_{t}(3)$","$\\hat{x}_{t}(4)$","$\\hat{x}_{t}(5)$","$\\hat{x}_{t}(6)$")
@@ -189,9 +270,9 @@ metrics_names = c("$\\hat{x}_{t}(1)$","$\\hat{x}_{t}(2)$","$\\hat{x}_{t}(3)$","$
 rnames <- c("SE Simples", "SE de Holt" , "Auto","Original")
 
 data_res <- as.data.frame(t(cbind(
-  X1 = as.vector(Producao_SES$mean),
-  X2 = as.vector(Producao_Holt$mean),
-  X3 = as.vector(predict(auto,n.ahead = 7)$pred),
+  X1 = as.vector(exp(Producao_SES$mean)),
+  X2 = as.vector(exp(Producao_Holt$mean)),
+  X3 = as.vector(exp(predict(auto,n.ahead = 7)$pred)),
   Original = df_res$Producao
 )),row.names = rnames)
 
@@ -205,26 +286,26 @@ producao_df <- df_1 %>% mutate(`Ajuste Holt(Producao)`     = Producao_Holt$fitte
 
 df1 <- data.frame(Data = c(df_1$ANOMES,df_res$ANOMES),
                   Producao = c(df_1$Producao,df_res$Producao),
-                  `Ajuste Holt(Producao)`     = c(Producao_Holt$fitted,Producao_Holt$mean),
-                  `Ajuste SES(Producao)`      = c(Producao_SES$fitted,Producao_SES$mean),
-                  `Auto Arima`                = c(fit.auto$fitted,predict(fit.auto,n.ahead = 7)$pred)) %>% 
-  dplyr::rename(`Ajuste Holt(Diesel)` = Ajuste.Holt.Producao.,
-                `Ajuste SES(Diesel)` = Ajuste.SES.Producao.,
+                  `Ajuste Holt(Producao)`     = exp(c(Producao_Holt$fitted,Producao_Holt$mean)),
+                  `Ajuste SES(Producao)`      = exp(c(Producao_SES$fitted,Producao_SES$mean)),
+                  `Auto Arima`                = exp(c(auto$fitted,predict(auto,n.ahead = 7)$pred))) %>% 
+  dplyr::rename(`Ajuste Holt(Producao)` = Ajuste.Holt.Producao.,
+                `Ajuste SES(Producao)` = Ajuste.SES.Producao.,
                 `Auto Arima`   =  `Auto.Arima`)
 
+library(reshape2)
+library(plotly)
 
-
-
-df_producao <- producao_df %>% dplyr::select(ANOMES,Producao,`Ajuste Holt(Producao)`,`Ajuste SES(Producao)`) %>% melt("ANOMES") %>% dplyr::rename( Producao = value,Legenda = variable)
+df_producao <- df1 %>% dplyr::select(Data,Producao,`Ajuste Holt(Producao)`,`Ajuste SES(Producao)`,`Auto Arima`) %>% melt("Data") %>% dplyr::rename( Producao = value,Legenda = variable)
 #df_producao$Producao <- log(df_producao$Producao)
 #df_gasolina <- df %>% select(Data,Gasolina,`Ajuste Holt(Gasolina)`,`Ajuste SES(Gasolina)`) %>% melt("Data") %>% dplyr::rename( Preços = value,Legenda = variable)
 
-p1 <- ggplot(data = df_producao, aes(x = ANOMES, y = Producao, linetype = Legenda,color = Legenda)) + 
+p1 <- ggplot(data = df_producao, aes(x = Data, y = Producao, linetype = Legenda,color = Legenda)) + 
   geom_line(alpha=1,size = 0.85)+
   #geom_line(data = df,aes(x = Data, y = `Ajuste Holt(Diesel)`),color = "red", lty = "dashed") +
   #geom_point(size = .3,alpha = 0.25,color="black") +
   labs(x = "Data", y = "Preço") +
-  scale_color_manual(values = c("black","red","darkgreen")) +
+  scale_color_manual(values = c("black","red","green","purple")) +
   scale_x_date(date_breaks = "12 months",date_labels = "%Y")+
   axis.theme(x.angle = 45,vjust = 1,hjust = 1,axis.title.size.x = 12,axis.title.size.y = 12,tick.size = 8,lengend_title_size = 10,lengend_text_size = 8,pos_leg = "right")
 
@@ -333,3 +414,345 @@ plot(fit011)
 
 
 
+#######################################################################################################
+
+
+library(lubridate)
+library(tidyverse)
+
+########################### CORRELOGRAMA ###############################
+df_pago$SEMANA <- floor_date(df_pago$DATA_PAGAMENTO, "1 week")
+df_pago$SEMANA2 <- format(df_pago$SEMANA, "%Y-%V")
+reservados$SEMANA <- floor_date(reservados$DATA_PAGAMENTO, "1 week")
+reservados$SEMANA2 <- format(df_pago$SEMANA, "%Y-%V")
+
+teste <- df_pago %>%  group_by(year_week = floor_date(DATA_PAGAMENTO, "1 week"))
+
+reservados$SEMANA %>% unique %>% sort
+
+(lubridate::yday(df_pago$DATA_PAGAMENTO)-1)%/%7 + 1
+
+
+df_1 <- df_pago %>%  dplyr::group_by(SEMANA) %>% 
+  dplyr::summarise(Producao = sum(VLR_PRODUCAO),Qntd     =sum(Qntd_Propostas)) %>% 
+  dplyr::select(SEMANA,Producao) 
+
+
+df_res <- reservados %>%   dplyr::group_by(SEMANA) %>% 
+  dplyr::summarise(Producao = sum(VLR_PRODUCAO),Qntd     =sum(Qntd_Propostas)) %>% 
+  dplyr::select(SEMANA,Producao) 
+
+producao   <- zoo(df_1$Producao  ,df_1$SEMANA)
+
+p1 <- autoplot.zoo(producao) + 
+  geom_line(size = 0.35,alpha=1,color="black")+
+  #geom_point() +
+  #geom_point(size = .3,alpha = 0.25,color="black") +
+  labs(x = "Data", y = "Produção") +
+  # scale_color_manual(values = color_pal) +
+  scale_x_date(date_breaks = "month",date_labels = "%V %Y")+
+  axis.theme(x.angle = 45,vjust = 1,hjust = 1,axis.title.size.x = 16,axis.title.size.y = 16,tick.size = 16)
+
+producao   <- zoo(log(df_1$Producao)  ,df_1$SEMANA)
+p2 <- autoplot.zoo(producao) + 
+  geom_line(size = 0.35,alpha=1,color="black")+
+  #geom_point() +
+  #geom_point(size = .3,alpha = 0.25,color="black") +
+  labs(x = "Data", y = "Produção") +
+  # scale_color_manual(values = color_pal) +
+  scale_x_date(date_breaks = "month",date_labels = "%V %Y")+
+  axis.theme(x.angle = 45,vjust = 1,hjust = 1,axis.title.size.x = 16,axis.title.size.y = 16,tick.size = 16)
+cowplot::plot_grid(p1, p2,ncol=1,nrow=2,labels = LETTERS[1:2],align = "v")
+
+
+
+producao_df   <- zoo(log(df_1$Producao)  ,df_1$SEMANA)
+
+
+p3 <- autoplot.zoo(diff(producao_df)) + 
+  geom_line(size = 0.25,alpha=1,color="black")+
+  #geom_point(size = .3,alpha = 0.25,color="black") +
+  labs(x = "Data", y = "Produção") +
+  #scale_color_manual(values = color_pal) +
+  scale_x_date(date_breaks = "12 months",date_labels = "%Y")+
+  axis.theme(x.angle = 45,vjust = 1,hjust = 1,axis.title.size.x = 16,axis.title.size.y = 16,tick.size = 10)
+
+as.zoo(producao_df)
+
+
+pA1 <- ggAcf(as.data.frame(as.zoo(diff(producao_df)))$`as.zoo(diff(producao_df))`,type = "correlation",lag.max = 162)+
+  labs(x = "Lag", y = "FAC",title=NULL) +
+  axis.theme(axis.title.size.x = 16,axis.title.size.y = 16,tick.size = 16)
+
+pB1 <- ggAcf(as.data.frame(as.zoo(diff(producao_df)))$`as.zoo(diff(producao_df))`,type = "partial",lag.max = 162)+
+  labs(x = "Lag", y = "FAC P",title=NULL) +
+  axis.theme(axis.title.size.x = 16,axis.title.size.y = 16,tick.size = 16)
+
+parcial1 <- cowplot::plot_grid(p3,cowplot::plot_grid(pA1, pB1,ncol=1,nrow=2,labels = LETTERS[2:3],align = "v"),labels = LETTERS[1])
+
+
+
+
+p4 <- autoplot.zoo(diff(diff(producao_df))) + 
+  geom_line(size = 0.25,alpha=1,color="black")+
+  #geom_point(size = .3,alpha = 0.25,color="black") +
+  labs(x = "Data", y = "Produção") +
+  #scale_color_manual(values = color_pal) +
+  scale_x_date(date_breaks = "12 months",date_labels = "%Y")+
+  axis.theme(x.angle = 45,vjust = 1,hjust = 1,axis.title.size.x = 16,axis.title.size.y = 16,tick.size = 10)
+
+as.zoo(producao_df)
+
+
+pA2 <- ggAcf(as.data.frame(as.zoo(diff(diff(producao_df))))$`as.zoo(diff(diff(producao_df)))`,type = "correlation",lag.max = 162)+
+  labs(x = "Lag", y = "FAC",title=NULL) +
+  axis.theme(axis.title.size.x = 16,axis.title.size.y = 16,tick.size = 16)
+
+pB2 <- ggAcf(as.data.frame(as.zoo(diff(diff(producao_df))))$`as.zoo(diff(diff(producao_df)))`,type = "partial",lag.max = 162)+
+  labs(x = "Lag", y = "FAC P",title=NULL) +
+  axis.theme(axis.title.size.x = 16,axis.title.size.y = 16,tick.size = 16)
+
+parcial2 <- cowplot::plot_grid(p4,cowplot::plot_grid(pA2, pB2,ncol=1,nrow=2,labels = LETTERS[4:5],align = "v"),labels = LETTERS[3])
+
+cowplot::plot_grid(parcial1,parcial2, ncol=1,nrow=2,align = "v")
+
+
+
+
+producao_st   <- ts(data = log(df_1$Producao),frequency = 54,start = c(2018))
+
+
+
+
+#producao           <- zoo(log(producao_df$Producao)  ,producao_df$DATA_PAGAMENTO)
+Producao_Holt      = holt(producao_st,level = .95,h = 19)
+Producao_SES       = ses(producao_st,level = .95,h = 19)
+auto           = arima(producao_st,order = c(2,1,3),seasonal = list(order = c(1,0,0), period = 54))
+#fitted(auto)
+#auto.arima(producao_st)
+
+# df_pago$SEMANA %>% unique %>% length
+# df_res$SEMANA %>% unique %>% length
+metrics_names = c("$\\hat{x}_{t}(1)$","$\\hat{x}_{t}(2)$","$\\hat{x}_{t}(3)$","$\\hat{x}_{t}(4)$","$\\hat{x}_{t}(5)$","$\\hat{x}_{t}(6)$")
+
+rnames <- c("SE Simples", "SE de Holt" , "Auto","Original")
+
+data_res <- as.data.frame(t(cbind(
+  X1 = as.vector(exp(Producao_SES$mean)),
+  X2 = as.vector(exp(Producao_Holt$mean)),
+  X3 = as.vector(exp(predict(auto,n.ahead = 19)$pred)),
+  Original = df_res$Producao
+)),row.names = rnames)
+
+library(aTSA)
+library(fpp2)
+df_pago$DATA_PAGAMENTO %>% range
+
+producao_df <- df_1 %>% mutate(`Ajuste Holt(Producao)`     = Producao_Holt$fitted,
+                               `Ajuste SES(Producao)`      = Producao_SES$fitted) 
+
+
+df1 <- data.frame(Data = c(df_1$SEMANA,df_res$SEMANA),
+                  Producao = c(df_1$Producao,df_res$Producao),
+                  `Ajuste Holt(Producao)`     = exp(c(Producao_Holt$fitted,Producao_Holt$mean)),
+                  `Ajuste SES(Producao)`      = exp(c(Producao_SES$fitted,Producao_SES$mean)),
+                  `Auto Arima`                = exp(c(fitted(auto),predict(auto,n.ahead = 19)$pred))) %>% 
+  dplyr::rename(`Ajuste Holt(Producao)` = Ajuste.Holt.Producao.,
+                `Ajuste SES(Producao)` = Ajuste.SES.Producao.,
+                `Auto Arima`   =  `Auto.Arima`)
+
+library(reshape2)
+library(plotly)
+
+df_producao <- df1 %>% dplyr::select(Data,Producao,`Ajuste Holt(Producao)`,`Ajuste SES(Producao)`,`Auto Arima`) %>% melt("Data") %>% dplyr::rename( Producao = value,Legenda = variable)
+#df_producao$Producao <- log(df_producao$Producao)
+#df_gasolina <- df %>% select(Data,Gasolina,`Ajuste Holt(Gasolina)`,`Ajuste SES(Gasolina)`) %>% melt("Data") %>% dplyr::rename( Preços = value,Legenda = variable)
+
+p1 <- ggplot(data = df_producao, aes(x = Data, y = Producao, linetype = Legenda,color = Legenda)) + 
+  geom_line(alpha=1,size = 0.85)+
+  #geom_line(data = df,aes(x = Data, y = `Ajuste Holt(Diesel)`),color = "red", lty = "dashed") +
+  #geom_point(size = .3,alpha = 0.25,color="black") +
+  labs(x = "Data", y = "Preço") +
+  scale_color_manual(values = c("black","red","green","purple")) +
+  scale_x_date(date_breaks = "12 months",date_labels = "%Y")+
+  axis.theme(x.angle = 45,vjust = 1,hjust = 1,axis.title.size.x = 12,axis.title.size.y = 12,tick.size = 8,lengend_title_size = 10,lengend_text_size = 8,pos_leg = "right")
+
+ggplotly(p1) %>%
+  layout(showlegend = F, title='Time Series with Rangeslider',
+         xaxis = list(rangeslider = list(visible = T)))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+########################### CORRELOGRAMA ###############################
+# df_pago$SEMANA <- floor_date(df_pago$DATA_PAGAMENTO, "1 week")
+# reservados$SEMANA <- floor_date(reservados$DATA_PAGAMENTO, "1 week")
+
+teste <- df_pago %>%  group_by(DATA_PAGAMENTO))
+
+reservados$SEMANA %>% unique %>% sort
+
+(lubridate::yday(df_pago$DATA_PAGAMENTO)-1)%/%7 + 1
+
+
+df_1 <- df_pago %>%  dplyr::group_by(DATA_PAGAMENTO) %>% 
+  dplyr::summarise(Producao = sum(VLR_PRODUCAO),Qntd     =sum(Qntd_Propostas)) %>% 
+  dplyr::select(DATA_PAGAMENTO,Producao) 
+
+
+df_res <- reservados %>%   dplyr::group_by(DATA_PAGAMENTO) %>% 
+  dplyr::summarise(Producao = sum(VLR_PRODUCAO),Qntd     =sum(Qntd_Propostas)) %>% 
+  dplyr::select(DATA_PAGAMENTO,Producao) 
+
+producao   <- zoo(df_1$Producao  ,df_1$DATA_PAGAMENTO)
+
+p1 <- autoplot.zoo(producao) + 
+  geom_line(size = 0.35,alpha=1,color="black")+
+  #geom_point() +
+  #geom_point(size = .3,alpha = 0.25,color="black") +
+  labs(x = "Data", y = "Produção") +
+  # scale_color_manual(values = color_pal) +
+  scale_x_date(date_breaks = "month",date_labels = "%V %Y")+
+  axis.theme(x.angle = 45,vjust = 1,hjust = 1,axis.title.size.x = 16,axis.title.size.y = 16,tick.size = 16)
+
+producao   <- zoo(log(df_1$Producao)  ,df_1$DATA_PAGAMENTO)
+p2 <- autoplot.zoo(producao) + 
+  geom_line(size = 0.35,alpha=1,color="black")+
+  #geom_point() +
+  #geom_point(size = .3,alpha = 0.25,color="black") +
+  labs(x = "Data", y = "Produção") +
+  # scale_color_manual(values = color_pal) +
+  scale_x_date(date_breaks = "month",date_labels = "%V %Y")+
+  axis.theme(x.angle = 45,vjust = 1,hjust = 1,axis.title.size.x = 16,axis.title.size.y = 16,tick.size = 16)
+cowplot::plot_grid(p1, p2,ncol=1,nrow=2,labels = LETTERS[1:2],align = "v")
+
+
+
+producao_df   <- zoo(log(df_1$Producao)  ,df_1$DATA_PAGAMENTO)
+
+
+p3 <- autoplot.zoo(diff(producao_df)) + 
+  geom_line(size = 0.25,alpha=1,color="black")+
+  #geom_point(size = .3,alpha = 0.25,color="black") +
+  labs(x = "Data", y = "Produção") +
+  #scale_color_manual(values = color_pal) +
+  scale_x_date(date_breaks = "12 months",date_labels = "%Y")+
+  axis.theme(x.angle = 45,vjust = 1,hjust = 1,axis.title.size.x = 16,axis.title.size.y = 16,tick.size = 10)
+
+as.zoo(producao_df)
+
+
+pA1 <- ggAcf(as.data.frame(as.zoo(diff(producao_df)))$`as.zoo(diff(producao_df))`,type = "correlation",lag.max = 162)+
+  labs(x = "Lag", y = "FAC",title=NULL) +
+  axis.theme(axis.title.size.x = 16,axis.title.size.y = 16,tick.size = 16)
+
+pB1 <- ggAcf(as.data.frame(as.zoo(diff(producao_df)))$`as.zoo(diff(producao_df))`,type = "partial",lag.max = 162)+
+  labs(x = "Lag", y = "FAC P",title=NULL) +
+  axis.theme(axis.title.size.x = 16,axis.title.size.y = 16,tick.size = 16)
+
+parcial1 <- cowplot::plot_grid(p3,cowplot::plot_grid(pA1, pB1,ncol=1,nrow=2,labels = LETTERS[2:3],align = "v"),labels = LETTERS[1])
+
+
+
+
+p4 <- autoplot.zoo(diff(diff(producao_df))) + 
+  geom_line(size = 0.25,alpha=1,color="black")+
+  #geom_point(size = .3,alpha = 0.25,color="black") +
+  labs(x = "Data", y = "Produção") +
+  #scale_color_manual(values = color_pal) +
+  scale_x_date(date_breaks = "12 months",date_labels = "%Y")+
+  axis.theme(x.angle = 45,vjust = 1,hjust = 1,axis.title.size.x = 16,axis.title.size.y = 16,tick.size = 10)
+
+as.zoo(producao_df)
+
+
+pA2 <- ggAcf(as.data.frame(as.zoo(diff(diff(producao_df))))$`as.zoo(diff(diff(producao_df)))`,type = "correlation",lag.max = 162)+
+  labs(x = "Lag", y = "FAC",title=NULL) +
+  axis.theme(axis.title.size.x = 16,axis.title.size.y = 16,tick.size = 16)
+
+pB2 <- ggAcf(as.data.frame(as.zoo(diff(diff(producao_df))))$`as.zoo(diff(diff(producao_df)))`,type = "partial",lag.max = 162)+
+  labs(x = "Lag", y = "FAC P",title=NULL) +
+  axis.theme(axis.title.size.x = 16,axis.title.size.y = 16,tick.size = 16)
+
+parcial2 <- cowplot::plot_grid(p4,cowplot::plot_grid(pA2, pB2,ncol=1,nrow=2,labels = LETTERS[4:5],align = "v"),labels = LETTERS[3])
+
+cowplot::plot_grid(parcial1,parcial2, ncol=1,nrow=2,align = "v")
+
+
+
+
+producao_st   <- ts(data = log(df_1$Producao),frequency = 1,start = c(2018))
+
+
+df_1$DATA_PAGAMENTO %>% range
+
+#producao           <- zoo(log(producao_df$Producao)  ,producao_df$DATA_PAGAMENTO)
+Producao_Holt      = holt(producao_st,level = .95,h = 150)
+Producao_SES       = ses(producao_st,level = .95,h = 150)
+auto           = arima(producao_st,order = c(2,1,5),seasonal = list(order = c(1,0,0), period = 360))
+#fitted(auto)
+auto.arima(producao_st)
+
+# df_pago$SEMANA %>% unique %>% length
+# df_res$SEMANA %>% unique %>% length
+metrics_names = c("$\\hat{x}_{t}(1)$","$\\hat{x}_{t}(2)$","$\\hat{x}_{t}(3)$","$\\hat{x}_{t}(4)$","$\\hat{x}_{t}(5)$","$\\hat{x}_{t}(6)$")
+
+rnames <- c("SE Simples", "SE de Holt" , "Auto","Original")
+
+data_res <- as.data.frame(t(cbind(
+  X1 = as.vector(exp(Producao_SES$mean)),
+  X2 = as.vector(exp(Producao_Holt$mean)),
+  X3 = as.vector(exp(predict(auto,n.ahead = 150)$pred)),
+  Original = df_res$Producao
+)),row.names = rnames)
+
+library(aTSA)
+library(fpp2)
+df_pago$DATA_PAGAMENTO %>% range
+
+producao_df <- df_1 %>% mutate(`Ajuste Holt(Producao)`     = Producao_Holt$fitted,
+                               `Ajuste SES(Producao)`      = Producao_SES$fitted) 
+
+
+df1 <- data.frame(Data = c(df_1$SEMANA,df_res$SEMANA),
+                  Producao = c(df_1$Producao,df_res$Producao),
+                  `Ajuste Holt(Producao)`     = exp(c(Producao_Holt$fitted,Producao_Holt$mean)),
+                  `Ajuste SES(Producao)`      = exp(c(Producao_SES$fitted,Producao_SES$mean)),
+                  `Auto Arima`                = exp(c(fitted(auto),predict(auto,n.ahead = 19)$pred))) %>% 
+  dplyr::rename(`Ajuste Holt(Producao)` = Ajuste.Holt.Producao.,
+                `Ajuste SES(Producao)` = Ajuste.SES.Producao.,
+                `Auto Arima`   =  `Auto.Arima`)
+
+library(reshape2)
+library(plotly)
+
+df_producao <- df1 %>% dplyr::select(Data,Producao,`Ajuste Holt(Producao)`,`Ajuste SES(Producao)`,`Auto Arima`) %>% melt("Data") %>% dplyr::rename( Producao = value,Legenda = variable)
+#df_producao$Producao <- log(df_producao$Producao)
+#df_gasolina <- df %>% select(Data,Gasolina,`Ajuste Holt(Gasolina)`,`Ajuste SES(Gasolina)`) %>% melt("Data") %>% dplyr::rename( Preços = value,Legenda = variable)
+
+p1 <- ggplot(data = df_producao, aes(x = Data, y = Producao, linetype = Legenda,color = Legenda)) + 
+  geom_line(alpha=1,size = 0.85)+
+  #geom_line(data = df,aes(x = Data, y = `Ajuste Holt(Diesel)`),color = "red", lty = "dashed") +
+  #geom_point(size = .3,alpha = 0.25,color="black") +
+  labs(x = "Data", y = "Preço") +
+  scale_color_manual(values = c("black","red","green","purple")) +
+  scale_x_date(date_breaks = "12 months",date_labels = "%Y")+
+  axis.theme(x.angle = 45,vjust = 1,hjust = 1,axis.title.size.x = 12,axis.title.size.y = 12,tick.size = 8,lengend_title_size = 10,lengend_text_size = 8,pos_leg = "right")
+
+ggplotly(p1) %>%
+  layout(showlegend = F, title='Time Series with Rangeslider',
+         xaxis = list(rangeslider = list(visible = T)))
