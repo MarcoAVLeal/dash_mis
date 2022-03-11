@@ -26,6 +26,20 @@ library(zoo)
 library(forecast)
 library(GGally)
 textsize <- 10
+l <- list(
+  title = list(text='<b> Legenda </b>'),
+  orientation = 'h',
+  xanchor = "center",
+  yanchor = "top",
+  x = 0.5,
+  y = 1.25,
+  font = list(
+    family = "sans-serif",
+    size = 12,
+    color = "#000"),
+  bgcolor = "#E2E2E2",
+  bordercolor = "#FFFFFF",
+  borderwidth = 2)
 axis.theme <- function(x.angle = 0,
                        vjust=0,
                        hjust=0.5,
@@ -1304,131 +1318,142 @@ table {
     
       
       
-      output$serie_prod <- renderPlot({
+      output$serie_prod <- renderPlotly({
         
-       # plot <- df_pago  %>%
-       #    dplyr::group_by(DATA_PAGAMENTO) %>%
-       #    dplyr::summarise(Producao = sum(VLR_PRODUCAO),
-       #                     Qntd     =sum(Qntd_Propostas)) %>%
-       # 
-       #    ggplot(aes(x = DATA_PAGAMENTO,y=Producao)) +
-       #    geom_line(size = 1.2, alpha = 0.75) +
-       #   geom_point(size = 1.2, alpha = 0.75) +
-       #   axis.theme(x.angle = 45,vjust = 1,hjust = 1,axis.title.size.x = 16,axis.title.size.y = 16,tick.size = 16)
-       #  plot
-
+    
         
-        
-        producao1   <<- df_pago  %>%
+        p1 <- df_pago  %>%
           dplyr::group_by(DATA_PAGAMENTO) %>%
           dplyr::summarise(Producao = sum(VLR_PRODUCAO),
                            Qntd     =sum(Qntd_Propostas)) %>% 
           dplyr::select(DATA_PAGAMENTO,Producao)
+        p1 <-  zoo(x = p1$Producao  ,order.by = p1$DATA_PAGAMENTO) 
         
-        producao_normal   <<- zoo(producao1$Producao  ,producao1$DATA_PAGAMENTO)
-        
-        p1 <- autoplot.zoo(producao_normal) + 
-          geom_line(size = 0.35,alpha=1,color="black")+
-          #geom_point() +
-          #geom_point(size = .3,alpha = 0.25,color="black") +
+        p1 <- autoplot.zoo(p1) + 
+          geom_line(size = 0.35,alpha=1,color="black") +
           labs(x = "Data", y = "Produção") +
-          # scale_color_manual(values = color_pal) +
-          scale_x_date(date_breaks = "12 months",date_labels = "%Y")+
+          scale_x_date(date_breaks = "months",date_labels = "%Y-%m") +
           axis.theme(x.angle = 45,vjust = 1,hjust = 1,axis.title.size.x = 16,axis.title.size.y = 16,tick.size = 16)
-        
-        # producao   <- df_pago  %>%
-        #   dplyr::group_by(DATA_PAGAMENTO) %>%
-        #   dplyr::summarise(Producao = sum(VLR_PRODUCAO),
-        #                    Qntd     =sum(Qntd_Propostas)) %>% 
-        #   dplyr::select(DATA_PAGAMENTO,Producao)
-        producao_log   <<- zoo(log(producao1$Producao)  ,producao1$DATA_PAGAMENTO)
-        
-        p2 <- autoplot.zoo(producao_log) + 
-          geom_line(size = 0.35,alpha=1,color="black")+
-          #geom_point() +
-          #geom_point(size = .3,alpha = 0.25,color="black") +
-          labs(x = "Data", y = "Produção") +
-          # scale_color_manual(values = color_pal) +
-          scale_x_date(date_breaks = "12 months",date_labels = "%Y")+
-          axis.theme(x.angle = 45,vjust = 1,hjust = 1,axis.title.size.x = 16,axis.title.size.y = 16,tick.size = 16)
-        cowplot::plot_grid(p1, p2,ncol=1,nrow=2,labels = LETTERS[1:2],align = "v")
+        p1 <- ggplotly(p1) %>% layout(hovermode = "y", spikedistance =  -1,margin = c(0,0,0,10),legend = l,
+                   xaxis = list(title = "<b>Dias</b>", showspikes = TRUE, titlefont = list(size = 16),rangeslider = list(visible = T),
+                                spikemode  = 'across', #toaxis, across, marker
+                                spikesnap = 'cursor',  ticks = "outside",tickangle = -45,
+                                showline=TRUE,tickfont = list(size = 12),fixedrange=TRUE,
+                                showgrid=TRUE),
+                   yaxis = list (title = "<b>Qntd. Envios</b>",
+                                 spikemode  = 'across', #toaxis, across, marker
+                                 spikesnap = 'cursor', zeroline=FALSE,titlefont = list(size = 16),
+                                 showline=TRUE,tickfont = list(size = 12),fixedrange=TRUE,
+                                 showgrid=TRUE),height = 580) %>% config(displayModeBar = FALSE)
         
         
+        p1
       })
       
+      # output$bar_serie_prod <- renderPlotly({
+      #   
+      #   
+      #   
+      #   p1 <- df_pago  %>%
+      #     dplyr::group_by(DATA_PAGAMENTO) %>%
+      #     dplyr::summarise(Producao = sum(VLR_PRODUCAO),
+      #                      Qntd     =sum(Qntd_Propostas)) %>% 
+      #     dplyr::select(DATA_PAGAMENTO,Producao) %>% as.data.frame
+      #   
+      #   p1 <- ggplot(data = p1,aes(x = DATA_PAGAMENTO,y = Producao)) + 
+      #     geom_bar(stat="identity")+
+      #     labs(x = "Data", y = "Produção") +
+      #     scale_x_date(date_breaks = "months",date_labels = "%Y-%m") +
+      #     axis.theme(x.angle = 45,vjust = 1,hjust = 1,axis.title.size.x = 16,axis.title.size.y = 16,tick.size = 16)
+      #   p1 <- ggplotly(p1) %>% layout(hovermode = "y", spikedistance =  -1,margin = c(0,0,0,10),legend = l,
+      #                                 xaxis = list(title = "<b>Dias</b>", showspikes = TRUE, titlefont = list(size = 16),rangeslider = list(visible = T),
+      #                                              spikemode  = 'across', 
+      #                                              spikesnap = 'cursor',  ticks = "outside",tickangle = -45,
+      #                                              showline=TRUE,tickfont = list(size = 12),fixedrange=TRUE,
+      #                                              showgrid=TRUE),
+      #                                 yaxis = list (title = "<b>Produção</b>",
+      #                                               spikemode  = 'across', 
+      #                                               spikesnap = 'cursor', zeroline=FALSE,titlefont = list(size = 16),
+      #                                               showline=TRUE,tickfont = list(size = 12),fixedrange=TRUE,
+      #                                               showgrid=TRUE),height = 580) %>% config(displayModeBar = FALSE)
+      #   
+      #   
+      #   p1
+      # })
+      # 
       
       
       output$serie_prod2 <- renderPlotly({
         
-        producao_st   <- ts(data = producao1$Producao, start=2017,frequency = 1)
-        # Gasolina_st <-  ts(data = dados$A1, start=1995,frequency = 1)
-        
-        
-        
-        #producao           <- zoo(log(producao_df$Producao)  ,producao_df$DATA_PAGAMENTO)
-        Producao_Holt      = holt(producao_st,level = .95,h = 90)
-        Producao_SES       = ses(producao_st,level = .95,h = 90)
-        
-        producao1 <<- producao1 %>% mutate(`Ajuste Holt(Producao)`     = Producao_Holt$fitted,
-                                              `Ajuste SES(Producao)`      = Producao_SES$fitted)
-        
-        df_producao <- producao1 %>% dplyr::select(DATA_PAGAMENTO,Producao,`Ajuste Holt(Producao)`,`Ajuste SES(Producao)`) %>% melt("DATA_PAGAMENTO") %>% dplyr::rename( Producao = value,Legenda = variable)
-        
-        #df_gasolina <- df %>% select(Data,Gasolina,`Ajuste Holt(Gasolina)`,`Ajuste SES(Gasolina)`) %>% melt("Data") %>% dplyr::rename( Preços = value,Legenda = variable)
-        
-        p1 <- ggplot(data = df_producao, aes(x = DATA_PAGAMENTO, y = Producao, linetype = Legenda,color = Legenda)) + 
-          geom_line(alpha=1,size = 0.85)+
-          #geom_line(data = df,aes(x = Data, y = `Ajuste Holt(Diesel)`),color = "red", lty = "dashed") +
-          #geom_point(size = .3,alpha = 0.25,color="black") +
-          labs(x = "Data", y = "Preço") +
-          scale_color_manual(values = c("black","red","darkgreen")) +
-          scale_x_date(date_breaks = "12 months",date_labels = "%Y")+
-          axis.theme(x.angle = 45,vjust = 1,hjust = 1,axis.title.size.x = 12,axis.title.size.y = 12,tick.size = 8,lengend_title_size = 10,lengend_text_size = 8,pos_leg = "right")
-        
-        plot <- ggplotly(p1) %>%
-          layout(showlegend = F, title='Time Series with Rangeslider',
-                 xaxis = list(rangeslider = list(visible = T)))
-        
-        plot
+        # producao_st   <- ts(data = producao1$Producao, start=2017,frequency = 1)
+        # # Gasolina_st <-  ts(data = dados$A1, start=1995,frequency = 1)
+        # 
+        # 
+        # 
+        # #producao           <- zoo(log(producao_df$Producao)  ,producao_df$DATA_PAGAMENTO)
+        # Producao_Holt      = holt(producao_st,level = .95,h = 90)
+        # Producao_SES       = ses(producao_st,level = .95,h = 90)
+        # 
+        # producao1 <<- producao1 %>% mutate(`Ajuste Holt(Producao)`     = Producao_Holt$fitted,
+        #                                       `Ajuste SES(Producao)`      = Producao_SES$fitted)
+        # 
+        # df_producao <- producao1 %>% dplyr::select(DATA_PAGAMENTO,Producao,`Ajuste Holt(Producao)`,`Ajuste SES(Producao)`) %>% melt("DATA_PAGAMENTO") %>% dplyr::rename( Producao = value,Legenda = variable)
+        # 
+        # #df_gasolina <- df %>% select(Data,Gasolina,`Ajuste Holt(Gasolina)`,`Ajuste SES(Gasolina)`) %>% melt("Data") %>% dplyr::rename( Preços = value,Legenda = variable)
+        # 
+        # p1 <- ggplot(data = df_producao, aes(x = DATA_PAGAMENTO, y = Producao, linetype = Legenda,color = Legenda)) + 
+        #   geom_line(alpha=1,size = 0.85)+
+        #   #geom_line(data = df,aes(x = Data, y = `Ajuste Holt(Diesel)`),color = "red", lty = "dashed") +
+        #   #geom_point(size = .3,alpha = 0.25,color="black") +
+        #   labs(x = "Data", y = "Preço") +
+        #   scale_color_manual(values = c("black","red","darkgreen")) +
+        #   scale_x_date(date_breaks = "12 months",date_labels = "%Y")+
+        #   axis.theme(x.angle = 45,vjust = 1,hjust = 1,axis.title.size.x = 12,axis.title.size.y = 12,tick.size = 8,lengend_title_size = 10,lengend_text_size = 8,pos_leg = "right")
+        # 
+        # plot <- ggplotly(p1) %>%
+        #   layout(showlegend = F, title='Time Series with Rangeslider',
+        #          xaxis = list(rangeslider = list(visible = T)))
+        # 
+        # plot
         
       })
       
       output$serie_prod3 <- renderPlotly({
         
-        producao_st   <- ts(data = log(producao1$Producao), start=2017,frequency = 1)
-        # Gasolina_st <-  ts(data = dados$A1, start=1995,frequency = 1)
-        
-        
-        
-        #producao           <- zoo(log(producao_df$Producao)  ,producao_df$DATA_PAGAMENTO)
-        Producao_Holt      = holt(producao_st,level = .95,h = 90)
-        Producao_SES       = ses(producao_st,level = .95,h = 90)
-        
-        producao2 <<- data.frame(
-            Producao = producao1$Producao,
-            DATA_PAGAMENTO = producao1$DATA_PAGAMENTO,
-            `Ajuste Holt(Producao)`     = exp(Producao_Holt$fitted),
-            `Ajuste SES(Producao)`      = exp(Producao_SES$fitted))
-        colnames(producao2) <- c("Producao","DATA_PAGAMENTO","Ajuste Holt(Producao)","Ajuste SES(Producao)")
-        
-        df_producao <- producao2 %>% dplyr::select(DATA_PAGAMENTO,Producao,`Ajuste Holt(Producao)`,`Ajuste SES(Producao)`) %>% melt("DATA_PAGAMENTO") %>% dplyr::rename( Producao = value,Legenda = variable)
-        
-        #df_gasolina <- df %>% select(Data,Gasolina,`Ajuste Holt(Gasolina)`,`Ajuste SES(Gasolina)`) %>% melt("Data") %>% dplyr::rename( Preços = value,Legenda = variable)
-        
-        p1 <- ggplot(data = df_producao, aes(x = DATA_PAGAMENTO, y = log(Producao), linetype = Legenda,color = Legenda)) + 
-          geom_line(alpha=1,size = 0.85)+
-          #geom_line(data = df,aes(x = Data, y = `Ajuste Holt(Diesel)`),color = "red", lty = "dashed") +
-          #geom_point(size = .3,alpha = 0.25,color="black") +
-          labs(x = "Data", y = "Preço") +
-          scale_color_manual(values = c("black","red","darkgreen")) +
-          scale_x_date(date_breaks = "12 months",date_labels = "%Y")+
-          axis.theme(x.angle = 45,vjust = 1,hjust = 1,axis.title.size.x = 12,axis.title.size.y = 12,tick.size = 8,lengend_title_size = 10,lengend_text_size = 8,pos_leg = "right")
-        
-        plot <- ggplotly(p1) %>%
-          layout(showlegend = F, title='Time Series with Rangeslider',
-                 xaxis = list(rangeslider = list(visible = T)))
-        
-        plot
+        # producao_st   <- ts(data = log(producao1$Producao), start=2017,frequency = 1)
+        # # Gasolina_st <-  ts(data = dados$A1, start=1995,frequency = 1)
+        # 
+        # 
+        # 
+        # #producao           <- zoo(log(producao_df$Producao)  ,producao_df$DATA_PAGAMENTO)
+        # Producao_Holt      = holt(producao_st,level = .95,h = 90)
+        # Producao_SES       = ses(producao_st,level = .95,h = 90)
+        # 
+        # producao2 <<- data.frame(
+        #     Producao = producao1$Producao,
+        #     DATA_PAGAMENTO = producao1$DATA_PAGAMENTO,
+        #     `Ajuste Holt(Producao)`     = exp(Producao_Holt$fitted),
+        #     `Ajuste SES(Producao)`      = exp(Producao_SES$fitted))
+        # colnames(producao2) <- c("Producao","DATA_PAGAMENTO","Ajuste Holt(Producao)","Ajuste SES(Producao)")
+        # 
+        # df_producao <- producao2 %>% dplyr::select(DATA_PAGAMENTO,Producao,`Ajuste Holt(Producao)`,`Ajuste SES(Producao)`) %>% melt("DATA_PAGAMENTO") %>% dplyr::rename( Producao = value,Legenda = variable)
+        # 
+        # #df_gasolina <- df %>% select(Data,Gasolina,`Ajuste Holt(Gasolina)`,`Ajuste SES(Gasolina)`) %>% melt("Data") %>% dplyr::rename( Preços = value,Legenda = variable)
+        # 
+        # p1 <- ggplot(data = df_producao, aes(x = DATA_PAGAMENTO, y = log(Producao), linetype = Legenda,color = Legenda)) + 
+        #   geom_line(alpha=1,size = 0.85)+
+        #   #geom_line(data = df,aes(x = Data, y = `Ajuste Holt(Diesel)`),color = "red", lty = "dashed") +
+        #   #geom_point(size = .3,alpha = 0.25,color="black") +
+        #   labs(x = "Data", y = "Preço") +
+        #   scale_color_manual(values = c("black","red","darkgreen")) +
+        #   scale_x_date(date_breaks = "12 months",date_labels = "%Y")+
+        #   axis.theme(x.angle = 45,vjust = 1,hjust = 1,axis.title.size.x = 12,axis.title.size.y = 12,tick.size = 8,lengend_title_size = 10,lengend_text_size = 8,pos_leg = "right")
+        # 
+        # plot <- ggplotly(p1) %>%
+        #   layout(showlegend = F, title='Time Series with Rangeslider',
+        #          xaxis = list(rangeslider = list(visible = T)))
+        # 
+        # plot
         
       })
       
@@ -1437,42 +1462,42 @@ table {
       output$serie_diff_correlogram <- renderPlot({
         
         
-        p3 <- autoplot.zoo(diff(producao_normal)) + 
-          geom_line(size = 0.25,alpha=1,color="black")+
-          #geom_point(size = .3,alpha = 0.25,color="black") +
-          labs(x = "Data", y = "Preço") +
-          #scale_color_manual(values = color_pal) +
-          scale_x_date(date_breaks = "12 months",date_labels = "%Y")+
-          axis.theme(x.angle = 45,vjust = 1,hjust = 1,axis.title.size.x = 16,axis.title.size.y = 16,tick.size = 10)
-        
-        pA1 <- ggAcf(as.zoo(diff(producao_normal)),type = "correlation")+
-          labs(x = "Lag", y = "FAC",title=NULL) +
-          axis.theme(axis.title.size.x = 16,axis.title.size.y = 16,tick.size = 16)
-        
-        pB1 <- ggAcf(as.zoo(diff(producao_normal)),type = "partial")+
-          labs(x = "Lag", y = "FACP",title=NULL) +
-          axis.theme(axis.title.size.x = 16,axis.title.size.y = 16,tick.size = 16)
-        
-        parcial1 <- cowplot::plot_grid(p3,cowplot::plot_grid(pA1, pB1,ncol=1,nrow=2,labels = LETTERS[2:3],align = "v"),labels = LETTERS[1])
-        p4 <- autoplot.zoo(diff(diff(producao_normal))) + 
-          geom_line(size = 0.25,alpha=1,color="black")+
-          #geom_point(size = .3,alpha = 0.25,color="black") +
-          labs(x = "Data", y = "Preço") +
-          #scale_color_manual(values = color_pal[2]) +
-          scale_x_date(date_breaks = "12 months",date_labels = "%Y")+
-          axis.theme(x.angle = 45,vjust = 1,hjust = 1,axis.title.size.x = 16,axis.title.size.y = 16,tick.size = 10)
-        
-        pA2 <- ggAcf(as.zoo(diff(diff(producao_normal))),type = "correlation")+
-          labs(x = "Lag", y = "FAC",title = NULL) +
-          axis.theme(axis.title.size.x = 16,axis.title.size.y = 16,tick.size = 16)
-        
-        pB2 <- ggAcf(as.zoo(diff(diff(producao_normal))),type = "partial")+
-          labs(x = "Lag", y = "FACP",title = NULL) +
-          axis.theme(axis.title.size.x = 16,axis.title.size.y = 16,tick.size = 16)
-        
-        parcial2 <- cowplot::plot_grid(p4,cowplot::plot_grid(pA2, pB2,ncol=1,nrow=2,labels = LETTERS[4:5],align = "v"),labels = LETTERS[3])
-        
-        cowplot::plot_grid(parcial1,parcial2, ncol=1,nrow=2,align = "v")
+        # p3 <- autoplot.zoo(diff(producao_normal)) + 
+        #   geom_line(size = 0.25,alpha=1,color="black")+
+        #   #geom_point(size = .3,alpha = 0.25,color="black") +
+        #   labs(x = "Data", y = "Preço") +
+        #   #scale_color_manual(values = color_pal) +
+        #   scale_x_date(date_breaks = "12 months",date_labels = "%Y")+
+        #   axis.theme(x.angle = 45,vjust = 1,hjust = 1,axis.title.size.x = 16,axis.title.size.y = 16,tick.size = 10)
+        # 
+        # pA1 <- ggAcf(as.zoo(diff(producao_normal)),type = "correlation")+
+        #   labs(x = "Lag", y = "FAC",title=NULL) +
+        #   axis.theme(axis.title.size.x = 16,axis.title.size.y = 16,tick.size = 16)
+        # 
+        # pB1 <- ggAcf(as.zoo(diff(producao_normal)),type = "partial")+
+        #   labs(x = "Lag", y = "FACP",title=NULL) +
+        #   axis.theme(axis.title.size.x = 16,axis.title.size.y = 16,tick.size = 16)
+        # 
+        # parcial1 <- cowplot::plot_grid(p3,cowplot::plot_grid(pA1, pB1,ncol=1,nrow=2,labels = LETTERS[2:3],align = "v"),labels = LETTERS[1])
+        # p4 <- autoplot.zoo(diff(diff(producao_normal))) + 
+        #   geom_line(size = 0.25,alpha=1,color="black")+
+        #   #geom_point(size = .3,alpha = 0.25,color="black") +
+        #   labs(x = "Data", y = "Preço") +
+        #   #scale_color_manual(values = color_pal[2]) +
+        #   scale_x_date(date_breaks = "12 months",date_labels = "%Y")+
+        #   axis.theme(x.angle = 45,vjust = 1,hjust = 1,axis.title.size.x = 16,axis.title.size.y = 16,tick.size = 10)
+        # 
+        # pA2 <- ggAcf(as.zoo(diff(diff(producao_normal))),type = "correlation")+
+        #   labs(x = "Lag", y = "FAC",title = NULL) +
+        #   axis.theme(axis.title.size.x = 16,axis.title.size.y = 16,tick.size = 16)
+        # 
+        # pB2 <- ggAcf(as.zoo(diff(diff(producao_normal))),type = "partial")+
+        #   labs(x = "Lag", y = "FACP",title = NULL) +
+        #   axis.theme(axis.title.size.x = 16,axis.title.size.y = 16,tick.size = 16)
+        # 
+        # parcial2 <- cowplot::plot_grid(p4,cowplot::plot_grid(pA2, pB2,ncol=1,nrow=2,labels = LETTERS[4:5],align = "v"),labels = LETTERS[3])
+        # 
+        # cowplot::plot_grid(parcial1,parcial2, ncol=1,nrow=2,align = "v")
         
         
         
@@ -1483,43 +1508,43 @@ table {
       output$serie_log_diff_correlogram <- renderPlot({
         
         
-        p3 <- autoplot.zoo(diff(producao_log)) + 
-          geom_line(size = 0.25,alpha=1,color="black")+
-          #geom_point(size = .3,alpha = 0.25,color="black") +
-          labs(x = "Data", y = "Preço") +
-          #scale_color_manual(values = color_pal) +
-          scale_x_date(date_breaks = "12 months",date_labels = "%Y")+
-          axis.theme(x.angle = 45,vjust = 1,hjust = 1,axis.title.size.x = 16,axis.title.size.y = 16,tick.size = 10)
-        
-        pA1 <- ggAcf(as.zoo(diff(producao_log)),type = "correlation")+
-          labs(x = "Lag", y = "FAC",title=NULL) +
-          axis.theme(axis.title.size.x = 16,axis.title.size.y = 16,tick.size = 16)
-        
-        pB1 <- ggAcf(as.zoo(diff(producao_log)),type = "partial")+
-          labs(x = "Lag", y = "FACP",title=NULL) +
-          axis.theme(axis.title.size.x = 16,axis.title.size.y = 16,tick.size = 16)
-        
-        parcial1 <- cowplot::plot_grid(p3,cowplot::plot_grid(pA1, pB1,ncol=1,nrow=2,labels = LETTERS[2:3],align = "v"),labels = LETTERS[1])
-        p4 <- autoplot.zoo(diff(diff(producao_log))) + 
-          geom_line(size = 0.25,alpha=1,color="black")+
-          #geom_point(size = .3,alpha = 0.25,color="black") +
-          labs(x = "Data", y = "Preço") +
-          #scale_color_manual(values = color_pal[2]) +
-          scale_x_date(date_breaks = "12 months",date_labels = "%Y")+
-          axis.theme(x.angle = 45,vjust = 1,hjust = 1,axis.title.size.x = 16,axis.title.size.y = 16,tick.size = 10)
-        
-        pA2 <- ggAcf(as.zoo(diff(diff(producao_log))),type = "correlation")+
-          labs(x = "Lag", y = "FAC",title = NULL) +
-          axis.theme(axis.title.size.x = 16,axis.title.size.y = 16,tick.size = 16)
-        
-        pB2 <- ggAcf(as.zoo(diff(diff(producao_log))),type = "partial")+
-          labs(x = "Lag", y = "FACP",title = NULL) +
-          axis.theme(axis.title.size.x = 16,axis.title.size.y = 16,tick.size = 16)
-        
-        parcial2 <- cowplot::plot_grid(p4,cowplot::plot_grid(pA2, pB2,ncol=1,nrow=2,labels = LETTERS[4:5],align = "v"),labels = LETTERS[3])
-        
-        cowplot::plot_grid(parcial1,parcial2, ncol=1,nrow=2,align = "v")
-        
+        # p3 <- autoplot.zoo(diff(producao_log)) + 
+        #   geom_line(size = 0.25,alpha=1,color="black")+
+        #   #geom_point(size = .3,alpha = 0.25,color="black") +
+        #   labs(x = "Data", y = "Preço") +
+        #   #scale_color_manual(values = color_pal) +
+        #   scale_x_date(date_breaks = "12 months",date_labels = "%Y")+
+        #   axis.theme(x.angle = 45,vjust = 1,hjust = 1,axis.title.size.x = 16,axis.title.size.y = 16,tick.size = 10)
+        # 
+        # pA1 <- ggAcf(as.zoo(diff(producao_log)),type = "correlation")+
+        #   labs(x = "Lag", y = "FAC",title=NULL) +
+        #   axis.theme(axis.title.size.x = 16,axis.title.size.y = 16,tick.size = 16)
+        # 
+        # pB1 <- ggAcf(as.zoo(diff(producao_log)),type = "partial")+
+        #   labs(x = "Lag", y = "FACP",title=NULL) +
+        #   axis.theme(axis.title.size.x = 16,axis.title.size.y = 16,tick.size = 16)
+        # 
+        # parcial1 <- cowplot::plot_grid(p3,cowplot::plot_grid(pA1, pB1,ncol=1,nrow=2,labels = LETTERS[2:3],align = "v"),labels = LETTERS[1])
+        # p4 <- autoplot.zoo(diff(diff(producao_log))) + 
+        #   geom_line(size = 0.25,alpha=1,color="black")+
+        #   #geom_point(size = .3,alpha = 0.25,color="black") +
+        #   labs(x = "Data", y = "Preço") +
+        #   #scale_color_manual(values = color_pal[2]) +
+        #   scale_x_date(date_breaks = "12 months",date_labels = "%Y")+
+        #   axis.theme(x.angle = 45,vjust = 1,hjust = 1,axis.title.size.x = 16,axis.title.size.y = 16,tick.size = 10)
+        # 
+        # pA2 <- ggAcf(as.zoo(diff(diff(producao_log))),type = "correlation")+
+        #   labs(x = "Lag", y = "FAC",title = NULL) +
+        #   axis.theme(axis.title.size.x = 16,axis.title.size.y = 16,tick.size = 16)
+        # 
+        # pB2 <- ggAcf(as.zoo(diff(diff(producao_log))),type = "partial")+
+        #   labs(x = "Lag", y = "FACP",title = NULL) +
+        #   axis.theme(axis.title.size.x = 16,axis.title.size.y = 16,tick.size = 16)
+        # 
+        # parcial2 <- cowplot::plot_grid(p4,cowplot::plot_grid(pA2, pB2,ncol=1,nrow=2,labels = LETTERS[4:5],align = "v"),labels = LETTERS[3])
+        # 
+        # cowplot::plot_grid(parcial1,parcial2, ncol=1,nrow=2,align = "v")
+        # 
         
         
         
@@ -1530,20 +1555,20 @@ table {
         
         
         
-        library(lubridate)
-        p1 <- df_pago  %>%
-          dplyr::group_by(DATA_PAGAMENTO) %>%
-          dplyr::summarise(Producao = sum(VLR_PRODUCAO),
-                           Qntd     =sum(Qntd_Propostas)) %>% 
-          dplyr::select(DATA_PAGAMENTO,Producao) %>%  
-          mutate(Mes = as.factor(month(DATA_PAGAMENTO))) %>%
-          ggplot() +
-          labs(x = "Meses", y = "Produção") +
-          scale_x_discrete(breaks = 1:12,labels = month.abb) +
-          geom_boxplot(aes(x = Mes,y = Producao)) + 
-          axis.theme(x.angle = 45,vjust = 1,hjust = 1,axis.title.size.x = 12,axis.title.size.y = 12,tick.size = 10)
-        
-        p1
+        # library(lubridate)
+        # p1 <- df_pago  %>%
+        #   dplyr::group_by(DATA_PAGAMENTO) %>%
+        #   dplyr::summarise(Producao = sum(VLR_PRODUCAO),
+        #                    Qntd     =sum(Qntd_Propostas)) %>% 
+        #   dplyr::select(DATA_PAGAMENTO,Producao) %>%  
+        #   mutate(Mes = as.factor(month(DATA_PAGAMENTO))) %>%
+        #   ggplot() +
+        #   labs(x = "Meses", y = "Produção") +
+        #   scale_x_discrete(breaks = 1:12,labels = month.abb) +
+        #   geom_boxplot(aes(x = Mes,y = Producao)) + 
+        #   axis.theme(x.angle = 45,vjust = 1,hjust = 1,axis.title.size.x = 12,axis.title.size.y = 12,tick.size = 10)
+        # 
+        # p1
       })
       
       

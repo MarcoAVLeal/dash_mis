@@ -46,7 +46,7 @@ div(
                           collapsible = TRUE,
                           collapsed = FALSE,
                           solidHeader = TRUE,
-                          plotOutput(outputId = "serie_prod",height = 760)
+                          plotlyOutput(outputId = "serie_prod",height = 580)
              ))))
              
            
