@@ -488,7 +488,7 @@ server <- function(input, output, session) {
               
               
               
-              df_prod <<- read_url_csv(onedrive_url)
+              df_prod <- read_url_csv(onedrive_url)
               df_prod$DATACADASTRO<<-lubridate::as_date(df_prod$DATACADASTRO)
               df_prod$DATA_PAGAMENTO<<-lubridate::as_date(df_prod$DATA_PAGAMENTO)
               
@@ -511,6 +511,53 @@ server <- function(input, output, session) {
               
               prod_mes_atual <<- df_pago %>% dplyr::filter( (ANO_PAGAMENTO==ano_atual)  & (MES_PAGAMENTO==mes_atual))   %>% dplyr::summarise(Producao = sum(VLR_PRODUCAO),
                                                                                                                                             Qntd     =sum(Qntd_Propostas))
+              
+              library(bizdays)
+         
+              
+              (cal <- bizdays::create.calendar(holidaysANBIMA, weekdays=c('saturday', 'sunday'), name='ANBIMA'))
+              bizdays.options$set(default.calendar=cal)
+              first_day           =  lubridate::today() %>% lubridate::floor_date(unit = "month")
+              last_day            =  lubridate::today() %>% lubridate::ceiling_date(unit = "month")
+              dates               <- seq(first_day,last_day-1,"day")
+              qtd_dias            <- length(dates)
+              dias_uteis          <- as.Date(dates[is.bizday(dates)])
+              dias_uteis_corridos <- dias_uteis[dias_uteis <= lubridate::today()]
+              qtd_dias_uteis      <- length(dias_uteis)
+              qtd_dias_corridos   <- difftime( lubridate::today(), first_day )
+              qtd_dias_nao_uteis  <- qtd_dias - qtd_dias_uteis
+              qtd_dias_restantes  <- qtd_dias - qtd_dias_corridos
+              qtd_dias_uteis_corridos  <- length(dias_uteis_corridos)
+              qtd_dias_uteis_restantes <-  qtd_dias_uteis - qtd_dias_uteis_corridos 
+               require(Hmisc)
+              monthDays(as.Date('2010-01-01'))
+              
+              numberOfDays <- function(date) {
+                m <- format(date, format="%m")
+                
+                while (format(date, format="%m") == m) {
+                  date <- date + 1
+                }
+                
+                return(as.integer(format(date - 1, format="%d")))
+              }
+              
+              
+              
+              
+   
+              df_pago %>% 
+                dplyr::filter(DATA_PAGAMENTO > (max(as.Date(DATA_PAGAMENTO))-10)) %>% 
+                dplyr::group_by(DATA_PAGAMENTO) %>% 
+                dplyr::summarise(Producao = sum(VLR_PRODUCAO))
+            
+              
+              producao_media_10dias<- df_pago %>% 
+                dplyr::filter(DATA_PAGAMENTO > (max(as.Date(DATA_PAGAMENTO))-10))  %>% 
+                dplyr::group_by(DATA_PAGAMENTO) %>% 
+                dplyr::summarise(Producao = sum(VLR_PRODUCAO))%>% 
+                dplyr::summarise(Producao = mean(Producao))
+             projetado <- producao_media_10dias*qtd_dias_uteis_restantes +prod_mes_atual$Producao
               
               f_data <- as.Date(as.yearmon(as.Date(max(df_pago$DATA_PAGAMENTO,na.rm = TRUE))) -.6, frac = 1)
               
