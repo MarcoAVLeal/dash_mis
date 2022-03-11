@@ -47,18 +47,15 @@ div(
                           collapsed = FALSE,
                           solidHeader = TRUE,
                           plotOutput(outputId = "serie_prod",height = 760)
-             ))),
-             tabPanel(title = p("Ajuste Produção",style="color:#E4781C;text-align:center;font-weight:bold;font-size:14px"), 
-                      fluidRow(box(title = tags$p("Ajuste",style = "font-size:100%;color:#E4781C;font-weight:bold;"),
-                                   headerBorder = TRUE,
-                                   width = 12,
-                                   collapsible = TRUE,
-                                   collapsed = FALSE,
-                                   solidHeader = TRUE,
-                                   plotlyOutput(outputId = "serie_prod2",height = 480),
-                                   plotlyOutput(outputId = "serie_prod3",height = 480)
-                      )))),
-             tabsetPanel(
+             ))))
+             
+           
+             
+    ),
+    tabPanel(title = p("Ajuste Produção",style="color:#E4781C;text-align:center;font-weight:bold;font-size:14px"), 
+             fluidRow(
+               
+               tabsetPanel(
                  id = "tabset_series2",
                  # type = "hidden",
                  
@@ -89,11 +86,23 @@ div(
                                 collapsed = TRUE,
                                 solidHeader = TRUE,
                                 plotOutput(outputId = "boxplot_season",height = 480)
+                            ))),
+                 tabPanel(title = p("Box-Plot",style="color:#E4781C;text-align:center;font-weight:bold;font-size:14px"), 
+                          fluidRow(
+                            box(title = tags$p("Ajuste",style = "font-size:100%;color:#E4781C;font-weight:bold;"),
+                                headerBorder = TRUE,
+                                width = 12,
+                                collapsible = TRUE,
+                                collapsed = FALSE,
+                                solidHeader = TRUE,
+                                plotlyOutput(outputId = "serie_prod2",height = 480),
+                                plotlyOutput(outputId = "serie_prod3",height = 480)
                             )))
                  
                )
-           
-             
-    ))
+               
+               
+               ))
+    )
     
   )
