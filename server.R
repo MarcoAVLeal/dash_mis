@@ -659,7 +659,7 @@ server <- function(input, output, session) {
         output$text_data_producao <- renderUI({
           
           
-          HTML(tags$p("Produção :",as.character(input$data_producao), " Até ",as.character(input$data_producao),style = "font-size:100%;color:#E4781C;font-weight:bold;"))
+          HTML(tags$p(paste0("Produção :",as.character(input$data_producao), " Até ",as.character(input$data_producao)),style = "font-size:100%;color:#E4781C;font-weight:bold;"))
           
           
         })
