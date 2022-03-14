@@ -654,6 +654,16 @@ server <- function(input, output, session) {
           
         })
         
+        
+        
+        output$text_data_producao <- renderUI({
+          
+          
+          tags$p("Produção :",input$data_producao, " Até ",input$data_producao,style = "font-size:100%;color:#E4781C;font-weight:bold;")
+          
+          
+        })
+        
       }else if(input$tabs == "page6"){
         output$config_ui <- renderUI({
           

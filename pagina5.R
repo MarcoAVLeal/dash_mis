@@ -13,7 +13,7 @@ div(
                                  collapsible = TRUE,
                                  solidHeader = TRUE,
                                  uiOutput("box_uiprod1")),
-                             box(title = tags$p("Produção :",input$data_producao, " Até ",input$data_producao,style = "font-size:100%;color:#E4781C;font-weight:bold;"),
+                             box(title = uiOutput(outputId = "text_data_producao"),
                                  headerBorder = TRUE,
                                  width = 12,
                                  collapsible = TRUE,
