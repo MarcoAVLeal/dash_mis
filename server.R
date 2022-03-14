@@ -1381,12 +1381,12 @@ table {
         
         p1 <- autoplot.zoo(p1) + 
           geom_line(size = 0.35,alpha=1,color="black") +
-          #geom_smooth(method="gam",color="red")+
-          geom_ma(ma_fun = SMA, n = 7) +
+          geom_smooth(method="gam",color="red")+
+          #geom_ma(ma_fun = TTR::SMA, n = 7) +
           labs(x = "Data", y = "Produção") +
           scale_x_date(date_breaks = "months",date_labels = "%Y-%m") +
           axis.theme(x.angle = 45,vjust = 1,hjust = 1,axis.title.size.x = 16,axis.title.size.y = 16,tick.size = 16)
-        p1 <- ggplotly(p1) %>% layout(hovermode = "y+x", spikedistance =  -1,margin = c(0,0,0,10),legend = l,
+        p1 <- ggplotly(p1) %>% layout(hovermode = "x unified", spikedistance =  -1,margin = c(0,0,0,10),legend = l,
                    xaxis = list(title = "<b>Dias</b>", showspikes = TRUE, titlefont = list(size = 16),rangeslider = list(visible = T),
                                 spikemode  = 'across', #toaxis, across, marker
                                 spikesnap = 'cursor',  ticks = "outside",tickangle = -45,
