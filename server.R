@@ -625,7 +625,7 @@ server <- function(input, output, session) {
                    selectInput(inputId = "versao",label =  "Template:",
                                c("V1","V2")))),
             HTML("<div style='color:#E4781C;text-align:center;font-weight:bold;'><h4 style='color:#E4781C;text-align:center;font-weight:bold;'>Filtros Movimentações</h4> </div>"),
-            dateInput(inputId = "data_referencia",label = "Data Referência",value = "2022-03-07"))
+            dateInput(inputId = "data_referencia",label = "Data Referência",value = lubridate::as_date("2022-03-07")))
           
           
         })
@@ -1369,10 +1369,12 @@ table {
       
       
       output$serie_prod <- renderPlotly({
-       
+        library(npreg)
+        library(splines)
+        library(Ecdat)
     library(tidyquant)
     library(scales)
-        
+        sp <-  lm(data = df_prod, VLR_PRODUCAO ~ bs(DATA_PAGAMENTO))
         p1 <- df_prod  %>%
           dplyr::group_by(DATA_PAGAMENTO) %>%
           dplyr::summarise(Producao = sum(VLR_PRODUCAO),
@@ -1381,7 +1383,7 @@ table {
         p1 <-  zoo(x = p1$Producao  ,order.by = p1$DATA_PAGAMENTO) 
         
         p1 <- autoplot.zoo(p1,label = "Produção(R$)") + 
-          #geom_line(size = 0.35,alpha=1,aes(color="Produção(R$)")) +
+          #geom_line(size = 0.35,alpha=1,aes(sp$model$`bs(DATA_PAGAMENTO)`,sp$fitted.values)) +
           #geom_smooth(level=0.0, aes(colour="Moving average"), se=FALSE)+
           #geom_smooth(method="gam",label = "Spline",lwd = 0.75,se = FALSE)+
           #geom_ma(ma_fun = TTR::SMA, n = 7) +
@@ -1400,20 +1402,18 @@ table {
                                  spikesnap = 'cursor', zeroline=FALSE,titlefont = list(size = 16),
                                  showline=TRUE,tickfont = list(size = 12),fixedrange=TRUE,
                                  showgrid=TRUE),height = 580) %>% config(displayModeBar = FALSE)
- 
+        # %>%
+        #   add_trace(y = sp$fitted.values, name = 'trace 1', mode = 'lines+markers')
         text_y <- number(
           p1$x$data[[1]]$y,
           prefix = "Produção : R$ "
         )
-        library(npreg)
-        library(splines)
-        library(Ecdat)
-       sp <-  lm(data = df_prod, VLR_PRODUCAO ~ bs(DATA_PAGAMENTO))
-      
+        text_x <- paste0("Data : ",format(as.Date(p1$x$data[[1]]$x),"%d-%m-%Y"))
+       
+    
        
       p1  <- p1  %>%
-           style(text = paste0(text_y), traces = 1) %>%
-         plotly::add_trace(x= sp$model$`bs(DATA_PAGAMENTO)`,y=fitted(sp),"Spline",markers="line+scatterplot")
+        style(text = paste0(text_x, "</br></br>", text_y), traces = 1) 
       p1
       })
       
