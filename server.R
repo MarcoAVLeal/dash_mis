@@ -656,7 +656,7 @@ server <- function(input, output, session) {
         
         
         
-        output$text_data_producao <- renderUI({
+        output$box_prod_dia <- renderUI({
           
           box(title = tags$p(paste0("Produção :",as.character(input$data_producao), " Até ",as.character(input$data_producao)),style = "font-size:100%;color:#E4781C;font-weight:bold;"),
               headerBorder = TRUE,
