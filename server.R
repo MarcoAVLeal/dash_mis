@@ -1053,8 +1053,8 @@ server <- function(input, output, session) {
       dados               <- left_join(completedados,df1,by = c("ID_LEADS"))
       dados   <- dados %>% dplyr::mutate("Atributo" = ifelse(Atributo == "Fechou lead(Desafio ou pago)",paste0("Moveu para ",`Fase do negocio`),Atributo))
       
-      
-      dados               <- dados %>% filter(value == as.Date(input$data_referencia))
+      print(input$data_referencia)
+      dados               <- dados %>% filter(value == "2022-03-07")
       total_movimentacoes <- dados %>%  nrow
       
       
