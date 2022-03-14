@@ -1459,7 +1459,7 @@ table {
           dplyr::summarise(Producao = sum(VLR_PRODUCAO),
                            Qntd     = sum(Qntd_Propostas)) %>% 
           dplyr::select(DATA_PAGAMENTO,ANO_PAGAMENTO,MES_PAGAMENTO, Producao)
-        #p1 <-  zoo(x = p1$Producao  ,order.by = p1$DATA_PAGAMENTO) 
+        p1 <-  zoo(x = p1$Producao  ,order.by = p1$DATA_PAGAMENTO) 
         
         p1 <- autoplot.zoo(p1,label = "Produção(R$)") + 
         # p1 <- ggplot(data = p1,aes(x = DATA_PAGAMENTO,y = Producao)) + 
