@@ -1438,14 +1438,14 @@ table {
     library(scales)
         sp <-  lm(data = df_prod, VLR_PRODUCAO ~ bs(DATA_PAGAMENTO))
         p1 <- df_prod  %>%
-          dplyr::group_by(DATA_PAGAMENTO) %>%
+          dplyr::group_by(DATA_PAGAMENTO,ANO_PAGAMENTO,MES_PAGAMENTO) %>%
           dplyr::summarise(Producao = sum(VLR_PRODUCAO),
                            Qntd     = sum(Qntd_Propostas)) %>% 
           dplyr::select(DATA_PAGAMENTO,ANO_PAGAMENTO,MES_PAGAMENTO, Producao)
         #p1 <-  zoo(x = p1$Producao  ,order.by = p1$DATA_PAGAMENTO) 
         
         #p1 <- autoplot.zoo(p1,label = "Produção(R$)") + 
-        p1 <- ggplot(p1,aes(x = DATA_PAGAMENTO,y = Producao)) + 
+        p1 <- ggplot(data = p1,aes(x = DATA_PAGAMENTO,y = Producao,color =ANO_PAGAMENTO)) + 
           geom_line(size = 0.35,alpha=1) +
           #geom_smooth(level=0.0, aes(colour="Moving average"), se=FALSE)+
           #geom_smooth(method="gam",label = "Spline",lwd = 0.75,se = FALSE)+
