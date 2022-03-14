@@ -497,9 +497,13 @@ server <- function(input, output, session) {
               
               
               df_city  <<- df_prod_map  %>% 
-                dplyr::group_by(Cidade_UF,codigo_ibge,regiao,latitude,longitude) %>% 
+                dplyr::group_by(Cidade_UF,codigo_ibge,regiao,latitude,longitude,uf) %>% 
                 dplyr::summarise(Qntd = sum(Qntd_Propostas),
-                                 Producao = sum(VLR_PRODUCAO))
+                                 Producao = sum(VLR_PRODUCAO)) %>%
+                dplyr::group_by(uf) %>%
+                dplyr::mutate(
+                  Total_UF = sum(Qntd),
+                  Incidencia = Qntd/Total_UF)
             
               beatCol <<- colorFactor(palette = color_maps, df_city$regiao)
               
@@ -507,12 +511,16 @@ server <- function(input, output, session) {
                 "<strong>%s</strong><br/>
   <strong>%s</strong><br/>
    <strong>%s</strong><br/>
+   <strong>%s</strong><br/>
+   <strong>%s</strong><br/>
    <strong>%s</strong><br/>",
                 
                 paste0("<b><h1>",df_city$Cidade_UF,"</h1></b>"),
                 paste0("<b>Região :</b>",df_city$regiao),
                 paste0("<b>Qntd. Propostas:</b>",df_city$Qntd),
-                paste0("<b>Produção:</b>",df_city$Producao)
+                paste0("<b>Produção:</b>",df_city$Producao),
+                paste0("<b>Total UF:</b>",df_city$Total_UF),
+                paste0("<b>Incidencia:</b>",df_city$Incidencia)
                 
               ) %>% lapply(htmltools::HTML)     
               
@@ -1510,7 +1518,7 @@ table {
                 options = list(zoomControl = F)
         ) %>% addTiles() %>%
           #addMarkers(lng = df$LONG,lat = df$LAT)
-          addCircleMarkers(radius =  ,lng =  ~ longitude,lat =  ~ latitude,label = map_label,popup = map_label,color = ~beatCol(df_city$regiao),
+          addCircleMarkers(radius =  ~Incidencia,lng =  ~ longitude,lat =  ~ latitude,label = map_label,popup = map_label,color = ~beatCol(df_city$regiao),
                            stroke = FALSE, fillOpacity = 0.75, 
                            labelOptions = labelOptions(
                              style = list("font-weight" = "normal", padding = "3px 8px"),
