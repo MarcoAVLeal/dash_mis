@@ -484,17 +484,34 @@ server <- function(input, output, session) {
             
             output$page5 <- renderUI({
               
-              url_motor_agregado       <- "https://crefaz-my.sharepoint.com/:x:/g/personal/gestaodedados4_crefaz_onmicrosoft_com/EeMfqB4KwUBBmD-HMQrGtLIBiAliiY-t0S7-osHkDKN-qA?download=1"
-              url_motor_agregado_geral <- "https://crefaz-my.sharepoint.com/:x:/g/personal/gestaodedados4_crefaz_onmicrosoft_com/Edb_Zdd38UNDkP-F3h4Nl0MBuBhsPZ050EXvy00dMIOBiw?download=1"
+              url_motor_agregado            <- "https://crefaz-my.sharepoint.com/:x:/g/personal/gestaodedados4_crefaz_onmicrosoft_com/EeMfqB4KwUBBmD-HMQrGtLIBiAliiY-t0S7-osHkDKN-qA?download=1"
+              url_motor_agregado_geral      <- "https://crefaz-my.sharepoint.com/:x:/g/personal/gestaodedados4_crefaz_onmicrosoft_com/Edb_Zdd38UNDkP-F3h4Nl0MBuBhsPZ050EXvy00dMIOBiw?download=1"
+              url_motor_agregado_expansao   <- "https://crefaz-my.sharepoint.com/:x:/g/personal/gestaodedados4_crefaz_onmicrosoft_com/EfyLi2zJt8xKpBtfwvcg1_UBvyhZ-2qdNWmCD9OQNht6gQ?download=1"
+              color_maps = c(RColorBrewer::brewer.pal(8,"Dark2"),RColorBrewer::brewer.pal(8,"Set2"))
               
-             
-              
+         
+              df_prod_map             <<- read_url_csv(url_motor_agregado_expansao)
               df_prod                 <<- read_url_csv(url_motor_agregado_geral)
               df_prod$DATACADASTRO    <<-lubridate::as_date(df_prod$DATACADASTRO)
               df_prod$DATA_PAGAMENTO  <<-lubridate::as_date(df_prod$DATA_PAGAMENTO)
               
-         
               
+              df_city  <<- df_prod_map  %>% dplyr::group_by(Cidade_UF,codigo_ibge,regiao,latitude,longitude) %>% dplyr::summarise(Qntd = sum(Qntd_Propostas),Producao = sum(VLR_PRODUCAO))
+            
+              beatCol <<- colorFactor(palette = color_maps, df_city$regiao)
+              
+              map_label <<- sprintf(
+                "<strong>%s</strong><br/>
+  <strong>%s</strong><br/>
+   <strong>%s</strong><br/>
+   <strong>%s</strong><br/>",
+                
+                paste0("<b><h1>",df_city$Cidade_UF,"</h1></b>"),
+                paste0("<b>Região :</b>",df_city$regiao),
+                paste0("<b>Qntd. Propostas:</b>",df_city$Qntd),
+                paste0("<b>Produção:</b>",df_city$Producao)
+                
+              ) %>% lapply(htmltools::HTML)     
               
               
               df_prod$ANO_CADASTRO    <<-lubridate::year(df_prod$DATACADASTRO)
@@ -1479,6 +1496,55 @@ table {
         style(text = paste0(text_x, "</br></br>", text_y), traces = 1) 
       p1
       })
+      
+      
+      
+      output$mapa_producao <- renderLeaflet({
+        
+        
+        
+        leaflet(df_city,
+                options = list(zoomControl = F)
+        ) %>% addTiles() %>%
+          #addMarkers(lng = df$LONG,lat = df$LAT)
+          addCircleMarkers(radius = 3,label = map_label,popup = map_label,color = ~beatCol(df_city$regiao),
+                           stroke = FALSE, fillOpacity = 0.75, 
+                           labelOptions = labelOptions(
+                             style = list("font-weight" = "normal", padding = "3px 8px"),
+                             textsize = "15px",
+                             direction = "auto")
+          )
+        #setView(lng = setview$lng, lat = setview$lat, zoom=7) %>%
+        # addPolygons(
+        #   fillColor = cores,layerId = dados.maps.pr$macroid,
+        #   weight = 2,
+        #   opacity = opac$values,label = maps.label.pr,
+        #   color = cores,fill = "black",stroke = T,
+        #   dashArray = "3",
+        #   fillOpacity = opac$values,
+        #   highlight = highlightOptions(
+        #     weight = 5,
+        #     color = "#666",
+        #     dashArray = "",
+        #     fillOpacity = 0.5,
+        #     bringToFront = TRUE),
+        #   labelOptions = labelOptions(
+        #     style = list("font-weight" = "normal", padding = "3px 8px"),
+        #     textsize = "15px",
+        #     direction = "auto"))  %>%
+        # addLegend(colors  = unique(cores),labels = unique(maps.cities2$macroregional), opacity = 1, title = "Macroregião",
+        #           position = "topleft")
+        
+        
+        
+        
+        
+      })
+      
+      
+      
+      
+      
       
       # output$bar_serie_prod <- renderPlotly({
       #   
