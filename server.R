@@ -625,7 +625,7 @@ server <- function(input, output, session) {
                    selectInput(inputId = "versao",label =  "Template:",
                                c("V1","V2")))),
             HTML("<div style='color:#E4781C;text-align:center;font-weight:bold;'><h4 style='color:#E4781C;text-align:center;font-weight:bold;'>Filtros Movimentações</h4> </div>"),
-            dateInput(inputId = "data_referencia",label = "Data Referência",value = lubridate::as_date("2022-03-07")))
+            dateInput(inputId = "data_referencia",label = "Data Referência",value = max(df1$`Modificado em`)))
           
           
         })
