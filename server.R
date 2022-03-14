@@ -1381,7 +1381,7 @@ table {
         
         p1 <- autoplot.zoo(p1) + 
           geom_line(size = 0.35,alpha=1,color="black") +
-          geom_smooth(method="gam",color="red",size = 0.75)+
+          geom_smooth(method="gam",color="red",lwd = 0.75)+
           #geom_ma(ma_fun = TTR::SMA, n = 7) +
           labs(x = "Data", y = "Produção") +
           scale_x_date(date_breaks = "months",date_labels = "%Y-%m") +
