@@ -785,8 +785,8 @@ server <- function(input, output, session) {
     output$plot_envio_diario <- renderPlotly({
       
       p1 <- ggplot(data = df_melt,aes(x= dia, y = Envios)) +
-        geom_point(size = 1.2, alpha = 0.75)+
-        geom_line(size = 1.2, alpha = 0.75,aes(color  = Legenda,group = Legenda)) +
+        geom_point(size = 1.0, alpha = 0.75)+
+        geom_line(size = 0.75, alpha = 0.75,aes(color  = Legenda,group = Legenda)) +
         scale_color_manual(values = c("darkgreen", "red","darkblue")) +
          scale_x_continuous(breaks = seq(min(x1$dia),max(x1$dia),by = paste(length(unique(lubridate::month(x1$dia))),"days") ) )+
         # scale_y_continuous(breaks = seq(0,1,0.1))+
@@ -795,7 +795,7 @@ server <- function(input, output, session) {
                    linetype = "dashed", colour = "red", alpha = 1,size = 0.8) +
         geom_hline(yintercept = sum(qtd_contatos_enviados),
                    linetype = "dashed", colour = "red", alpha = 1,size = 0.8) 
-     plot <- ggplotly(p1) %>% layout(hovermode = "x", spikedistance =  -1,margin = c(0,0,0,10),legend = l,
+     plot <- ggplotly(p1) %>% layout(hovermode = "x unified", spikedistance =  -1,margin = c(0,0,0,10),legend = l,
                               xaxis = list(title = "<b>Dias</b>", showspikes = TRUE, titlefont = list(size = 16),
                                            spikemode  = 'across', #toaxis, across, marker
                                            spikesnap = 'cursor',  ticks = "outside",tickangle = -45,
@@ -816,15 +816,15 @@ server <- function(input, output, session) {
      
       
       p1 <- ggplot(data = df_melt,aes(x= dia, y = Acumulado)) +
-        geom_point(size = 1.2, alpha = 0.75)+
-        geom_line(size = 1.2, alpha = 0.75,aes(color  = Legenda,group = Legenda)) +
+        geom_point(size = 1, alpha = 0.75)+
+        geom_line(size = 0.75, alpha = 0.75,aes(color  = Legenda,group = Legenda)) +
         scale_color_manual(values = c("darkgreen", "red","darkblue")) +
         geom_vline(xintercept = max(df_melt$dia),
                    linetype = "dashed", colour = "red", alpha = 1,size = 0.8) +
       scale_x_continuous(breaks = seq(min(x1$dia),max(x1$dia),by = paste(length(unique(lubridate::month(x1$dia))),"days") ) )+
         # scale_y_continuous(breaks = seq(0,1,0.1))+
         axis.theme(x.angle = 45,vjust = 1,hjust = 1,axis.title.size.x = 16,axis.title.size.y = 16,tick.size = 16)
-      plot <- ggplotly(p1) %>% layout(hovermode = "y", spikedistance =  -1,margin = c(0,0,0,10),legend = l,
+      plot <- ggplotly(p1) %>% layout(hovermode = "x unified", spikedistance =  -1,margin = c(0,0,0,10),legend = l,
                                       xaxis = list(title = "<b>Dias</b>", showspikes = TRUE, titlefont = list(size = 16),
                                                    spikemode  = 'across', #toaxis, across, marker
                                                    spikesnap = 'cursor',  ticks = "outside",tickangle = -45,
@@ -851,8 +851,8 @@ server <- function(input, output, session) {
       df_melt$Acumulado <- acumulado
       
       p1 <- ggplot(data = df_melt,aes(x= dia, y = Acumulado)) +
-        geom_point(size = 1.2, alpha = 0.75)+
-        geom_line(size = 1.2, alpha = 0.75,aes(color  = Legenda,group = Legenda)) +
+        geom_point(size = 1.0, alpha = 0.75)+
+        geom_line(size = 0.75, alpha = 0.75,aes(color  = Legenda,group = Legenda)) +
         scale_color_manual(values = c("darkgreen", "red","darkblue")) +
         geom_hline(yintercept = 5000,
                    linetype = "dashed", colour = "red", alpha = 1,size = 0.8) +  
@@ -862,7 +862,7 @@ server <- function(input, output, session) {
         # scale_y_continuous(breaks = seq(0,1,0.1))+
         axis.theme(x.angle = 45,vjust = 1,hjust = 1,axis.title.size.x = 16,axis.title.size.y = 16,tick.size = 16)
      
-         plot <- ggplotly(p1) %>% layout(hovermode = "y", spikedistance =  -1,margin = c(0,0,0,10),legend = l,
+         plot <- ggplotly(p1) %>% layout(hovermode = "x unified", spikedistance =  -1,margin = c(0,0,0,10),legend = l,
                                       xaxis = list(title = "<b>Dias</b>", showspikes = TRUE, titlefont = list(size = 16),
                                                    spikemode  = 'across', #toaxis, across, marker
                                                    spikesnap = 'cursor',  ticks = "outside",tickangle = -45,
