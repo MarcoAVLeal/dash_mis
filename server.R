@@ -1383,7 +1383,7 @@ table {
         p1 <- autoplot.zoo(p1,label = "Produção(R$)") + 
           #geom_line(size = 0.35,alpha=1,aes(color="Produção(R$)")) +
           #geom_smooth(level=0.0, aes(colour="Moving average"), se=FALSE)+
-          geom_smooth(method="gam",label = "Spline",lwd = 0.75,se = FALSE)+
+          #geom_smooth(method="gam",label = "Spline",lwd = 0.75,se = FALSE)+
           #geom_ma(ma_fun = TTR::SMA, n = 7) +
           labs(x = "Data", y = "Produção") +
           scale_x_date(date_breaks = "months",date_labels = "%Y-%m") +
@@ -1403,12 +1403,18 @@ table {
  
         text_y <- number(
           p1$x$data[[1]]$y,
-          prefix = "Produção(R$): "
+          prefix = "Produção : R$ "
         )
-        
-        p1
-        # <- p1  %>%
-        #   style(text = paste0(text_y), traces = 1)
+        library(npreg)
+        library(splines)
+        library(Ecdat)
+       sp <-  lm(data = df_prod, VLR_PRODUCAO ~ bs(DATA_PAGAMENTO))
+      
+       
+      p1  <- p1  %>%
+           style(text = paste0(text_y), traces = 1) %>%
+         plotly::add_trace(x= sp$model$`bs(DATA_PAGAMENTO)`,y=fitted(sp),"Spline",markers="line+scatterplot")
+      p1
       })
       
       # output$bar_serie_prod <- renderPlotly({
