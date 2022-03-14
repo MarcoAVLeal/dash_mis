@@ -656,10 +656,10 @@ server <- function(input, output, session) {
         
         
         
-        output$text_data_producao <- renderText({
+        output$text_data_producao <- renderUI({
           
           
-          paste0("Produção :",as.character(input$data_producao), " Até ",as.character(input$data_producao))
+          div(paste0("Produção :",as.character(input$data_producao), " Até ",as.character(input$data_producao)))
           
           
         })
