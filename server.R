@@ -650,7 +650,7 @@ server <- function(input, output, session) {
           div(br(),br(),
             
               HTML("<div style='color:#E4781C;text-align:center;font-weight:bold;'><h4 style='color:#E4781C;text-align:center;font-weight:bold;'>Filtros</h4> </div>"),
-              dateInput(inputId = "data_producao",label = "Data Produção",value = max(df_prod$DATA_PAGAMENTO)))
+              dateRangeInput(inputId = "data_producao",label = "Data Produção",start =max(df_prod$DATA_PAGAMENTO),end = max(df_prod$DATA_PAGAMENTO)))
           
         })
         
@@ -1369,7 +1369,7 @@ table {
   })
   
   output$box_uiprod5 <- renderUI({
-    prod_dia <<- df_prod %>% dplyr::filter( DATA_PAGAMENTO == input$data_producao)   %>% dplyr::summarise(Producao = sum(VLR_PRODUCAO),
+    prod_dia <<- df_prod %>% dplyr::filter( DATA_PAGAMENTO >= input$data_producao[1] & DATA_PAGAMENTO <= input$data_producao[2])   %>% dplyr::summarise(Producao = sum(VLR_PRODUCAO),
                                                                                                                              Qntd     =sum(Qntd_Propostas))
     HTML(paste0('
     <style>
