@@ -1370,7 +1370,7 @@ table {
       
       output$serie_prod <- renderPlotly({
         
-    
+    library("tidyquant")
         
         p1 <- df_prod  %>%
           dplyr::group_by(DATA_PAGAMENTO) %>%
@@ -1380,7 +1380,9 @@ table {
         p1 <-  zoo(x = p1$Producao  ,order.by = p1$DATA_PAGAMENTO) 
         
         p1 <- autoplot.zoo(p1) + 
-          geom_line(size = 0.5,alpha=1,color="black") +
+          geom_line(size = 0.35,alpha=1,color="black") +
+          #geom_smooth(method="gam",color="red")+
+          geom_ma(ma_fun = SMA, n = 7) +
           labs(x = "Data", y = "Produção") +
           scale_x_date(date_breaks = "months",date_labels = "%Y-%m") +
           axis.theme(x.angle = 45,vjust = 1,hjust = 1,axis.title.size.x = 16,axis.title.size.y = 16,tick.size = 16)
