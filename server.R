@@ -484,32 +484,36 @@ server <- function(input, output, session) {
             
             output$page5 <- renderUI({
               
-              onedrive_url <- "https://crefaz-my.sharepoint.com/:x:/g/personal/gestaodedados4_crefaz_onmicrosoft_com/ET_WfaYB2k1IouEbVGeMcPYBFp_36rF5CLDjQgZi3iTrbw?download=1"
+              url_motor_agregado       <- "https://crefaz-my.sharepoint.com/:x:/g/personal/gestaodedados4_crefaz_onmicrosoft_com/EeMfqB4KwUBBmD-HMQrGtLIBiAliiY-t0S7-osHkDKN-qA?download=1"
+              url_motor_agregado_geral <- "https://crefaz-my.sharepoint.com/:x:/g/personal/gestaodedados4_crefaz_onmicrosoft_com/Edb_Zdd38UNDkP-F3h4Nl0MBuBhsPZ050EXvy00dMIOBiw?download=1"
+              
+             
+              
+              df_prod                 <<- read_url_csv(url_motor_agregado_geral)
+              df_prod$DATACADASTRO    <<-lubridate::as_date(df_prod$DATACADASTRO)
+              df_prod$DATA_PAGAMENTO  <<-lubridate::as_date(df_prod$DATA_PAGAMENTO)
+              
+         
               
               
               
-              df_prod <- read_url_csv(onedrive_url)
-              df_prod$DATACADASTRO<<-lubridate::as_date(df_prod$DATACADASTRO)
-              df_prod$DATA_PAGAMENTO<<-lubridate::as_date(df_prod$DATA_PAGAMENTO)
+              df_prod$ANO_CADASTRO    <<-lubridate::year(df_prod$DATACADASTRO)
+              df_prod$ANO_PAGAMENTO   <<-lubridate::year(df_prod$DATA_PAGAMENTO)
+              df_prod$MES_CADASTRO    <<-lubridate::month(df_prod$DATACADASTRO)
+              df_prod$MES_PAGAMENTO   <<-lubridate::month(df_prod$DATA_PAGAMENTO)
               
-              df_prod$ANO_CADASTRO<<-lubridate::year(df_prod$DATACADASTRO)
-              df_prod$ANO_PAGAMENTO<<-lubridate::year(df_prod$DATA_PAGAMENTO)
-              df_prod$MES_CADASTRO<<-lubridate::month(df_prod$DATACADASTRO)
-              df_prod$MES_PAGAMENTO<<-lubridate::month(df_prod$DATA_PAGAMENTO)
-              
-              df_pago <<- df_prod %>% dplyr::filter(STATUS_PRINCIPAL == "PAGO AO CLIENTE")
-              prod_total <<- df_pago %>% dplyr::summarise(Producao = sum(VLR_PRODUCAO),
+              prod_total <<- df_prod %>% dplyr::summarise(Producao = sum(VLR_PRODUCAO),
                                                          Qntd     =sum(Qntd_Propostas))
-              prod_2021 <<- df_pago %>% dplyr::filter(DATA_PAGAMENTO >= "2021-01-01") %>% dplyr::summarise(Producao = sum(VLR_PRODUCAO),
+              prod_2021 <<- df_prod %>% dplyr::filter(DATA_PAGAMENTO >= "2021-01-01") %>% dplyr::summarise(Producao = sum(VLR_PRODUCAO),
                                                                                                           Qntd     =sum(Qntd_Propostas))
               
-              prod_2022 <<- df_pago %>% dplyr::filter(DATA_PAGAMENTO >= "2022-01-01") %>% dplyr::summarise(Producao = sum(VLR_PRODUCAO),
+              prod_2022 <<- df_prod %>% dplyr::filter(DATA_PAGAMENTO >= "2022-01-01") %>% dplyr::summarise(Producao = sum(VLR_PRODUCAO),
                                                                                                           Qntd     =sum(Qntd_Propostas))
               
               mes_atual <<- lubridate::month(lubridate::today())
               ano_atual <<- lubridate::year(lubridate::today())
               
-              prod_mes_atual <<- df_pago %>% dplyr::filter( (ANO_PAGAMENTO==ano_atual)  & (MES_PAGAMENTO==mes_atual))   %>% dplyr::summarise(Producao = sum(VLR_PRODUCAO),
+              prod_mes_atual <- df_prod %>% dplyr::filter( (ANO_PAGAMENTO==ano_atual)  & (MES_PAGAMENTO==mes_atual))   %>% dplyr::summarise(Producao = sum(VLR_PRODUCAO),
                                                                                                                                             Qntd     =sum(Qntd_Propostas))
               
               library(bizdays)
@@ -544,25 +548,24 @@ server <- function(input, output, session) {
               
               
               
-              
-   
-              df_pago %>% 
+            
+              df_prod %>% 
                 dplyr::filter(DATA_PAGAMENTO > (max(as.Date(DATA_PAGAMENTO))-10)) %>% 
                 dplyr::group_by(DATA_PAGAMENTO) %>% 
                 dplyr::summarise(Producao = sum(VLR_PRODUCAO))
             
               
-              producao_media_10dias<- df_pago %>% 
+              producao_media_10dias<- df_prod %>% 
                 dplyr::filter(DATA_PAGAMENTO > (max(as.Date(DATA_PAGAMENTO))-10))  %>% 
                 dplyr::group_by(DATA_PAGAMENTO) %>% 
                 dplyr::summarise(Producao = sum(VLR_PRODUCAO))%>% 
                 dplyr::summarise(Producao = mean(Producao))
-             projetado <- producao_media_10dias*qtd_dias_uteis_restantes +prod_mes_atual$Producao
+             projetado <<- producao_media_10dias*qtd_dias_uteis_restantes
               
-              f_data <- as.Date(as.yearmon(as.Date(max(df_pago$DATA_PAGAMENTO,na.rm = TRUE))) -.6, frac = 1)
-              
-              reservados   <<- df_pago %>% dplyr::filter(DATA_PAGAMENTO > f_data)
-              df_pago      <<- df_pago %>% dplyr::filter(DATA_PAGAMENTO <= f_data)
+              # f_data <- as.Date(as.yearmon(as.Date(max(df_pago$DATA_PAGAMENTO,na.rm = TRUE))) -.6, frac = 1)
+              # 
+              # reservados   <<- df_pago %>% dplyr::filter(DATA_PAGAMENTO > f_data)
+              # df_pago      <<- df_pago %>% dplyr::filter(DATA_PAGAMENTO <= f_data)
               
               div(
                 HTML("<div style='color:#273658;text-align:center;font-weight:bold;'><h1 style='color:#273658;text-align:center;font-weight:bold;'>PRODUÇÃO</h1> </div>"),
@@ -1218,7 +1221,7 @@ table {
            
   <td valign="top">
            <div style = "background-color:#273658;">
-           <h1 style="color:#E4781C;text-align:center;font-weight:bold;font-size:16px"> ',paste0(format(prod_total[1,2],scientific =FALSE,big.mark =".",nsmall = 2,decimal.mark = ",")),'  </h1> 
+           <h1 style="color:#E4781C;text-align:center;font-weight:bold;font-size:16px"> ',paste0("R$ ",format(prod_total[1,1]  + projetado,scientific =FALSE,big.mark =".",nsmall = 2,decimal.mark = ",")),'  </h1> 
            <h3 style="color:#E4781C;text-align:center;font-weight:bold;font-size:16px">  Projetado </h3>  
            </div>
            </td>
@@ -1262,7 +1265,7 @@ table {
            
   <td valign="top">
            <div style = "background-color:#273658;">
-           <h1 style="color:#E4781C;text-align:center;font-weight:bold;font-size:16px"> ',paste0(format(prod_2021[1,2],scientific =FALSE,big.mark =".",nsmall = 2,decimal.mark = ",")),'  </h1> 
+           <h1 style="color:#E4781C;text-align:center;font-weight:bold;font-size:16px"> ',paste0("R$ ",format(prod_2021[1,1] + projetado,scientific =FALSE,big.mark =".",nsmall = 2,decimal.mark = ",")),'  </h1> 
            <h3 style="color:#E4781C;text-align:center;font-weight:bold;font-size:16px">  Projetado </h3>  
            </div>
            </td>
@@ -1306,7 +1309,7 @@ table {
            
   <td valign="top">
            <div style = "background-color:#273658;">
-           <h1 style="color:#E4781C;text-align:center;font-weight:bold;font-size:16px"> ',paste0(format(prod_2022[1,2],scientific =FALSE,big.mark =".",nsmall = 2,decimal.mark = ",")),'  </h1> 
+           <h1 style="color:#E4781C;text-align:center;font-weight:bold;font-size:16px"> ',paste0("R$ ",format(prod_2022[1,1] + projetado,scientific =FALSE,big.mark =".",nsmall = 2,decimal.mark = ",")),'  </h1> 
            <h3 style="color:#E4781C;text-align:center;font-weight:bold;font-size:16px">  Projetado </h3>  
            </div>
            </td>
@@ -1350,7 +1353,7 @@ table {
            
   <td valign="top">
            <div style = "background-color:#273658;">
-           <h1 style="color:#E4781C;text-align:center;font-weight:bold;font-size:16px"> ',paste0(format(prod_mes_atual[1,2],scientific =FALSE,big.mark =".",nsmall = 2,decimal.mark = ",")),'  </h1> 
+           <h1 style="color:#E4781C;text-align:center;font-weight:bold;font-size:16px"> ',paste0("R$ ",format(prod_mes_atual[1,1] + projetado,scientific =FALSE,big.mark =".",nsmall = 2,decimal.mark = ",")),'  </h1> 
            <h3 style="color:#E4781C;text-align:center;font-weight:bold;font-size:16px">  Projetado </h3>  
            </div>
            </td>
@@ -1369,19 +1372,19 @@ table {
         
     
         
-        p1 <- df_pago  %>%
+        p1 <- df_prod  %>%
           dplyr::group_by(DATA_PAGAMENTO) %>%
           dplyr::summarise(Producao = sum(VLR_PRODUCAO),
-                           Qntd     =sum(Qntd_Propostas)) %>% 
+                           Qntd     = sum(Qntd_Propostas)) %>% 
           dplyr::select(DATA_PAGAMENTO,Producao)
         p1 <-  zoo(x = p1$Producao  ,order.by = p1$DATA_PAGAMENTO) 
         
         p1 <- autoplot.zoo(p1) + 
-          geom_line(size = 0.35,alpha=1,color="black") +
+          geom_line(size = 0.5,alpha=1,color="black") +
           labs(x = "Data", y = "Produção") +
           scale_x_date(date_breaks = "months",date_labels = "%Y-%m") +
           axis.theme(x.angle = 45,vjust = 1,hjust = 1,axis.title.size.x = 16,axis.title.size.y = 16,tick.size = 16)
-        p1 <- ggplotly(p1) %>% layout(hovermode = "y", spikedistance =  -1,margin = c(0,0,0,10),legend = l,
+        p1 <- ggplotly(p1) %>% layout(hovermode = "y+x", spikedistance =  -1,margin = c(0,0,0,10),legend = l,
                    xaxis = list(title = "<b>Dias</b>", showspikes = TRUE, titlefont = list(size = 16),rangeslider = list(visible = T),
                                 spikemode  = 'across', #toaxis, across, marker
                                 spikesnap = 'cursor',  ticks = "outside",tickangle = -45,
