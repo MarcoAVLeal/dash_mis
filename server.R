@@ -1445,8 +1445,8 @@ table {
         #p1 <-  zoo(x = p1$Producao  ,order.by = p1$DATA_PAGAMENTO) 
         
         #p1 <- autoplot.zoo(p1,label = "Produção(R$)") + 
-        p1 <- ggplot(data = p1,aes(x = DATA_PAGAMENTO,y = Producao,color =ANO_PAGAMENTO)) + 
-          geom_line(size = 0.35,alpha=1) +
+        p1 <- ggplot(data = p1,aes(x = DATA_PAGAMENTO,y = Producao)) + 
+          geom_line(size = 0.35,alpha=1,aes(color =ANO_PAGAMENTO)) +
           #geom_smooth(level=0.0, aes(colour="Moving average"), se=FALSE)+
           #geom_smooth(method="gam",label = "Spline",lwd = 0.75,se = FALSE)+
           #geom_ma(ma_fun = TTR::SMA, n = 7) +
