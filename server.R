@@ -658,7 +658,7 @@ server <- function(input, output, session) {
         
         output$box_prod_dia <- renderUI({
           
-          box(title = tags$p(paste0("Produção :",as.character(input$data_producao), " Até ",as.character(input$data_producao)),style = "font-size:100%;color:#E4781C;font-weight:bold;"),
+          box(title = tags$p("Produção :",as.character(input$data_producao[1]), " Até ",as.character(input$data_producao[2]),style = "font-size:100%;color:#E4781C;font-weight:bold;"),
               headerBorder = TRUE,
               width = 12,
               collapsible = TRUE,
