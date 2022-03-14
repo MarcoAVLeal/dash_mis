@@ -1501,13 +1501,13 @@ table {
       
       output$mapa_producao <- renderLeaflet({
         
-        
+        library(leaflet)
         
         leaflet(df_city,
                 options = list(zoomControl = F)
         ) %>% addTiles() %>%
           #addMarkers(lng = df$LONG,lat = df$LAT)
-          addCircleMarkers(radius = 3,label = map_label,popup = map_label,color = ~beatCol(df_city$regiao),
+          addCircleMarkers(radius = 3,lng =  ~ longitudo,lat =  ~ latitude,label = map_label,popup = map_label,color = ~beatCol(df_city$regiao),
                            stroke = FALSE, fillOpacity = 0.75, 
                            labelOptions = labelOptions(
                              style = list("font-weight" = "normal", padding = "3px 8px"),
