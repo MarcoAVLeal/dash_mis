@@ -647,7 +647,10 @@ server <- function(input, output, session) {
       }else if(input$tabs == "page5"){
         output$config_ui <- renderUI({
           
-          div("NULL")
+          div(br(),br(),
+            
+              HTML("<div style='color:#E4781C;text-align:center;font-weight:bold;'><h4 style='color:#E4781C;text-align:center;font-weight:bold;'>Filtros</h4> </div>"),
+              dateInput(inputId = "data_producao",label = "Data Produção",value = max(df_prod$DATA_PAGAMENTO)))
           
         })
         
@@ -1321,7 +1324,7 @@ table {
     
   })
    
-    
+  
   output$box_uiprod4 <- renderUI({
     HTML(paste0('
     <style>
@@ -1365,7 +1368,50 @@ table {
     
   })
   
+  output$box_uiprod5 <- renderUI({
+    prod_dia <<- df_prod %>% dplyr::filter( DATA_PAGAMENTO == input$data_producao)   %>% dplyr::summarise(Producao = sum(VLR_PRODUCAO),
+                                                                                                                             Qntd     =sum(Qntd_Propostas))
+    HTML(paste0('
+    <style>
+table, th, td {
+  border: 2px solid black;
+  padding: 5px;
+}
+table {
+  border-spacing: 15px;
+}
+</style>
+  <center>
+<table>
+ <tr >
+  <td valign="top">
+  
+           <div style = "background-color:#273658;">
+           <h1 style="color:#E4781C;text-align:center;font-weight:bold;font-size:16px"> ',paste0("R$ ",format(prod_dia[1,1],scientific =FALSE,big.mark =".",nsmall = 2,decimal.mark = ",")),'  </h1> 
+           <h3 style="color:#E4781C;text-align:center;font-weight:bold;font-size:16px">  Total  </h3>  
+           </div>
+           </td>
+           
+  <td valign="top">
+           <div style = "background-color:#273658;">
+           <h1 style="color:#E4781C;text-align:center;font-weight:bold;font-size:16px">',paste0(format(prod_dia[1,2],scientific =FALSE,big.mark =".",nsmall = 2,decimal.mark = ",")),'</h1> 
+           <h3 style="color:#E4781C;text-align:center;font-weight:bold;font-size:16px">  Qntd. <br> Propostas  </h3>  
+           </div>
+           </td>
+           
+  <td valign="top">
+           <div style = "background-color:#273658;">
+           <h1 style="color:#E4781C;text-align:center;font-weight:bold;font-size:16px"> ',paste0("R$ ",format(prod_dia[1,1],scientific =FALSE,big.mark =".",nsmall = 2,decimal.mark = ",")),'  </h1> 
+           <h3 style="color:#E4781C;text-align:center;font-weight:bold;font-size:16px">  Projetado </h3>  
+           </div>
+           </td>
+           </tr>
+    </table>
+           </center>'))
     
+    
+    
+  })
       
       
       output$serie_prod <- renderPlotly({
