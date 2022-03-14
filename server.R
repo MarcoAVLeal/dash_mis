@@ -1507,7 +1507,7 @@ table {
                 options = list(zoomControl = F)
         ) %>% addTiles() %>%
           #addMarkers(lng = df$LONG,lat = df$LAT)
-          addCircleMarkers(radius =  ~ Qntd,lng =  ~ longitude,lat =  ~ latitude,label = map_label,popup = map_label,color = ~beatCol(df_city$regiao),
+          addCircleMarkers(radius =  ~ Qntd/max( ~ Qntd),lng =  ~ longitude,lat =  ~ latitude,label = map_label,popup = map_label,color = ~beatCol(df_city$regiao),
                            stroke = FALSE, fillOpacity = 0.75, 
                            labelOptions = labelOptions(
                              style = list("font-weight" = "normal", padding = "3px 8px"),
