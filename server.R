@@ -496,7 +496,10 @@ server <- function(input, output, session) {
               df_prod$DATA_PAGAMENTO  <<-lubridate::as_date(df_prod$DATA_PAGAMENTO)
               
               
-              df_city  <<- df_prod_map  %>% dplyr::group_by(Cidade_UF,codigo_ibge,regiao,latitude,longitude) %>% dplyr::summarise(Qntd = sum(Qntd_Propostas),Producao = sum(VLR_PRODUCAO))
+              df_city  <<- df_prod_map  %>% 
+                dplyr::group_by(Cidade_UF,codigo_ibge,regiao,latitude,longitude) %>% 
+                dplyr::summarise(Qntd = sum(Qntd_Propostas),
+                                 Producao = sum(VLR_PRODUCAO))
             
               beatCol <<- colorFactor(palette = color_maps, df_city$regiao)
               
@@ -1507,7 +1510,7 @@ table {
                 options = list(zoomControl = F)
         ) %>% addTiles() %>%
           #addMarkers(lng = df$LONG,lat = df$LAT)
-          addCircleMarkers(radius =  ~ Qntd/100,lng =  ~ longitude,lat =  ~ latitude,label = map_label,popup = map_label,color = ~beatCol(df_city$regiao),
+          addCircleMarkers(radius =  ,lng =  ~ longitude,lat =  ~ latitude,label = map_label,popup = map_label,color = ~beatCol(df_city$regiao),
                            stroke = FALSE, fillOpacity = 0.75, 
                            labelOptions = labelOptions(
                              style = list("font-weight" = "normal", padding = "3px 8px"),
