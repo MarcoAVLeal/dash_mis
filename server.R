@@ -513,7 +513,7 @@ server <- function(input, output, session) {
               mes_atual <<- lubridate::month(lubridate::today())
               ano_atual <<- lubridate::year(lubridate::today())
               
-              prod_mes_atual <- df_prod %>% dplyr::filter( (ANO_PAGAMENTO==ano_atual)  & (MES_PAGAMENTO==mes_atual))   %>% dplyr::summarise(Producao = sum(VLR_PRODUCAO),
+              prod_mes_atual <<- df_prod %>% dplyr::filter( (ANO_PAGAMENTO==ano_atual)  & (MES_PAGAMENTO==mes_atual))   %>% dplyr::summarise(Producao = sum(VLR_PRODUCAO),
                                                                                                                                             Qntd     =sum(Qntd_Propostas))
               
               library(bizdays)
