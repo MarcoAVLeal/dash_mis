@@ -1386,13 +1386,14 @@ table {
           labs(x = "Data", y = "Produção") +
           scale_x_date(date_breaks = "months",date_labels = "%Y-%m") +
           axis.theme(x.angle = 45,vjust = 1,hjust = 1,axis.title.size.x = 16,axis.title.size.y = 16,tick.size = 16)
-        p1 <- ggplotly(p1) %>% layout(hovermode = "x unified", spikedistance =  -1,margin = c(0,0,0,10),legend = l,
+        p1 <- ggplotly(p1) %>% layout(hovermode = "x unified",hovertemplate = 'Price: %{y:$.2f}<extra></extra>',
+                                      spikedistance =  -1,margin = c(0,0,0,10),legend = l,
                    xaxis = list(title = "<b>Dias</b>", showspikes = TRUE, titlefont = list(size = 16),rangeslider = list(visible = T),
                                 spikemode  = 'across', #toaxis, across, marker
                                 spikesnap = 'cursor',  ticks = "outside",tickangle = -45,
                                 showline=TRUE,tickfont = list(size = 12),fixedrange=TRUE,
                                 showgrid=TRUE),
-                   yaxis = list (title = "<b>Qntd. Envios</b>",
+                   yaxis = list (title = "<b>Produção (R$)</b>",
                                  spikemode  = 'across', #toaxis, across, marker
                                  spikesnap = 'cursor', zeroline=FALSE,titlefont = list(size = 16),
                                  showline=TRUE,tickfont = list(size = 12),fixedrange=TRUE,
