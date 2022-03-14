@@ -1380,34 +1380,35 @@ table {
           dplyr::select(DATA_PAGAMENTO,Producao)
         p1 <-  zoo(x = p1$Producao  ,order.by = p1$DATA_PAGAMENTO) 
         
-        p1 <- autoplot.zoo(p1,color = "Produção(R$)") + 
+        p1 <- autoplot.zoo(p1,label = "Produção(R$)") + 
           #geom_line(size = 0.35,alpha=1,aes(color="Produção(R$)")) +
           #geom_smooth(level=0.0, aes(colour="Moving average"), se=FALSE)+
-          geom_smooth(method="gam",aes(colour="Spline"),lwd = 0.75,se = FALSE)+
+          geom_smooth(method="gam",label = "Spline",lwd = 0.75,se = FALSE)+
           #geom_ma(ma_fun = TTR::SMA, n = 7) +
           labs(x = "Data", y = "Produção") +
           scale_x_date(date_breaks = "months",date_labels = "%Y-%m") +
           axis.theme(x.angle = 45,vjust = 1,hjust = 1,axis.title.size.x = 16,axis.title.size.y = 16,tick.size = 16)
-        p1 <- ggplotly(p1) %>% layout(hovermode = "x unified",
+        p1 <- ggplotly(p1,hoverinfo ="y") %>% layout(hovermode = "x unified",
                                       spikedistance =  -1,margin = c(0,0,0,10),legend = l,
                    xaxis = list(title = "<b>Dias</b>", showspikes = TRUE, titlefont = list(size = 16),rangeslider = list(visible = T),
                                 spikemode  = 'across', #toaxis, across, marker
                                 spikesnap = 'cursor',  ticks = "outside",tickangle = -45,
                                 showline=TRUE,tickfont = list(size = 12),fixedrange=TRUE,
                                 showgrid=TRUE),
-                   yaxis = list (title = "<b>Produção (R$)</b>",
+                   yaxis = list (title = "<b>Produção (R$)</b>",hoverfomat = ".2f",
                                  spikemode  = 'across', #toaxis, across, marker
                                  spikesnap = 'cursor', zeroline=FALSE,titlefont = list(size = 16),
                                  showline=TRUE,tickfont = list(size = 12),fixedrange=TRUE,
                                  showgrid=TRUE),height = 580) %>% config(displayModeBar = FALSE)
-      
+ 
         text_y <- number(
           p1$x$data[[1]]$y,
           prefix = "Produção(R$): "
         )
         
-        p1 <- p1  %>%
-          style(text = paste0(text_y), traces = 1) 
+        p1
+        # <- p1  %>%
+        #   style(text = paste0(text_y), traces = 1)
       })
       
       # output$bar_serie_prod <- renderPlotly({
