@@ -31,7 +31,7 @@ library(Ecdat)
 library(tidyquant)
 library(scales)
 library(leaflet)
-
+library(sf)
 library(brazilmaps)
 library(maps)
 library(mapdata)
@@ -559,9 +559,9 @@ server <- function(input, output, session) {
                 paste0("<b>Incidencia:</b>",format(df_city$Incidencia,scientific =FALSE,big.mark =".",nsmall = 2,decimal.mark = ","))
                 
               ) %>% lapply(htmltools::HTML) 
-              library(sf)
-              df_city <- left_join(df_city,maps.brasil,c("codigo_ibge" = "City"))
-              df_city                       <- st_as_sf(x = df_city)
+             
+              df_city <<- left_join(df_city,maps.brasil,c("codigo_ibge" = "City"))
+              df_city                       <<- st_as_sf(x = df_city)
               df_prod$ANO_CADASTRO    <<-lubridate::year(df_prod$DATACADASTRO)
               df_prod$ANO_PAGAMENTO   <<-lubridate::year(df_prod$DATA_PAGAMENTO)
               df_prod$MES_CADASTRO    <<-lubridate::month(df_prod$DATACADASTRO)
