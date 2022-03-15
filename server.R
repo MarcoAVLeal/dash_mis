@@ -505,11 +505,18 @@ server <- function(input, output, session) {
               df_city  <<- df_prod_map  %>% 
                 dplyr::group_by(Cidade_UF,codigo_ibge,regiao,latitude,longitude,uf) %>% 
                 dplyr::summarise(Qntd = sum(Qntd_Propostas),
-                                 Producao = round(sum(VLR_PRODUCAO)),2) %>%
+                                 Producao = round(sum(VLR_PRODUCAO),2)) %>%
                 dplyr::group_by(uf) %>%
                 dplyr::mutate(
                   Total_UF = sum(Qntd),
-                  Incidencia = round(Qntd/Total_UF,2))
+                  Incidencia = round(Qntd/Total_UF,2),
+                  Size       = ifelse(Incidencia < 0.05,0.5,
+                                      ifelse(Incidencia >= 0.05 & Incidencia < 0.1,1,
+                                             ifelse(Incidencia >= 0.1 & Incidencia < 0.15,1.5,
+                                                    ifelse(Incidencia >= 0.15 & Incidencia < 0.2,2,
+                                                           ifelse(Incidencia >= 0.2 & Incidencia < 0.25,2.5,
+                                                                  ifelse(Incidencia >= 0.25 & Incidencia < 0.3,3,
+                                                                         ifelse(Incidencia >= 0.3 & Incidencia < 0.35,3.5, 4))))))))
             
               beatCol <<- colorFactor(palette = color_maps, df_city$regiao)
               
@@ -1520,7 +1527,7 @@ table {
                 options = list(zoomControl = F)
         ) %>% addTiles() %>%
           #addMarkers(lng = df$LONG,lat = df$LAT)
-          addCircleMarkers(radius =  ~ Incidencia * 50,weight = 1,lng =  ~ longitude,lat =  ~ latitude,label = map_label,popup = map_label,color = ~beatCol(df_city$regiao),
+          addCircleMarkers(radius =  ~ Size,weight = 1,lng =  ~ longitude,lat =  ~ latitude,label = map_label,popup = map_label,color = ~beatCol(df_city$regiao),
                            stroke = FALSE, fillOpacity = 0.75, 
                            labelOptions = labelOptions(
                              style = list("font-weight" = "normal", padding = "3px 8px"),
