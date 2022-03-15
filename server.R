@@ -510,13 +510,13 @@ server <- function(input, output, session) {
                 dplyr::mutate(
                   Total_UF = sum(Qntd),
                   Incidencia = round(Qntd/Total_UF,2),
-                  Size       = ifelse(Incidencia < 0.05,0.5,
-                                      ifelse(Incidencia >= 0.05 & Incidencia < 0.1,1,
-                                             ifelse(Incidencia >= 0.1 & Incidencia < 0.15,1.5,
-                                                    ifelse(Incidencia >= 0.15 & Incidencia < 0.2,2,
-                                                           ifelse(Incidencia >= 0.2 & Incidencia < 0.25,2.5,
-                                                                  ifelse(Incidencia >= 0.25 & Incidencia < 0.3,3,
-                                                                         ifelse(Incidencia >= 0.3 & Incidencia < 0.35,3.5, 4))))))))
+                  Size       = ifelse(Incidencia < 0.05,2,
+                                      ifelse(Incidencia >= 0.05 & Incidencia < 0.1,3,
+                                             ifelse(Incidencia >= 0.1 & Incidencia < 0.15,4,
+                                                    ifelse(Incidencia >= 0.15 & Incidencia < 0.2,5,
+                                                           ifelse(Incidencia >= 0.2 & Incidencia < 0.25,6,
+                                                                  ifelse(Incidencia >= 0.25 & Incidencia < 0.3,7,
+                                                                         ifelse(Incidencia >= 0.3 & Incidencia < 0.35,3.5, 8))))))))
             
               beatCol <<- colorFactor(palette = color_maps, df_city$regiao)
               
