@@ -31,6 +31,14 @@ library(Ecdat)
 library(tidyquant)
 library(scales)
 library(leaflet)
+
+library(brazilmaps)
+library(maps)
+library(mapdata)
+library(geobr)
+maps.brasil             <- get_brmap(geo = "City",class="sf") 
+
+
 textsize <- 10
 l <- list(
   title = list(text='<b> Legenda </b>'),
@@ -550,8 +558,9 @@ server <- function(input, output, session) {
                 paste0("<b>Produção UF: R$ </b>",format(df_city$Total_UF,scientific =FALSE,big.mark =".",nsmall = 2,decimal.mark = ",")),
                 paste0("<b>Incidencia:</b>",format(df_city$Incidencia,scientific =FALSE,big.mark =".",nsmall = 2,decimal.mark = ","))
                 
-              ) %>% lapply(htmltools::HTML)     
+              ) %>% lapply(htmltools::HTML) 
               
+              df_city <- left_join(df_city,maps.brasil,c("codigo_ibge" = "City"))
               
               df_prod$ANO_CADASTRO    <<-lubridate::year(df_prod$DATACADASTRO)
               df_prod$ANO_PAGAMENTO   <<-lubridate::year(df_prod$DATA_PAGAMENTO)
@@ -571,6 +580,7 @@ server <- function(input, output, session) {
               
               prod_mes_atual <<- df_prod %>% dplyr::filter( (ANO_PAGAMENTO==ano_atual)  & (MES_PAGAMENTO==mes_atual))   %>% dplyr::summarise(Producao = sum(VLR_PRODUCAO),
                                                                                                                                             Qntd     =sum(Qntd_Propostas))
+              
               
               library(bizdays)
          
