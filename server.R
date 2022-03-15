@@ -1559,24 +1559,24 @@ table {
                              textsize = "15px",
                              direction = "auto")
           )
-        #setView(lng = setview$lng, lat = setview$lat, zoom=7) %>%
-        # addPolygons(
-        #   fillColor = cores,layerId = dados.maps.pr$macroid,
-        #   weight = 2,
-        #   opacity = opac$values,label = maps.label.pr,
-        #   color = cores,fill = "black",stroke = T,
-        #   dashArray = "3",
-        #   fillOpacity = opac$values,
-        #   highlight = highlightOptions(
-        #     weight = 5,
-        #     color = "#666",
-        #     dashArray = "",
-        #     fillOpacity = 0.5,
-        #     bringToFront = TRUE),
-        #   labelOptions = labelOptions(
-        #     style = list("font-weight" = "normal", padding = "3px 8px"),
-        #     textsize = "15px",
-        #     direction = "auto"))  %>%
+        setView(lng = setview$lng, lat = setview$lat, zoom=7) %>%
+        addPolygons(
+          fillColor = cores,layerId = df_city$codigo_ibge,
+          weight = 2,
+          opacity = 0.75,label = df_city$regiao,
+          color = "gray",fill = "black",stroke = T,
+          dashArray = "3",
+          fillOpacity = 0.75,
+          highlight = highlightOptions(
+            weight = 5,
+            color = "#666",
+            dashArray = "",
+            fillOpacity = 0.5,
+            bringToFront = TRUE),
+          labelOptions = labelOptions(
+            style = list("font-weight" = "normal", padding = "3px 8px"),
+            textsize = "15px",
+            direction = "auto")) 
         # addLegend(colors  = unique(cores),labels = unique(maps.cities2$macroregional), opacity = 1, title = "Macroregião",
         #           position = "topleft")
         
