@@ -518,7 +518,7 @@ server <- function(input, output, session) {
                                                                   ifelse(Incidencia >= 0.25 & Incidencia < 0.3,7,
                                                                          ifelse(Incidencia >= 0.3 & Incidencia < 0.35,3.5, 8))))))))
             
-              beatCol <<- colorFactor(palette = color_maps, df_city$regiao)
+              beatCol <<- colorFactor(palette = color_maps, df_city$uf)
               
               map_label <<- sprintf(
                 "<strong>%s</strong><br/>
@@ -1527,7 +1527,7 @@ table {
                 options = list(zoomControl = F)
         ) %>% addTiles() %>%
           #addMarkers(lng = df$LONG,lat = df$LAT)
-          addCircleMarkers(radius =  ~ Size,weight = 1,lng =  ~ longitude,lat =  ~ latitude,label = map_label,popup = map_label,color = ~beatCol(df_city$regiao),
+          addCircleMarkers(radius =  ~ Size,weight = 1,lng =  ~ longitude,lat =  ~ latitude,label = map_label,popup = map_label,color = ~beatCol(df_city$uf),
                            stroke = FALSE, fillOpacity = 0.75, 
                            labelOptions = labelOptions(
                              style = list("font-weight" = "normal", padding = "3px 8px"),
