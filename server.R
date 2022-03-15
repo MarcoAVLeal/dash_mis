@@ -509,7 +509,7 @@ server <- function(input, output, session) {
                 dplyr::group_by(uf) %>%
                 dplyr::mutate(
                   Total_UF = sum(Qntd),
-                  Incidencia = round(Qntd/Total_UF,2),
+                  Incidencia = round(Qntd/Total_UF,4),
                   Size       = ifelse(Incidencia < 0.05,5,
                                       ifelse(Incidencia >= 0.05 & Incidencia < 0.1,7,
                                              ifelse(Incidencia >= 0.1 & Incidencia < 0.15,9,
