@@ -498,7 +498,7 @@ server <- function(input, output, session) {
             
             output$page5 <- renderUI({
               
-              url_motor_agregado            <- "https://crefaz-my.sharepoint.com/:x:/g/personal/gestaodedados4_crefaz_onmicrosoft_com/EeMfqB4KwUBBmD-HMQrGtLIBiAliiY-t0S7-osHkDKN-qA?download=1"
+              #url_motor_agregado            <- "https://crefaz-my.sharepoint.com/:x:/g/personal/gestaodedados4_crefaz_onmicrosoft_com/EeMfqB4KwUBBmD-HMQrGtLIBiAliiY-t0S7-osHkDKN-qA?download=1"
               url_motor_agregado_geral      <- "https://crefaz-my.sharepoint.com/:x:/g/personal/gestaodedados4_crefaz_onmicrosoft_com/Edb_Zdd38UNDkP-F3h4Nl0MBuBhsPZ050EXvy00dMIOBiw?download=1"
               url_motor_agregado_expansao   <- "https://crefaz-my.sharepoint.com/:x:/g/personal/gestaodedados4_crefaz_onmicrosoft_com/EfyLi2zJt8xKpBtfwvcg1_UBvyhZ-2qdNWmCD9OQNht6gQ?download=1"
               color_maps = c(RColorBrewer::brewer.pal(8,"Dark2"),RColorBrewer::brewer.pal(8,"Set2"))
@@ -559,9 +559,9 @@ server <- function(input, output, session) {
                 paste0("<b>Incidencia:</b>",format(df_city$Incidencia,scientific =FALSE,big.mark =".",nsmall = 2,decimal.mark = ","))
                 
               ) %>% lapply(htmltools::HTML) 
-              
+              library(sf)
               df_city <- left_join(df_city,maps.brasil,c("codigo_ibge" = "City"))
-              
+              df_city                       <- st_as_sf(x = df_city)
               df_prod$ANO_CADASTRO    <<-lubridate::year(df_prod$DATACADASTRO)
               df_prod$ANO_PAGAMENTO   <<-lubridate::year(df_prod$DATA_PAGAMENTO)
               df_prod$MES_CADASTRO    <<-lubridate::month(df_prod$DATACADASTRO)
@@ -1550,21 +1550,13 @@ table {
         
         leaflet(df_city,
                 options = list(zoomControl = F)
-        ) %>% addTiles() %>%
-          #addMarkers(lng = df$LONG,lat = df$LAT)
-          addCircleMarkers(radius =  ~ Size,weight = 2,lng =  ~ longitude,lat =  ~ latitude,label = map_label,popup = map_label,color ="black",
-                           stroke = TRUE,fillColor = ~beatCol(df_city$uf), fillOpacity = 0.75, 
-                           labelOptions = labelOptions(
-                             style = list("font-weight" = "normal", padding = "3px 8px"),
-                             textsize = "15px",
-                             direction = "auto")
-          ) %>%
+        ) %>% addTiles()  %>%
         #setView(lng = setview$lng, lat = setview$lat, zoom=7) %>%
         addPolygons(
-          fillColor = cores,layerId = df_city$codigo_ibge,
+          fillColor = "lightgray",layerId = df_city$codigo_ibge,
           weight = 2,
-          opacity = 0.75,label = df_city$regiao,
-          color = "gray",fill = "black",stroke = T,
+          opacity = 0.75,label = map_label,popup = map_label,
+          color = "black",fill = "black",stroke = T,
           dashArray = "3",
           fillOpacity = 0.75,
           highlight = highlightOptions(
@@ -1572,11 +1564,19 @@ table {
             color = "#666",
             dashArray = "",
             fillOpacity = 0.5,
-            bringToFront = TRUE),
+            bringToFront = FALSE),
           labelOptions = labelOptions(
             style = list("font-weight" = "normal", padding = "3px 8px"),
             textsize = "15px",
-            direction = "auto")) 
+            direction = "auto")) %>%
+          #addMarkers(lng = df$LONG,lat = df$LAT)
+          addCircleMarkers(radius =  ~ Size,weight = 2,lng =  ~ longitude,lat =  ~ latitude,label = map_label,popup = map_label,color ="black",
+                           stroke = TRUE,fillColor = ~beatCol(df_city$uf), fillOpacity = 0.75, 
+                           labelOptions = labelOptions(
+                             style = list("font-weight" = "normal", padding = "3px 8px"),
+                             textsize = "15px",
+                             direction = "auto")
+          )
         # addLegend(colors  = unique(cores),labels = unique(maps.cities2$macroregional), opacity = 1, title = "Macroregião",
         #           position = "topleft")
         
