@@ -548,7 +548,7 @@ server <- function(input, output, session) {
                 paste0("<b>Produção: R$ </b>",format(df_city$Producao,scientific =FALSE,big.mark =".",nsmall = 2,decimal.mark = ",")),
                 paste0("<b>Qntd UF:</b>",format(df_city$Qntd_UF,scientific =FALSE,big.mark =".",nsmall = 0,decimal.mark = ",")),
                 paste0("<b>Produção UF: R$ </b>",format(df_city$Total_UF,scientific =FALSE,big.mark =".",nsmall = 2,decimal.mark = ",")),
-                paste0("<b>Incidencia:</b>",format(df_city$Incidencia,scientific =FALSE,big.mark =".",nsmall = 2,decimal.mark = ",")),
+                paste0("<b>Incidencia:</b>",format(df_city$Incidencia,scientific =FALSE,big.mark =".",nsmall = 2,decimal.mark = ","))
                 
               ) %>% lapply(htmltools::HTML)     
               
