@@ -510,13 +510,20 @@ server <- function(input, output, session) {
                 dplyr::mutate(
                   Total_UF = sum(Qntd),
                   Incidencia = round(Qntd/Total_UF,2),
-                  Size       = ifelse(Incidencia < 0.05,2,
-                                      ifelse(Incidencia >= 0.05 & Incidencia < 0.1,3,
-                                             ifelse(Incidencia >= 0.1 & Incidencia < 0.15,4,
-                                                    ifelse(Incidencia >= 0.15 & Incidencia < 0.2,5,
-                                                           ifelse(Incidencia >= 0.2 & Incidencia < 0.25,6,
-                                                                  ifelse(Incidencia >= 0.25 & Incidencia < 0.3,7,
-                                                                         ifelse(Incidencia >= 0.3 & Incidencia < 0.35,3.5, 8))))))))
+                  Size       = ifelse(Incidencia < 0.05,5,
+                                      ifelse(Incidencia >= 0.05 & Incidencia < 0.1,7,
+                                             ifelse(Incidencia >= 0.1 & Incidencia < 0.15,9,
+                                                    ifelse(Incidencia >= 0.15 & Incidencia < 0.2,11,
+                                                           ifelse(Incidencia >= 0.2 & Incidencia < 0.25,13,
+                                                                  ifelse(Incidencia >= 0.25 & Incidencia < 0.3,15,
+                                                                         ifelse(Incidencia >= 0.3 & Incidencia < 0.35,17,
+                                                                                ifelse(Incidencia >= 0.35 & Incidencia < 0.4,19, 
+                                                                                       ifelse(Incidencia >= 0.4 & Incidencia < 0.45,21, 
+                                                                                              ifelse(Incidencia >= 0.45 & Incidencia < 0.5,23, 
+                                                                                                     ifelse(Incidencia >= 0.5 & Incidencia < 0.55,25, 
+                                                                                                            ifelse(Incidencia >= 0.55 & Incidencia < 0.6,27, 
+                                                                                                                   ifelse(Incidencia >= 0.6 & Incidencia < 0.65,29, 
+                                                                                                                          ifelse(Incidencia >= 0.65 & Incidencia < 0.7,31, 33)))))))))))))))
             
               beatCol <<- colorFactor(palette = color_maps, df_city$uf)
               
