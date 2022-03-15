@@ -1543,7 +1543,7 @@ table {
         ) %>% addTiles() %>%
           #addMarkers(lng = df$LONG,lat = df$LAT)
           addCircleMarkers(radius =  ~ Size,weight = 1,lng =  ~ longitude,lat =  ~ latitude,label = map_label,popup = map_label,color = ~beatCol(df_city$uf),
-                           stroke = FALSE, fillOpacity = 0.75, 
+                           stroke = TRUE, fillOpacity = 0.75, 
                            labelOptions = labelOptions(
                              style = list("font-weight" = "normal", padding = "3px 8px"),
                              textsize = "15px",
