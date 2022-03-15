@@ -1558,8 +1558,8 @@ table {
                              style = list("font-weight" = "normal", padding = "3px 8px"),
                              textsize = "15px",
                              direction = "auto")
-          )
-        setView(lng = setview$lng, lat = setview$lat, zoom=7) %>%
+          ) %>%
+        #setView(lng = setview$lng, lat = setview$lat, zoom=7) %>%
         addPolygons(
           fillColor = cores,layerId = df_city$codigo_ibge,
           weight = 2,
