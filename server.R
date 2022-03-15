@@ -505,11 +505,12 @@ server <- function(input, output, session) {
               df_city  <<- df_prod_map  %>% 
                 dplyr::group_by(Cidade_UF,codigo_ibge,regiao,latitude,longitude,uf) %>% 
                 dplyr::summarise(Qntd = sum(Qntd_Propostas),
-                                 Producao = round(sum(VLR_PRODUCAO),2)) %>%
+                                 Producao = sum(VLR_PRODUCAO)) %>%
                 dplyr::group_by(uf) %>%
                 dplyr::mutate(
-                  Total_UF = sum(Qntd),
-                  Incidencia = round(Qntd/Total_UF,4),
+                  Total_UF = sum(Producao),
+                  Qntd_UF = sum(Qntd),
+                  Incidencia = round(Qntd/Qntd_UF,4),
                   Size       = ifelse(Incidencia < 0.05,5,
                                       ifelse(Incidencia >= 0.05 & Incidencia < 0.1,7,
                                              ifelse(Incidencia >= 0.1 & Incidencia < 0.15,9,
@@ -523,7 +524,12 @@ server <- function(input, output, session) {
                                                                                                      ifelse(Incidencia >= 0.5 & Incidencia < 0.55,25, 
                                                                                                             ifelse(Incidencia >= 0.55 & Incidencia < 0.6,27, 
                                                                                                                    ifelse(Incidencia >= 0.6 & Incidencia < 0.65,29, 
-                                                                                                                          ifelse(Incidencia >= 0.65 & Incidencia < 0.7,31, 33)))))))))))))))
+                                                                                                                          ifelse(Incidencia >= 0.65 & Incidencia < 0.7,31,  
+                                                                                                                                 ifelse(Incidencia >= 0.7 & Incidencia < 0.75,33,  
+                                                                                                                                        ifelse(Incidencia >= 0.75 & Incidencia < 0.80,35,  
+                                                                                                                                               ifelse(Incidencia >= 0.80 & Incidencia < 0.85,37,  
+                                                                                                                                                      ifelse(Incidencia >= 0.85 & Incidencia < 0.9,39,  
+                                                                                                                                                             ifelse(Incidencia >= 0.90 & Incidencia < 0.95,41, 43))))))))))))))))))))
             
               beatCol <<- colorFactor(palette = color_maps, df_city$uf)
               
@@ -533,14 +539,16 @@ server <- function(input, output, session) {
    <strong>%s</strong><br/>
    <strong>%s</strong><br/>
    <strong>%s</strong><br/>
+   <strong>%s</strong><br/>
    <strong>%s</strong><br/>",
                 
                 paste0("<b><h1>",df_city$Cidade_UF,"</h1></b>"),
                 paste0("<b>Região :</b>",df_city$regiao),
-                paste0("<b>Qntd. Propostas:</b>",df_city$Qntd),
-                paste0("<b>Produção: R$</b>",df_city$Producao),
-                paste0("<b>Total UF:</b>",df_city$Total_UF),
-                paste0("<b>Incidencia:</b>",df_city$Incidencia)
+                paste0("<b>Qntd. Propostas:</b>",format(df_city$Qntd,scientific =FALSE,big.mark =".",nsmall = 0,decimal.mark = ",")),
+                paste0("<b>Produção: R$ </b>",format(df_city$Producao,scientific =FALSE,big.mark =".",nsmall = 2,decimal.mark = ",")),
+                paste0("<b>Qntd UF:</b>",format(df_city$Qntd_UF,scientific =FALSE,big.mark =".",nsmall = 0,decimal.mark = ",")),
+                paste0("<b>Produção UF: R$ </b>",format(df_city$Total_UF,scientific =FALSE,big.mark =".",nsmall = 2,decimal.mark = ",")),
+                paste0("<b>Incidencia:</b>",format(df_city$Incidencia,scientific =FALSE,big.mark =".",nsmall = 2,decimal.mark = ",")),
                 
               ) %>% lapply(htmltools::HTML)     
               
