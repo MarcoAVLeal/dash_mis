@@ -25,6 +25,12 @@ library(tidyverse)
 library(zoo)
 library(forecast)
 library(GGally)
+library(npreg)
+library(splines)
+library(Ecdat)
+library(tidyquant)
+library(scales)
+library(leaflet)
 textsize <- 10
 l <- list(
   title = list(text='<b> Legenda </b>'),
@@ -1459,11 +1465,7 @@ table {
       
       
       output$serie_prod <- renderPlotly({
-        library(npreg)
-        library(splines)
-        library(Ecdat)
-    library(tidyquant)
-    library(scales)
+        
         sp <-  lm(data = df_prod, VLR_PRODUCAO ~ bs(DATA_PAGAMENTO))
         p1 <- df_prod  %>%
           dplyr::group_by(DATA_PAGAMENTO,ANO_PAGAMENTO,MES_PAGAMENTO) %>%
@@ -1512,7 +1514,7 @@ table {
       
       output$mapa_producao <- renderLeaflet({
         
-        library(leaflet)
+
         
         leaflet(df_city,
                 options = list(zoomControl = F)
