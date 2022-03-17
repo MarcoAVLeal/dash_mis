@@ -32,10 +32,10 @@ library(tidyquant)
 library(scales)
 library(leaflet)
 library(sf)
-#library(brazilmaps)
+library(brazilmaps)
 library(maps)
 library(mapdata)
-#library(geobr)
+library(geobr)
 maps.brasil             <- get_brmap(geo = "City",class="sf") 
 
 
