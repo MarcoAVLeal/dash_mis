@@ -90,12 +90,14 @@ if( stringr::str_detect(string = getwd(),pattern = "marco")){
   path_pg1 <-  source(file = "https://raw.githubusercontent.com/MarcoAVLeal/dash_mis/main/pagina1.R",encoding = "UTF-8",local = F)
   path_pg2 <-  source(file = "https://raw.githubusercontent.com/MarcoAVLeal/dash_mis/main/pagina2.R",encoding = "UTF-8",local = F)
   path_pg5 <-  source(file = "https://raw.githubusercontent.com/MarcoAVLeal/dash_mis/main/pagina5.R",encoding = "UTF-8",local = F)
+  path_pg6 <-  ""
   
   
 }else{
   path_pg1 <-  source(file = "https://raw.githubusercontent.com/MarcoAVLeal/dash_mis/main/pagina1.R",encoding = "UTF-8",local = F)
   path_pg2 <-  source(file = "https://raw.githubusercontent.com/MarcoAVLeal/dash_mis/main/pagina2.R",encoding = "UTF-8",local = F)
   path_pg5 <-  source(file = "https://raw.githubusercontent.com/MarcoAVLeal/dash_mis/main/pagina5.R",encoding = "UTF-8",local = F)
+  path_pg6 <-  ""
   }
 
 
@@ -496,20 +498,10 @@ server <- function(input, output, session) {
               
             })
             
-            output$page5 <- renderUI({
-              
-              #url_motor_agregado            <- "https://crefaz-my.sharepoint.com/:x:/g/personal/gestaodedados4_crefaz_onmicrosoft_com/EeMfqB4KwUBBmD-HMQrGtLIBiAliiY-t0S7-osHkDKN-qA?download=1"
-              url_motor_agregado_geral      <- "https://crefaz-my.sharepoint.com/:x:/g/personal/gestaodedados4_crefaz_onmicrosoft_com/Edb_Zdd38UNDkP-F3h4Nl0MBuBhsPZ050EXvy00dMIOBiw?download=1"
+            output$page6 <- renderUI({
               url_motor_agregado_expansao   <- "https://crefaz-my.sharepoint.com/:x:/g/personal/gestaodedados4_crefaz_onmicrosoft_com/EfyLi2zJt8xKpBtfwvcg1_UBvyhZ-2qdNWmCD9OQNht6gQ?download=1"
-              color_maps = c(RColorBrewer::brewer.pal(8,"Dark2"),RColorBrewer::brewer.pal(8,"Set2"))
               
-         
               df_prod_map             <<- read_url_csv(url_motor_agregado_expansao)
-              df_prod                 <<- read_url_csv(url_motor_agregado_geral)
-              df_prod$DATACADASTRO    <<- lubridate::as_date(df_prod$DATACADASTRO)
-              df_prod$DATA_PAGAMENTO  <<- lubridate::as_date(df_prod$DATA_PAGAMENTO)
-              
-              
               df_city  <<- df_prod_map  %>% 
                 dplyr::group_by(Cidade_UF,codigo_ibge,regiao,latitude,longitude,uf) %>% 
                 dplyr::summarise(Qntd = sum(Qntd_Propostas),
@@ -538,7 +530,7 @@ server <- function(input, output, session) {
                                                                                                                                                ifelse(Incidencia >= 0.80 & Incidencia < 0.85,37,  
                                                                                                                                                       ifelse(Incidencia >= 0.85 & Incidencia < 0.9,39,  
                                                                                                                                                              ifelse(Incidencia >= 0.90 & Incidencia < 0.95,41, 43))))))))))))))))))))
-            
+              
               beatCol <<- colorFactor(palette = color_maps, df_city$uf)
               
               map_label <<- sprintf(
@@ -559,9 +551,30 @@ server <- function(input, output, session) {
                 paste0("<b>Incidencia:</b>",format(df_city$Incidencia,scientific =FALSE,big.mark =".",nsmall = 2,decimal.mark = ","))
                 
               ) %>% lapply(htmltools::HTML) 
-             
+              
               df_city <<- left_join(df_city,maps.brasil,c("codigo_ibge" = "City"))
               df_city                       <<- st_as_sf(x = df_city)
+              div(
+                HTML("<div style='color:#273658;text-align:center;font-weight:bold;'><h1 style='color:#273658;text-align:center;font-weight:bold;'>PRODUÇÃO</h1> </div>"),
+                
+                
+                path_pg6)
+            })
+            
+            output$page5 <- renderUI({
+              
+              #url_motor_agregado            <- "https://crefaz-my.sharepoint.com/:x:/g/personal/gestaodedados4_crefaz_onmicrosoft_com/EeMfqB4KwUBBmD-HMQrGtLIBiAliiY-t0S7-osHkDKN-qA?download=1"
+              url_motor_agregado_geral      <- "https://crefaz-my.sharepoint.com/:x:/g/personal/gestaodedados4_crefaz_onmicrosoft_com/Edb_Zdd38UNDkP-F3h4Nl0MBuBhsPZ050EXvy00dMIOBiw?download=1"
+              color_maps = c(RColorBrewer::brewer.pal(8,"Dark2"),RColorBrewer::brewer.pal(8,"Set2"))
+              
+         
+              
+              df_prod                 <<- read_url_csv(url_motor_agregado_geral)
+              df_prod$DATACADASTRO    <<- lubridate::as_date(df_prod$DATACADASTRO)
+              df_prod$DATA_PAGAMENTO  <<- lubridate::as_date(df_prod$DATA_PAGAMENTO)
+              
+              
+              
               df_prod$ANO_CADASTRO    <<-lubridate::year(df_prod$DATACADASTRO)
               df_prod$ANO_PAGAMENTO   <<-lubridate::year(df_prod$DATA_PAGAMENTO)
               df_prod$MES_CADASTRO    <<-lubridate::month(df_prod$DATACADASTRO)
@@ -633,11 +646,7 @@ server <- function(input, output, session) {
               # reservados   <<- df_pago %>% dplyr::filter(DATA_PAGAMENTO > f_data)
               # df_pago      <<- df_pago %>% dplyr::filter(DATA_PAGAMENTO <= f_data)
               
-              div(
-                HTML("<div style='color:#273658;text-align:center;font-weight:bold;'><h1 style='color:#273658;text-align:center;font-weight:bold;'>PRODUÇÃO</h1> </div>"),
-                
-                
-                  path_pg5)
+              
               
             })
             
