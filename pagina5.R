@@ -20,7 +20,7 @@ div(
                           collapsed = FALSE,
                           solidHeader = TRUE,
                           plotlyOutput(outputId = "serie_prod",height = 580)
-             )))),
+             ))))
              #leafletOutput("mapa_producao",width = "auto",height = 1080)
              
            
