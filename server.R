@@ -1298,7 +1298,7 @@ observeEvent(input$tabs,{
     colnames(tb_producao) <- c("Vlr. Produção", "Qntd. Propostas", "Vlr. Projetado")
     rownames(tb_producao) <- c("Histórico","Desde 2021","2022","Mês Atual","Personalizado")
     
-    tb_produção
+    tb_producao
   })
   
   
