@@ -1274,10 +1274,25 @@ observeEvent(input$tabs,{
   
 
   tb_resumo_producao <- reactive({
-    
-    tb_produção <- c(paste0("R$ ",format(prod_total[1,1],scientific =FALSE,big.mark =".",nsmall = 2,decimal.mark = ",")),
-    paste0(format(prod_total[1,2],scientific =FALSE,big.mark =".",nsmall = 2,decimal.mark = ",")),
-    paste0("R$ ",format(prod_total[1,1]  + projetado,scientific =FALSE,big.mark =".",nsmall = 2,decimal.mark = ","))
+    prod_dia <<- df_prod %>% dplyr::filter( DATA_PAGAMENTO >= input$data_producao[1] & DATA_PAGAMENTO <= input$data_producao[2])   %>% 
+      dplyr::summarise(Producao = sum(VLR_PRODUCAO),
+                                                                                                                                                                                                                                                                                     Qntd     =sum(Qntd_Propostas))
+    tb_produção <- rbind(
+      c(paste0("R$ ",format(prod_total[1,1],scientific =FALSE,big.mark =".",nsmall = 2,decimal.mark = ",")),
+        paste0(format(prod_total[1,2],scientific =FALSE,big.mark =".",nsmall = 2,decimal.mark = ",")),
+        paste0("R$ ",format(prod_total[1,1]  + projetado,scientific =FALSE,big.mark =".",nsmall = 2,decimal.mark = ","))),
+      c(paste0("R$ ",format(prod_2021[1,1],scientific =FALSE,big.mark =".",nsmall = 2,decimal.mark = ",")),
+        paste0(format(prod_2021[1,2],scientific =FALSE,big.mark =".",nsmall = 2,decimal.mark = ",")),
+        paste0("R$ ",format(prod_2022[1,1]  + projetado,scientific =FALSE,big.mark =".",nsmall = 2,decimal.mark = ","))),
+      c(paste0("R$ ",format(prod_2022[1,1],scientific =FALSE,big.mark =".",nsmall = 2,decimal.mark = ",")),
+        paste0(format(prod_2022[1,2],scientific =FALSE,big.mark =".",nsmall = 2,decimal.mark = ",")),
+        paste0("R$ ",format(prod_2021[1,1]  + projetado,scientific =FALSE,big.mark =".",nsmall = 2,decimal.mark = ","))),
+      c(paste0("R$ ",format(prod_mes_atual[1,1],scientific =FALSE,big.mark =".",nsmall = 2,decimal.mark = ",")),
+        paste0(format(prod_mes_atual[1,2],scientific =FALSE,big.mark =".",nsmall = 2,decimal.mark = ",")),
+        paste0("R$ ",format(prod_mes_atual[1,1]  + projetado,scientific =FALSE,big.mark =".",nsmall = 2,decimal.mark = ","))),
+      c(paste0("R$ ",format(prod_dia[1,1],scientific =FALSE,big.mark =".",nsmall = 2,decimal.mark = ",")),
+        paste0(format(prod_dia[1,2],scientific =FALSE,big.mark =".",nsmall = 2,decimal.mark = ",")),
+        paste0("R$ ",format(prod_dia[1,1]  + projetado,scientific =FALSE,big.mark =".",nsmall = 2,decimal.mark = ",")))
     )
     tb_produção
   })
