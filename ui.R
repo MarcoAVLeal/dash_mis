@@ -58,7 +58,8 @@ sidebar = dashboardSidebar(sidebarMenu(
     menuItem(text = strong("Acompanhamento de Status"), tabName = "page3",icon = icon("home")),
     menuItem(text = strong("Entrada de Propostas"), tabName = "page4",icon = icon("home")),
     menuItem(text = strong("Produção"), tabName = "page5",icon = icon("home")),
-    menuItem(text = strong("Inadimplência"), tabName = "page6",icon = icon("home"))
+    menuItem(text = strong("Expansão"), tabName = "page6",icon = icon("map")),
+    menuItem(text = strong("Inadimplência"), tabName = "page7",icon = icon("home"))
     )),
 body = dashboardBody(
     tabItems(
@@ -73,7 +74,9 @@ body = dashboardBody(
     tabItem("page5",
             uiOutput(outputId = "page5")),
     tabItem("page6",
-            uiOutput(outputId = "page6"))
+            uiOutput(outputId = "page6")),
+    tabItem("page7",
+            uiOutput(outputId = "page7"))
 )),
 controlbar = dashboardControlbar( uiOutput(outputId = "config_ui")),
 title = "MIS"

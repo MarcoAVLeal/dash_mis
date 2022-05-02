@@ -23,7 +23,7 @@ knitr::opts_chunk$set(echo = TRUE,warning= FALSE, message= FALSE,
 color_pal = c(RColorBrewer::brewer.pal(n = 8,name = "Dark2")[c(2,3,5,6,7,8,9)],
               RColorBrewer::brewer.pal(n = 8,name = "Set1"),
               RColorBrewer::brewer.pal(n = 8,name = "Set2"))
-df <- read.csv(file = "D:\\OneDrive - Crefaz Financiamentos e Investimentos\\dash_mis_dados\\motor\\motor-agregadado.csv")
+df <- read.csv(file = "D:\\OneDrive - Crefaz Financiamentos e Investimentos\\dash_mis_dados\\motor\\motor-agregado.csv")
 
 df$DATACADASTRO <- lubridate::as_date(df$DATACADASTRO)
 df$DATA_PAGAMENTO <- lubridate::as_date(df$DATA_PAGAMENTO)

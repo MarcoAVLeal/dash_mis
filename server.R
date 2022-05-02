@@ -506,8 +506,8 @@ server <- function(input, output, session) {
          
               df_prod_map             <<- read_url_csv(url_motor_agregado_expansao)
               df_prod                 <<- read_url_csv(url_motor_agregado_geral)
-              df_prod$DATACADASTRO    <<-lubridate::as_date(df_prod$DATACADASTRO)
-              df_prod$DATA_PAGAMENTO  <<-lubridate::as_date(df_prod$DATA_PAGAMENTO)
+              df_prod$DATACADASTRO    <<- lubridate::as_date(df_prod$DATACADASTRO)
+              df_prod$DATA_PAGAMENTO  <<- lubridate::as_date(df_prod$DATA_PAGAMENTO)
               
               
               df_city  <<- df_prod_map  %>% 
@@ -1273,228 +1273,36 @@ observeEvent(input$tabs,{
   }
   
 
+  tb_resumo_producao <- reactive({
     
-  
-  output$box_uiprod1 <- renderUI({
-    HTML(paste0('
-    <style>
-table, th, td {
-  border: 2px solid black;
-  padding: 5px;
-}
-table {
-  border-spacing: 15px;
-}
-</style>
-  <center>
-<table>
- <tr >
-  <td valign="top">
-  
-           <div style = "background-color:#273658;">
-           <h1 style="color:#E4781C;text-align:center;font-weight:bold;font-size:16px"> ',paste0("R$ ",format(prod_total[1,1],scientific =FALSE,big.mark =".",nsmall = 2,decimal.mark = ",")),'  </h1> 
-           <h3 style="color:#E4781C;text-align:center;font-weight:bold;font-size:16px">  Total  </h3>  
-           </div>
-           </td>
-           
-  <td valign="top">
-           <div style = "background-color:#273658;">
-           <h1 style="color:#E4781C;text-align:center;font-weight:bold;font-size:16px">',paste0(format(prod_total[1,2],scientific =FALSE,big.mark =".",nsmall = 2,decimal.mark = ",")),'</h1> 
-           <h3 style="color:#E4781C;text-align:center;font-weight:bold;font-size:16px">  Qntd. <br> Propostas  </h3>  
-           </div>
-           </td>
-           
-  <td valign="top">
-           <div style = "background-color:#273658;">
-           <h1 style="color:#E4781C;text-align:center;font-weight:bold;font-size:16px"> ',paste0("R$ ",format(prod_total[1,1]  + projetado,scientific =FALSE,big.mark =".",nsmall = 2,decimal.mark = ",")),'  </h1> 
-           <h3 style="color:#E4781C;text-align:center;font-weight:bold;font-size:16px">  Projetado </h3>  
-           </div>
-           </td>
-           </tr>
-    </table>
-           </center>'))
-    
-    
-    
-  })
-   
-   
-  output$box_uiprod2 <- renderUI({
-    HTML(paste0('
-    <style>
-table, th, td {
-  border: 2px solid black;
-  padding: 5px;
-}
-table {
-  border-spacing: 15px;
-}
-</style>
-  <center>
-<table>
- <tr >
-  <td valign="top">
-  
-           <div style = "background-color:#273658;">
-           <h1 style="color:#E4781C;text-align:center;font-weight:bold;font-size:16px"> ',paste0("R$ ",format(prod_2021[1,1],scientific =FALSE,big.mark =".",nsmall = 2,decimal.mark = ",")),'  </h1> 
-           <h3 style="color:#E4781C;text-align:center;font-weight:bold;font-size:16px">  Total  </h3>  
-           </div>
-           </td>
-           
-  <td valign="top">
-           <div style = "background-color:#273658;">
-           <h1 style="color:#E4781C;text-align:center;font-weight:bold;font-size:16px">',paste0(format(prod_2021[1,2],scientific =FALSE,big.mark =".",nsmall = 2,decimal.mark = ",")),'</h1> 
-           <h3 style="color:#E4781C;text-align:center;font-weight:bold;font-size:16px">  Qntd. <br> Propostas  </h3>  
-           </div>
-           </td>
-           
-  <td valign="top">
-           <div style = "background-color:#273658;">
-           <h1 style="color:#E4781C;text-align:center;font-weight:bold;font-size:16px"> ',paste0("R$ ",format(prod_2021[1,1] + projetado,scientific =FALSE,big.mark =".",nsmall = 2,decimal.mark = ",")),'  </h1> 
-           <h3 style="color:#E4781C;text-align:center;font-weight:bold;font-size:16px">  Projetado </h3>  
-           </div>
-           </td>
-           </tr>
-    </table>
-           </center>'))
-    
-    
-    
+    tb_produção <- c(paste0("R$ ",format(prod_total[1,1],scientific =FALSE,big.mark =".",nsmall = 2,decimal.mark = ",")),
+    paste0(format(prod_total[1,2],scientific =FALSE,big.mark =".",nsmall = 2,decimal.mark = ",")),
+    paste0("R$ ",format(prod_total[1,1]  + projetado,scientific =FALSE,big.mark =".",nsmall = 2,decimal.mark = ","))
+    )
+    tb_produção
   })
   
   
-  output$box_uiprod3 <- renderUI({
-    HTML(paste0('
-    <style>
-table, th, td {
-  border: 2px solid black;
-  padding: 5px;
-}
-table {
-  border-spacing: 15px;
-}
-</style>
-  <center>
-<table>
- <tr >
-  <td valign="top">
+  output$tb_resumo_producao <- renderDT(
+    tb_resumo_producao(),
+    extensions = 'Buttons',server = FALSE,
+    options = list(
+      lengthChange = FALSE,
+      # scrollX=TRUE,
+      # lengthMenu = c(5,10,15),
+      paging = TRUE,
+      searching = TRUE,
+      # fixedColumns = TRUE,
+      # autoWidth = TRUE,
+      # ordering = TRUE,
+      dom = 'Bfrtip',
+      buttons = c('copy', 'csv', 'excel','pdf')
+    ) ,
+    class = "display"
+  )
   
-           <div style = "background-color:#273658;">
-           <h1 style="color:#E4781C;text-align:center;font-weight:bold;font-size:16px"> ',paste0("R$ ",format(prod_2022[1,1],scientific =FALSE,big.mark =".",nsmall = 2,decimal.mark = ",")),'  </h1> 
-           <h3 style="color:#E4781C;text-align:center;font-weight:bold;font-size:16px">  Total  </h3>  
-           </div>
-           </td>
-           
-  <td valign="top">
-           <div style = "background-color:#273658;">
-           <h1 style="color:#E4781C;text-align:center;font-weight:bold;font-size:16px">',paste0(format(prod_2022[1,2],scientific =FALSE,big.mark =".",nsmall = 2,decimal.mark = ",")),'</h1> 
-           <h3 style="color:#E4781C;text-align:center;font-weight:bold;font-size:16px">  Qntd. <br> Propostas  </h3>  
-           </div>
-           </td>
-           
-  <td valign="top">
-           <div style = "background-color:#273658;">
-           <h1 style="color:#E4781C;text-align:center;font-weight:bold;font-size:16px"> ',paste0("R$ ",format(prod_2022[1,1] + projetado,scientific =FALSE,big.mark =".",nsmall = 2,decimal.mark = ",")),'  </h1> 
-           <h3 style="color:#E4781C;text-align:center;font-weight:bold;font-size:16px">  Projetado </h3>  
-           </div>
-           </td>
-           </tr>
-    </table>
-           </center>'))
-    
-    
-    
-  })
-   
   
-  output$box_uiprod4 <- renderUI({
-    HTML(paste0('
-    <style>
-table, th, td {
-  border: 2px solid black;
-  padding: 5px;
-}
-table {
-  border-spacing: 15px;
-}
-</style>
-  <center>
-<table>
- <tr >
-  <td valign="top">
-  
-           <div style = "background-color:#273658;">
-           <h1 style="color:#E4781C;text-align:center;font-weight:bold;font-size:16px"> ',paste0("R$ ",format(prod_mes_atual[1,1],scientific =FALSE,big.mark =".",nsmall = 2,decimal.mark = ",")),'  </h1> 
-           <h3 style="color:#E4781C;text-align:center;font-weight:bold;font-size:16px">  Total  </h3>  
-           </div>
-           </td>
-           
-  <td valign="top">
-           <div style = "background-color:#273658;">
-           <h1 style="color:#E4781C;text-align:center;font-weight:bold;font-size:16px">',paste0(format(prod_mes_atual[1,2],scientific =FALSE,big.mark =".",nsmall = 2,decimal.mark = ",")),'</h1> 
-           <h3 style="color:#E4781C;text-align:center;font-weight:bold;font-size:16px">  Qntd. <br> Propostas  </h3>  
-           </div>
-           </td>
-           
-  <td valign="top">
-           <div style = "background-color:#273658;">
-           <h1 style="color:#E4781C;text-align:center;font-weight:bold;font-size:16px"> ',paste0("R$ ",format(prod_mes_atual[1,1] + projetado,scientific =FALSE,big.mark =".",nsmall = 2,decimal.mark = ",")),'  </h1> 
-           <h3 style="color:#E4781C;text-align:center;font-weight:bold;font-size:16px">  Projetado </h3>  
-           </div>
-           </td>
-           </tr>
-    </table>
-           </center>'))
-    
-    
-    
-  })
-  
-  output$box_uiprod5 <- renderUI({
-    prod_dia <<- df_prod %>% dplyr::filter( DATA_PAGAMENTO >= input$data_producao[1] & DATA_PAGAMENTO <= input$data_producao[2])   %>% dplyr::summarise(Producao = sum(VLR_PRODUCAO),
-                                                                                                                             Qntd     =sum(Qntd_Propostas))
-    HTML(paste0('
-    <style>
-table, th, td {
-  border: 2px solid black;
-  padding: 5px;
-}
-table {
-  border-spacing: 15px;
-}
-</style>
-  <center>
-<table>
- <tr >
-  <td valign="top">
-  
-           <div style = "background-color:#273658;">
-           <h1 style="color:#E4781C;text-align:center;font-weight:bold;font-size:16px"> ',paste0("R$ ",format(prod_dia[1,1],scientific =FALSE,big.mark =".",nsmall = 2,decimal.mark = ",")),'  </h1> 
-           <h3 style="color:#E4781C;text-align:center;font-weight:bold;font-size:16px">  Total  </h3>  
-           </div>
-           </td>
-           
-  <td valign="top">
-           <div style = "background-color:#273658;">
-           <h1 style="color:#E4781C;text-align:center;font-weight:bold;font-size:16px">',paste0(format(prod_dia[1,2],scientific =FALSE,big.mark =".",nsmall = 2,decimal.mark = ",")),'</h1> 
-           <h3 style="color:#E4781C;text-align:center;font-weight:bold;font-size:16px">  Qntd. <br> Propostas  </h3>  
-           </div>
-           </td>
-           
-  <td valign="top">
-           <div style = "background-color:#273658;">
-           <h1 style="color:#E4781C;text-align:center;font-weight:bold;font-size:16px"> ',paste0("R$ ",format(prod_dia[1,1],scientific =FALSE,big.mark =".",nsmall = 2,decimal.mark = ",")),'  </h1> 
-           <h3 style="color:#E4781C;text-align:center;font-weight:bold;font-size:16px">  Projetado </h3>  
-           </div>
-           </td>
-           </tr>
-    </table>
-           </center>'))
-    
-    
-    
-  })
-      
+
       
       output$serie_prod <- renderPlotly({
         
@@ -1546,29 +1354,29 @@ table {
       
       output$mapa_producao <- renderLeaflet({
         
-
+        
         
         leaflet(df_city,
                 options = list(zoomControl = F)
         ) %>% addTiles()  %>%
-        #setView(lng = setview$lng, lat = setview$lat, zoom=7) %>%
-        addPolygons(
-          fillColor = "lightgray",layerId = df_city$codigo_ibge,
-          weight = 2,
-          opacity = 0.75,label = map_label,popup = map_label,
-          color = "black",fill = "black",stroke = T,
-          dashArray = "3",
-          fillOpacity = 0.75,
-          highlight = highlightOptions(
-            weight = 5,
-            color = "#666",
-            dashArray = "",
-            fillOpacity = 0.5,
-            bringToFront = FALSE),
-          labelOptions = labelOptions(
-            style = list("font-weight" = "normal", padding = "3px 8px"),
-            textsize = "15px",
-            direction = "auto")) %>%
+          #setView(lng = setview$lng, lat = setview$lat, zoom=7) %>%
+          addPolygons(
+            fillColor = "lightgray",layerId = df_city$codigo_ibge,
+            weight = 2,
+            opacity = 0.75,label = map_label,popup = map_label,
+            color = "black",fill = "black",stroke = T,
+            dashArray = "3",
+            fillOpacity = 0.75,
+            highlight = highlightOptions(
+              weight = 5,
+              color = "#666",
+              dashArray = "",
+              fillOpacity = 0.5,
+              bringToFront = FALSE),
+            labelOptions = labelOptions(
+              style = list("font-weight" = "normal", padding = "3px 8px"),
+              textsize = "15px",
+              direction = "auto")) %>%
           #addMarkers(lng = df$LONG,lat = df$LAT)
           addCircleMarkers(radius =  ~ Size,weight = 2,lng =  ~ longitude,lat =  ~ latitude,label = map_label,popup = map_label,color ="black",
                            stroke = TRUE,fillColor = ~beatCol(df_city$uf), fillOpacity = 0.75, 
