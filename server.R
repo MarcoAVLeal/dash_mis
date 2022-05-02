@@ -646,11 +646,15 @@ server <- function(input, output, session) {
               # reservados   <<- df_pago %>% dplyr::filter(DATA_PAGAMENTO > f_data)
               # df_pago      <<- df_pago %>% dplyr::filter(DATA_PAGAMENTO <= f_data)
               
-              
+             div(
+               HTML("<div style='color:#273658;text-align:center;font-weight:bold;'><h1 style='color:#273658;text-align:center;font-weight:bold;'>PRODUÇÃO</h1> </div>"),
+               
+               
+               path_pg5)
               
             })
             
-            output$page6 <- renderUI({
+            output$page7 <- renderUI({
               
               HTML("<h3 style='color:#273658;text-align:center;font-weight:bold;'>INADIMPLÊNCIA</h1> ")
               
