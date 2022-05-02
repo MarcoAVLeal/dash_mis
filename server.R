@@ -1331,6 +1331,7 @@ observeEvent(input$tabs,{
     tb_anomes_producao(),
     extensions = 'Buttons',server = FALSE,
     options = list(
+      pageLength = 12,
       lengthChange = FALSE,
       # scrollX=TRUE,
       # lengthMenu = c(5,10,15),
