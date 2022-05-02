@@ -1322,7 +1322,7 @@ observeEvent(input$tabs,{
   
   tb_anomes_producao <- reactive({
     dados <- df_prod %>% dplyr::group_by(ANO_PAGAMENTO,MES_PAGAMENTO)   %>% dplyr::summarise(Producao = paste0("R$ ",format(sum(VLR_PRODUCAO),scientific =FALSE,big.mark =".",nsmall = 2,decimal.mark = ",")),
-                                                                                             Qntd     = paste0(format(sum(Qntd_Proposta),scientific =FALSE,big.mark =".",nsmall = 2,decimal.mark = ",")))
+                                                                                             Qntd     = paste0(format(sum(Qntd_Propostas),scientific =FALSE,big.mark =".",nsmall = 2,decimal.mark = ",")))
     dados
   })
   
