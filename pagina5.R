@@ -7,6 +7,7 @@ div(
              HTML('<hr style="color: purple;">'),
              HTML("<h3 style='color:#273658;text-align:center;font-weight:bold;'>PRODUÇÃO GERAL CREFAZ</h1> "),
              withSpinner(DTOutput(outputId = "tb_resumo_producao"),hide.ui = FALSE,proxy.height = "10px",size = 0.5),
+             withSpinner(DTOutput(outputId = "tb_anomes_producao"),hide.ui = FALSE,proxy.height = "10px",size = 0.5),
              tabsetPanel(
                id = "tabset_series1",
                # type = "hidden",

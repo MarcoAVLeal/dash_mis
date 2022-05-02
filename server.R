@@ -1320,7 +1320,30 @@ observeEvent(input$tabs,{
     class = "display"
   )
   
+  tb_anomes_producao <- reactive({
+    dados <- df_prod %>% dplyr::group_by(ANO_PAGAMENTO,MES_PAGAMENTO)   %>% dplyr::summarise(Producao = sum(VLR_PRODUCAO),
+                                                                                                                Qntd     =sum(Qntd_Propostas))
+    dados
+  })
   
+  
+  output$tb_anomes_producao <- renderDT(
+    tb_anomes_producao(),
+    extensions = 'Buttons',server = FALSE,
+    options = list(
+      lengthChange = FALSE,
+      # scrollX=TRUE,
+      # lengthMenu = c(5,10,15),
+      paging = TRUE,
+      searching = TRUE,
+      # fixedColumns = TRUE,
+      # autoWidth = TRUE,
+      # ordering = TRUE,
+      dom = 'Bfrtip',
+      buttons = c('copy', 'csv', 'excel','pdf')
+    ) ,
+    class = "display"
+  )
 
       
       output$serie_prod <- renderPlotly({
